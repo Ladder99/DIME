@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="libplctag" Version="1.5.2" />
+      <PackageReference Include="MQTTnet" Version="5.0.0.1214-RC" />
+      <PackageReference Include="NLog" Version="5.3.4" />
+    </ItemGroup>
+
+</Project>
