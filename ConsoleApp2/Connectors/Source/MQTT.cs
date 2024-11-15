@@ -9,13 +9,15 @@ public class MQTT: ISource
     private List<PropertyBag> _readItems = null;
     
     private IMqttClient _client = null;
-    private Dictionary<string, PropertyBag> _incomingBuffer;
+    private Dictionary<string, PropertyBag> _incomingBuffer = null;
+    private object _collectionLock = null;
     
     public void Initialize(PropertyBag configuration, List<PropertyBag> readItems)
     {
         _configuration = configuration;
         _readItems = readItems;
         _incomingBuffer = new Dictionary<string, PropertyBag>();
+        _collectionLock = new object();
         
         _configuration.MakeDefaultProperty("address", "127.0.0.1");
         _configuration.MakeDefaultProperty("port", 1883);
@@ -61,13 +63,16 @@ public class MQTT: ISource
     {
         List<PropertyBag> items = new List<PropertyBag>();
 
-        foreach (var buffer in _incomingBuffer)
+        lock (_collectionLock)
         {
-            var item = new PropertyBag();
-            item.SetProperty("address", buffer.Key);
-            item.SetProperty("value", buffer.Value.GetProperty<object>("value"));
-            item.SetProperty("timestamp", buffer.Value.GetProperty<DateTime>("timestamp"));
-            items.Add(item);
+            foreach (var buffer in _incomingBuffer)
+            {
+                var item = new PropertyBag();
+                item.SetProperty("address", buffer.Key);
+                item.SetProperty("value", buffer.Value.GetProperty<object>("value"));
+                item.SetProperty("timestamp", buffer.Value.GetProperty<DateTime>("timestamp"));
+                items.Add(item);
+            }
         }
 
         return items;
@@ -75,10 +80,13 @@ public class MQTT: ISource
     
     private Task ClientOnApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
     {
-        _incomingBuffer[arg.ApplicationMessage.Topic] = new PropertyBag();
-        _incomingBuffer[arg.ApplicationMessage.Topic].SetProperty("value", arg.ApplicationMessage.ConvertPayloadToString());
-        _incomingBuffer[arg.ApplicationMessage.Topic].SetProperty("timestamp", DateTime.Now);
-        
+        lock (_collectionLock)
+        {
+            _incomingBuffer[arg.ApplicationMessage.Topic] = new PropertyBag();
+            _incomingBuffer[arg.ApplicationMessage.Topic].SetProperty("value", arg.ApplicationMessage.ConvertPayloadToString());
+            _incomingBuffer[arg.ApplicationMessage.Topic].SetProperty("timestamp", DateTime.Now);
+        }
+
         return Task.FromResult(0);
     }
 

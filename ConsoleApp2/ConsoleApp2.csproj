@@ -11,6 +11,14 @@
       <PackageReference Include="libplctag" Version="1.5.2" />
       <PackageReference Include="MQTTnet" Version="5.0.0.1214-RC" />
       <PackageReference Include="NLog" Version="5.3.4" />
+      <PackageReference Include="NModbus" Version="3.0.81" />
+      <PackageReference Include="YamlDotNet" Version="16.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="config.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

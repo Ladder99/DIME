@@ -1,0 +1,21 @@
+sources:
+  - name: plc1
+    connector: EthernetIP
+    type: !!int 5
+    address: 192.168.111.20
+    log: !!int 3
+    timeout: !!int 1000
+    items:
+      - name: boolTag1
+        type: bool
+        address: B3:0/2
+      - name: boolTag2
+        type: bool
+        address: B3:0/3
+  - name: mqtt1
+    connector: MQTT
+    address: wss.sharc.tech
+    port: !!int 1883
+    items:
+      - name: subscribe1
+        address: sharc/+/evt/#
