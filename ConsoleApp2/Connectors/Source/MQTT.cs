@@ -8,6 +8,9 @@ public class MQTT: ISource
     private PropertyBag _configuration = null;
     private List<PropertyBag> _readItems = null;
     
+    public PropertyBag ConnectorConfiguration { get { return _configuration; } }
+    public List<PropertyBag> ItemsConfiguration { get { return _readItems; } }
+    
     private IMqttClient _client = null;
     private Dictionary<string, PropertyBag> _incomingBuffer = null;
     private object _collectionLock = null;
@@ -32,6 +35,11 @@ public class MQTT: ISource
 
     public void Create()
     {
+        if (!_configuration.GetProperty<bool>("enabled"))
+        {
+            return;
+        }
+        
         _client = new MqttClientFactory().CreateMqttClient();
         _client.DisconnectedAsync += ClientOnDisconnectedAsync;
         _client.ApplicationMessageReceivedAsync += ClientOnApplicationMessageReceivedAsync;
@@ -39,6 +47,11 @@ public class MQTT: ISource
 
     public void Connect()
     {
+        if (!_configuration.GetProperty<bool>("enabled"))
+        {
+            return;
+        }
+        
         var clientOptions = new MqttClientOptionsBuilder()
             .WithClientId(_configuration.GetProperty<string>("client_id"))
             .WithTcpServer(_configuration.GetProperty<string>("address"), _configuration.GetProperty<int>("port"))
@@ -57,6 +70,11 @@ public class MQTT: ISource
 
     public void Disconnect()
     {
+        if (!_configuration.GetProperty<bool>("enabled"))
+        {
+            return;
+        }
+        
         _client.DisconnectAsync().Wait();
     }
 

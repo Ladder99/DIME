@@ -7,7 +7,10 @@ public class EthernetIP: ISource
 {
     private PropertyBag _configuration = null;
     private List<PropertyBag> _readItems = null;
-    
+
+    public PropertyBag ConnectorConfiguration { get { return _configuration; } }
+    public List<PropertyBag> ItemsConfiguration { get { return _readItems; } }
+
     public void Initialize(PropertyBag configuration, List<PropertyBag> readItems)
     {
         _configuration = configuration;
@@ -48,12 +51,18 @@ public class EthernetIP: ISource
     
     public void Create()
     {
-        
+        if (!_configuration.GetProperty<bool>("enabled"))
+        {
+            return;
+        }
     }
     
     public void Connect()
     {
-        
+        if (!_configuration.GetProperty<bool>("enabled"))
+        {
+            return;
+        }
     }
 
     public List<PropertyBag> Read()
@@ -172,6 +181,9 @@ public class EthernetIP: ISource
 
     public void Disconnect()
     {
-        
+        if (!_configuration.GetProperty<bool>("enabled"))
+        {
+            return;
+        }
     }
 }

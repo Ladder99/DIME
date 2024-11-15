@@ -7,6 +7,9 @@ public class ModbusTCP: ISource
 {
     private PropertyBag _configuration = null;
     private List<PropertyBag> _readItems = null;
+    
+    public PropertyBag ConnectorConfiguration { get { return _configuration; } }
+    public List<PropertyBag> ItemsConfiguration { get { return _readItems; } }
 
     private IModbusMaster _client = null;
     
@@ -24,11 +27,19 @@ public class ModbusTCP: ISource
     
     public void Create()
     {
-        
+        if (!_configuration.GetProperty<bool>("enabled"))
+        {
+            return;
+        }
     }
     
     public void Connect()
     {
+        if (!_configuration.GetProperty<bool>("enabled"))
+        {
+            return;
+        }
+        
         var tcpClient = new TcpClient();
         var task = tcpClient.ConnectAsync(
             _configuration.GetProperty<string>("address"),
@@ -101,6 +112,9 @@ public class ModbusTCP: ISource
 
     public void Disconnect()
     {
-        
+        if (!_configuration.GetProperty<bool>("enabled"))
+        {
+            return;
+        }
     }
 }

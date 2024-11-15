@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
@@ -28,7 +29,7 @@ public class Config
         return deserializer.Deserialize(mergingParser) as Dictionary<object, object>;
     }
 
-    public List<ConfigurationBag> CreateBags(Dictionary<object, object> configuration)
+    public List<ConfigurationBag> CreateSourceBags(Dictionary<object, object> configuration)
     {
         var bags = new List<ConfigurationBag>();
         
@@ -61,6 +62,32 @@ public class Config
             {
                 Connector = connectorConfiguration,
                 Items = itemsConfiguration
+            });
+        }
+
+        return bags;
+    }
+    
+    public List<ConfigurationBag> CreateSinkBags(Dictionary<object, object> configuration)
+    {
+        var bags = new List<ConfigurationBag>();
+        
+        foreach (Dictionary<object, object> source in configuration["sinks"] as List<object>)
+        {
+            var connectorConfiguration = new PropertyBag();
+    
+            foreach (KeyValuePair<object, object> kvp in source)
+            {
+                if (kvp.Key.ToString() != "items")
+                {
+                    connectorConfiguration.SetProperty(kvp.Key.ToString(), kvp.Value);
+                }
+            }
+            
+            bags.Add(new ConfigurationBag()
+            {
+                Connector = connectorConfiguration,
+                Items = new List<PropertyBag>()
             });
         }
 

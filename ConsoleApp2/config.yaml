@@ -1,6 +1,13 @@
+sinks:
+  - name: mqttSink1
+    enabled: !!bool true
+    connector: MQTT
+    address: wss.sharc.tech
+    port: !!int 1883
+    base_topic: ids
 sources:
-  - name: plc1
-    enabled: !!bool false
+  - name: plcSource1
+    enabled: !!bool true
     connector: EthernetIP
     type: !!int 5
     address: 192.168.111.20
@@ -13,7 +20,7 @@ sources:
       - name: boolTag2
         type: bool
         address: B3:0/3
-  - name: mqtt1
+  - name: mqttSource1
     enabled: !!bool true
     connector: MQTT
     address: wss.sharc.tech
