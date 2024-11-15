@@ -15,6 +15,7 @@ public class ModbusTCP: ISource
         _configuration = configuration;
         _readItems = readItems;
         
+        _configuration.MakeDefaultProperty("enabled", true);
         _configuration.MakeDefaultProperty("address", "192.168.1.1");
         _configuration.MakeDefaultProperty("port", 502);
         _configuration.MakeDefaultProperty("slave", 1);
@@ -45,6 +46,11 @@ public class ModbusTCP: ISource
 
     public List<PropertyBag> Read()
     {
+        if (!_configuration.GetProperty<bool>("enabled"))
+        {
+            return new List<PropertyBag>();
+        }
+        
         List<PropertyBag> items = new List<PropertyBag>();
         
         foreach (var readItem in _readItems)

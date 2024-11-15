@@ -19,6 +19,7 @@ public class MQTT: ISource
         _incomingBuffer = new Dictionary<string, PropertyBag>();
         _collectionLock = new object();
         
+        _configuration.MakeDefaultProperty("enabled", true);
         _configuration.MakeDefaultProperty("address", "127.0.0.1");
         _configuration.MakeDefaultProperty("port", 1883);
         _configuration.MakeDefaultProperty("username", string.Empty);
@@ -61,6 +62,11 @@ public class MQTT: ISource
 
     public List<PropertyBag> Read()
     {
+        if (!_configuration.GetProperty<bool>("enabled"))
+        {
+            return new List<PropertyBag>();
+        }
+        
         List<PropertyBag> items = new List<PropertyBag>();
 
         lock (_collectionLock)

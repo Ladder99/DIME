@@ -1,5 +1,6 @@
 sources:
   - name: plc1
+    enabled: !!bool false
     connector: EthernetIP
     type: !!int 5
     address: 192.168.111.20
@@ -13,6 +14,7 @@ sources:
         type: bool
         address: B3:0/3
   - name: mqtt1
+    enabled: !!bool true
     connector: MQTT
     address: wss.sharc.tech
     port: !!int 1883

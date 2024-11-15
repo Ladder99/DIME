@@ -12,7 +12,8 @@ public class EthernetIP: ISource
     {
         _configuration = configuration;
         _readItems = readItems;
-        
+
+        _configuration.MakeDefaultProperty("enabled", true);
         _configuration.MakeDefaultProperty("type", 0);
         _configuration.MakeDefaultProperty("address", "192.168.111.20");
         _configuration.MakeDefaultProperty("path", "1,0");
@@ -57,6 +58,11 @@ public class EthernetIP: ISource
 
     public List<PropertyBag> Read()
     {
+        if (!_configuration.GetProperty<bool>("enabled"))
+        {
+            return new List<PropertyBag>();
+        }
+        
         List<PropertyBag> items = new List<PropertyBag>();
         
         foreach (var readItem in _readItems)

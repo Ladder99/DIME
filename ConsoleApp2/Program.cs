@@ -1,9 +1,5 @@
-﻿using System.Runtime.CompilerServices;
-using ConsoleApp2;
+﻿using ConsoleApp2;
 using ConsoleApp2.Connectors;
-using ConsoleApp2.Connectors.Source;
-using MQTTnet;
-using YamlDotNet.Core.Tokens;
 
 Console.WriteLine("Hello, World!");
 
