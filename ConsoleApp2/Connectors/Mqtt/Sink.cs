@@ -1,10 +1,9 @@
-using System.Collections;
-using ConsoleApp2.Configuration;
+using ConsoleApp2.Configuration.Mqtt;
 using MQTTnet;
 
 namespace ConsoleApp2.Connectors.Mqtt;
 
-public class Sink: SinkConnector<MqttConnectorConfiguration, MqttConnectorItem>
+public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 {
     private IMqttClient _client = null;
     

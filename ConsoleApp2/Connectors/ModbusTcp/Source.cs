@@ -1,16 +1,17 @@
+using ConsoleApp2.Configuration.ModbusTcp;
 using System.Net.Sockets;
-using ConsoleApp2.Configuration;
-using libplctag;
-using libplctag.DataTypes;
-using NLog;
 using NModbus;
 
 namespace ConsoleApp2.Connectors.ModbusTcp;
 
-public class Source: SourceConnector<ModbusTcpConnectorConfiguration, ModbusTcpConnectorItem>
+public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
 {
     private IModbusMaster _client = null;
-    
+
+    public Source(ConnectorConfiguration configuration) : base(configuration)
+    {
+    }
+
     protected override bool InitializeImplementation()
     {
         

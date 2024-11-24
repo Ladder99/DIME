@@ -1,6 +1,6 @@
-namespace ConsoleApp2.Configuration;
+namespace ConsoleApp2.Configuration.ModbusTcp;
 
-public sealed class ModbusTcpConnectorConfiguration : ConnectorConfiguration<ModbusTcpConnectorItem>
+public sealed class ConnectorConfiguration : ConnectorConfiguration<ConnectorItem>
 {
     public string IpAddress { get; set; }
     public int Port { get; set; }

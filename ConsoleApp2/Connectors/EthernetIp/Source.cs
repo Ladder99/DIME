@@ -1,12 +1,16 @@
-using ConsoleApp2.Configuration;
+using ConsoleApp2.Configuration.EthernetIp;
 using libplctag;
 using libplctag.DataTypes;
 using NLog;
 
 namespace ConsoleApp2.Connectors.EthernetIp;
 
-public class Source: SourceConnector<EthernetIpConnectorConfiguration, EthernetIpConnectorItem>
+public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
 {
+    public Source(ConnectorConfiguration configuration) : base(configuration)
+    {
+    }
+
     protected override bool InitializeImplementation()
     {
         Properties.SetProperty("typeEnum", Configuration.PlcType switch

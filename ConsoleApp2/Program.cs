@@ -1,118 +1,58 @@
-﻿using ConsoleApp2.Configuration;
+﻿namespace ConsoleApp2;
 
-var eipConfig = new EthernetIpConnectorConfiguration();
-eipConfig.ConnectorType = "EthernetIp";
-eipConfig.Direction = ConnectorDirection.Source;
-eipConfig.Enabled = true;
-eipConfig.ScanInterval = 1000;
-eipConfig.Name = "eipPlc1";
-eipConfig.PlcType = 5;
-eipConfig.IpAddress = "192.168.111.20";
-eipConfig.Path = "1,0";
-eipConfig.Timeout = 1000;
-eipConfig.Items = new List<EthernetIpConnectorItem>();
-eipConfig.Items.Add(new EthernetIpConnectorItem()
+public static class Program
 {
-    Name = "eipBool1",
-    Enabled = true,
-    Address = "B3:0/2",
-    Type = "bool"
-});
-
-var eip = new ConsoleApp2.Connectors.EthernetIp.Source();
-eip.Initialize(eipConfig);
-eip.Create();
-eip.Connect();
-
-while (true)
-{
-    eip.Read(); 
-}
-
-eip.Disconnect();
-
-var mqttConfig = new MqttConnectorConfiguration();
-mqttConfig.ConnectorType = "Mqtt";
-mqttConfig.Direction = ConnectorDirection.Source;
-mqttConfig.Enabled = true;
-mqttConfig.ScanInterval = 1000;
-mqttConfig.Name = "mqtt1";
-mqttConfig.IpAddress = "wss.sharc.tech";
-mqttConfig.Port = 1883;
-mqttConfig.CleanSession = true;
-mqttConfig.Username = string.Empty;
-mqttConfig.Password = string.Empty;
-mqttConfig.Items = new List<MqttConnectorItem>();
-mqttConfig.Items.Add(new MqttConnectorItem()
-{
-    Name = "sharcEvents",
-    Enabled = true,
-    Address = "sharc/+/evt/#"
-});
-
-var mqtt = new ConsoleApp2.Connectors.Mqtt.Source();
-mqtt.Initialize(mqttConfig);
-mqtt.Create();
-mqtt.Connect();
-while (true)
-{
-    mqtt.Read();
-}
-
-mqtt.Disconnect();
-
-
-
-/*
-Console.WriteLine("Hello, World!");
-
-var sources = new List<ISource>();
-var sinks = new List<ISink>();
-var config = new Config();
-var yaml = config.Read(new[] { "config.yaml" });
-var sourceBags = config.CreateSourceBags(yaml);
-var sinkBags = config.CreateSinkBags(yaml);
-
-foreach (var bag in sourceBags)
-{
-    var type = config.GetType().Assembly
-        .GetTypes()
-        .FirstOrDefault(t => t.FullName.EndsWith($"Connectors.Source.{bag.Connector.GetProperty<string>("connector")}"));
-
-    var sourceInstance = Activator.CreateInstance(type) as ISource;
-    sourceInstance.Initialize(bag.Connector, bag.Items);
-    sourceInstance.Create();
-    sourceInstance.Connect();
-    sources.Add(sourceInstance);
-}
-
-foreach (var bag in sinkBags)
-{
-    var type = config.GetType().Assembly
-        .GetTypes()
-        .FirstOrDefault(t => t.FullName.EndsWith($"Connectors.Sink.{bag.Connector.GetProperty<string>("connector")}"));
-
-    var sinkInstance = Activator.CreateInstance(type) as ISink;
-    sinkInstance.Initialize(bag.Connector);
-    sinkInstance.Create();
-    sinkInstance.Connect();
-    sinks.Add(sinkInstance);
-}
-
-while (true)
-{
-    foreach (var source in sources)
+    private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+    private static List<ConnectorRunner> _runners = new();
+    public static void Main(string[] args)
     {
-        var results = source.Read();
+        // set working directory
+        Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
 
-        foreach (var sink in sinks)
+        // intercept ctrl-c for clean shutdown
+        var exitEvent = new ManualResetEvent(false);
+        Console.CancelKeyPress += (sender, eventArgs) =>
         {
-            sink.Write(source.ConnectorConfiguration, source.ItemsConfiguration, results);
+            Logger.Info("Cancel key sequence intercepted.");
+            eventArgs.Cancel = true;
+            exitEvent.Set();
+        };
+        
+        Start(args, exitEvent);
+        // wait for ctrl-c
+        exitEvent.WaitOne();
+        Stop();
+    }
+
+    private static void Start(string[] args, ManualResetEvent exitEvent)
+    {
+        Logger.Info("Creating connectors.");
+        
+        var yaml = Configurator.Configurator.Read(new[] { "config.yaml" });
+        var connectors = Configurator.Configurator.CreateConnectors(yaml);
+        
+        Logger.Info("Creating runners.");
+
+        foreach (var connector in connectors)
+        {
+            _runners.Add(new ConnectorRunner(connector));
+        }
+        
+        Logger.Info("Starting runners.");
+        
+        foreach (var runner in _runners)
+        {
+            runner.Start(exitEvent);
         }
     }
     
-    Thread.Sleep(1000);
+    private static void Stop()
+    {
+        Logger.Info("Stopping runners.");
+        foreach (var runner in _runners)
+        {
+            runner.Stop();
+        }
+        Logger.Info("Application shutting down gracefully.");
+    }
 }
-
-//TODO: disconnect all sources
-*/

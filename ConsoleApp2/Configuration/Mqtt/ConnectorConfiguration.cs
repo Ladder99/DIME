@@ -1,6 +1,6 @@
-namespace ConsoleApp2.Configuration;
+namespace ConsoleApp2.Configuration.Mqtt;
 
-public sealed class MqttConnectorConfiguration : ConnectorConfiguration<MqttConnectorItem>
+public sealed class ConnectorConfiguration : ConnectorConfiguration<ConnectorItem>
 {
     public string IpAddress { get; set; }
     public int Port { get; set; }

@@ -1,10 +1,9 @@
-using System.Collections;
-using ConsoleApp2.Configuration;
+using ConsoleApp2.Configuration.Mqtt;
 using MQTTnet;
 
 namespace ConsoleApp2.Connectors.Mqtt;
 
-public class Source: SourceConnector<MqttConnectorConfiguration, MqttConnectorItem>
+public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
 {
     private IMqttClient _client = null;
     private Queue<IncomingMessage> _incomingQueue = null;
@@ -15,7 +14,11 @@ public class Source: SourceConnector<MqttConnectorConfiguration, MqttConnectorIt
         public string Payload { get; set; }
         public long Timestamp { get; set; }
     }
-    
+
+    public Source(ConnectorConfiguration configuration) : base(configuration)
+    {
+    }
+
     protected override bool InitializeImplementation()
     {
         _incomingQueue = new Queue<IncomingMessage>();

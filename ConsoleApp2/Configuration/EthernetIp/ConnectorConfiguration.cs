@@ -1,6 +1,6 @@
-namespace ConsoleApp2.Configuration;
+namespace ConsoleApp2.Configuration.EthernetIp;
 
-public sealed class EthernetIpConnectorConfiguration : ConnectorConfiguration<EthernetIpConnectorItem>
+public sealed class ConnectorConfiguration : ConnectorConfiguration<ConnectorItem>
 {
     public int PlcType { get; set; }
     public string IpAddress { get; set; }

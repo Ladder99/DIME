@@ -1,6 +1,6 @@
-namespace ConsoleApp2.Configuration;
+namespace ConsoleApp2.Configuration.ModbusTcp;
 
-public sealed class ModbusTcpConnectorItem : ConnectorItem
+public sealed class ConnectorItem : Configuration.ConnectorItem
 {
     public int Type { get; set; }
     public ushort Address { get; set; }
