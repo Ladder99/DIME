@@ -1,9 +1,0 @@
-namespace ConsoleApp2.Configuration.ModbusTcp;
-
-public sealed class ConnectorConfiguration : ConnectorConfiguration<ConnectorItem>
-{
-    public string IpAddress { get; set; }
-    public int Port { get; set; }
-    public byte Slave { get; set; }
-    public int Timeout { get; set; }
-}
