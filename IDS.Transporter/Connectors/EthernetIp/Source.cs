@@ -7,7 +7,7 @@ namespace IDS.Transporter.Connectors.EthernetIp;
 
 public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
 {
-    public Source(ConnectorConfiguration configuration) : base(configuration)
+    public Source(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<BoxMessage> disruptor) : base(configuration, disruptor)
     {
     }
 
@@ -148,15 +148,13 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
                     break;
             }
             
-            SampleReadResponses.Add(new ReadResponse()
+            SampleReadResponses.Add(new BoxMessage()
             {
                 Path = $"{Configuration.Name}/{item.Name}",
                 Data = response,
                 Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
             });
         }
-
-        UpdateReadResponses();
         
         return true;
     }

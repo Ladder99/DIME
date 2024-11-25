@@ -7,10 +7,12 @@ public static class Program
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     private static List<ConnectorRunner> _runners = new();
-    private static Disruptor<ReadResponse> _disruptor = new(() => new ReadResponse(), 1024);
+    private static Disruptor<BoxMessage> _disruptor = new(() => new BoxMessage(), 1024);
     
     public static void Main(string[] args)
     {
+        Logger.Info("Starting IDS.Transporter");
+        
         // set working directory
         Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
 
@@ -27,6 +29,8 @@ public static class Program
         // wait for ctrl-c
         exitEvent.WaitOne();
         Stop();
+        
+        Logger.Info("Stopping IDS.Transporter");
     }
 
     private static void Start(string[] args, ManualResetEvent exitEvent)
@@ -34,7 +38,7 @@ public static class Program
         Logger.Info("Creating connectors.");
         
         var yaml = Configurator.Configurator.Read(new[] { "config.yaml" });
-        var connectors = Configurator.Configurator.CreateConnectors(yaml);
+        var connectors = Configurator.Configurator.CreateConnectors(yaml, _disruptor);
         
         Logger.Info("Creating runners.");
 
@@ -62,6 +66,5 @@ public static class Program
         {
             runner.Stop();
         }
-        Logger.Info("Application shutting down gracefully.");
     }
 }

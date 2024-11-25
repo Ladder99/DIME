@@ -1,6 +1,6 @@
 namespace IDS.Transporter.Connectors;
 
-public class ReadResponse
+public class BoxMessage
 {
     public string Path { get; set; }
     public object Data { get; set; }

@@ -5,33 +5,41 @@ namespace IDS.Transporter.Configurator.EthernetIp;
 
 public static class Source
 {
-    public static IConnector Create(Dictionary<object, object> section)
+    public static IConnector Create(Dictionary<object, object> section, Disruptor.Dsl.Disruptor<BoxMessage> disruptor)
     {
-        var config = new ConnectorConfiguration();
-        config.ConnectorType = Convert.ToString(section["connector"]);
+        ConnectorConfiguration config = new();
+        config.ConnectorType = section.ContainsKey("connector") ? Convert.ToString(section["connector"]) : "EthernetIP";
         config.Direction = Configuration.ConnectorDirectionEnum.Source;
-        config.Enabled = Convert.ToBoolean(section["enabled"]);
-        config.ScanInterval = Convert.ToInt32(section["scan_interval"]);
-        config.Name = Convert.ToString(section["name"]);
-        config.PlcType = Convert.ToInt32(section["type"]);
-        config.IpAddress = Convert.ToString(section["address"]);
-        config.Path = Convert.ToString(section["path"]);
-        config.Log = Convert.ToInt32(section["log"]);
-        config.Timeout = Convert.ToInt32(section["timeout"]);
+        config.Enabled = section.ContainsKey("enabled") ? Convert.ToBoolean(section["enabled"]) : true;
+        config.ScanInterval = section.ContainsKey("scan_interval") ? Convert.ToInt32(section["scan_interval"]) : 1000;
+        config.Name = section.ContainsKey("name") ? Convert.ToString(section["name"]) : Guid.NewGuid().ToString();
+        config.PlcType = section.ContainsKey("type") ? Convert.ToInt32(section["type"]) : 0;
+        config.IpAddress = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "0.0.0.0";
+        config.Path = section.ContainsKey("path") ? Convert.ToString(section["path"]) : "1,0";
+        config.Log = section.ContainsKey("log") ? Convert.ToInt32(section["log"]) : 0;
+        config.Timeout = section.ContainsKey("timeout") ? Convert.ToInt32(section["timeout"]) : 1000;
         config.Items = new List<ConnectorItem>();
 
-        foreach (Dictionary<object, object> item in section["items"] as List<object>)
+        var items = section["items"] as List<object>;
+        if (items != null)
         {
-            config.Items.Add(new ConnectorItem()
+            foreach (var item in items)
             {
-                Enabled = Convert.ToBoolean(item["enabled"]),
-                Name = Convert.ToString(item["name"]),
-                Type = Convert.ToString(item["type"]),
-                Address = Convert.ToString(item["address"])
-            });
+                var itemDictionary = item as Dictionary<object, object>;
+                if (itemDictionary != null)
+                {
+                    config.Items.Add(new ConnectorItem()
+                    {
+                        Enabled = itemDictionary.ContainsKey("enabled") ? Convert.ToBoolean(itemDictionary["enabled"]) : true,
+                        Name = itemDictionary.ContainsKey("name") ? Convert.ToString(itemDictionary["name"]) : Guid.NewGuid().ToString(),
+                        Type = itemDictionary.ContainsKey("type") ? Convert.ToString(itemDictionary["type"]) : "bool",
+                        Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : "B0:0/0"
+                    });
+                }
+            }
         }
 
-        var connector = new Connectors.EthernetIp.Source(config);
+        var connector = new Connectors.EthernetIp.Source(config, disruptor);
 
         return connector;
     }

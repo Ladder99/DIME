@@ -9,7 +9,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 {
     private IMqttClient _client = null;
 
-    public Sink(ConnectorConfiguration configuration) : base(configuration)
+    public Sink(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<BoxMessage> disruptor) : base(configuration, disruptor)
     {
     }
 
@@ -43,7 +43,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool WriteImplementation()
     {
-        foreach (var response in DeltaReadResponses)
+        foreach (var response in Outbox)
         {
             Console.WriteLine($"{response.Path} = {response.Data}");
             

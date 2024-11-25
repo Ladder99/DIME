@@ -15,7 +15,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
         public long Timestamp { get; set; }
     }
 
-    public Source(ConnectorConfiguration configuration) : base(configuration)
+    public Source(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<BoxMessage> disruptor) : base(configuration, disruptor)
     {
     }
 
@@ -64,15 +64,13 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
         {
             var message = _incomingQueue.Dequeue();
             
-            SampleReadResponses.Add(new ReadResponse()
+            SampleReadResponses.Add(new BoxMessage()
             {
                 Path = $"{Configuration.Name}/{message.Topic}",
                 Data = message.Payload,
                 Timestamp = message.Timestamp
             });
         }
-
-        UpdateReadResponses();
         
         return true;
     }

@@ -7,12 +7,12 @@ using Timer = System.Timers.Timer;
 
 namespace IDS.Transporter;
 
-public class ConnectorRunner: Disruptor.IEventHandler<ReadResponse>
+public class ConnectorRunner: Disruptor.IEventHandler<BoxMessage>
 {
     protected readonly NLog.Logger Logger;
     private IConnector _connector;
-    private Disruptor.Dsl.Disruptor<ReadResponse> _disruptor;
-    private BlockingCollection<ReadResponse> _queueSubscription;
+    private Disruptor.Dsl.Disruptor<BoxMessage> _disruptor;
+    private BlockingCollection<BoxMessage> _queueSubscription;
     private ManualResetEvent _exitEvents;
     private Timer _timer;
     private bool _isExecuting;
@@ -20,7 +20,7 @@ public class ConnectorRunner: Disruptor.IEventHandler<ReadResponse>
     private long _executionExit = DateTime.UtcNow.ToEpochMilliseconds();
     private long _executionDuration;
 
-    public ConnectorRunner(IConnector connector, Disruptor.Dsl.Disruptor<ReadResponse> disruptor)
+    public ConnectorRunner(IConnector connector, Disruptor.Dsl.Disruptor<BoxMessage> disruptor)
     {
         Logger = NLog.LogManager.GetLogger(GetType().FullName);
         _connector = connector;
@@ -41,9 +41,9 @@ public class ConnectorRunner: Disruptor.IEventHandler<ReadResponse>
         StartTimer();
     }
 
-    public void OnEvent(ReadResponse data, long sequence, bool endOfBatch)
+    public void OnEvent(BoxMessage data, long sequence, bool endOfBatch)
     {
-        _connector.DeltaReadResponses.Add(data);
+        (_connector as ISinkConnector).Outbox.Add(data);
     }
     
     private void Execute()
@@ -58,17 +58,6 @@ public class ConnectorRunner: Disruptor.IEventHandler<ReadResponse>
         if (_connector.Configuration.Direction == ConnectorDirectionEnum.Source)
         {
             ConnectorRead();
-
-            foreach (var response in _connector.DeltaReadResponses)
-            {
-                using (var scope = _disruptor.RingBuffer.PublishEvent())
-                {
-                    var data = scope.Event();
-                    data.Data = response.Data;
-                    data.Path = response.Path;
-                    data.Timestamp = response.Timestamp;
-                }
-            }
         }
         
         if (_connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
@@ -78,7 +67,7 @@ public class ConnectorRunner: Disruptor.IEventHandler<ReadResponse>
 
         ExecuteExit();
     }
-
+    
     public void Stop()
     {
         _timer.Stop();
@@ -163,31 +152,40 @@ public class ConnectorRunner: Disruptor.IEventHandler<ReadResponse>
 
     private bool ConnectorRead()
     {
-        if (_connector.Read())
+        if (_connector.Configuration.Direction == ConnectorDirectionEnum.Source)
         {
-            Logger.Info($"[{_connector.Configuration.Name}] Connector read.");
-            return true;
+            if ((_connector as ISourceConnector).Read())
+            {
+                Logger.Info($"[{_connector.Configuration.Name}] Connector read.");
+                return true;
+            }
+            else
+            {
+                Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector reading failed.");
+                return false;
+            }
         }
-        else
-        {
-            Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector reading failed.");
-            return false;
-        }
+
+        return true;
     }
     
     private bool ConnectorWrite()
     {
-        if (_connector.Write())
+        if (_connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
         {
-            Logger.Info($"[{_connector.Configuration.Name}] Connector written.");
-            _connector.DeltaReadResponses.Clear();
-            return true;
+            if ((_connector as ISinkConnector).Write())
+            {
+                Logger.Info($"[{_connector.Configuration.Name}] Connector written.");
+                return true;
+            }
+            else
+            {
+                Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector writing failed.");
+                return false;
+            }
         }
-        else
-        {
-            Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector writing failed.");
-            return false;
-        }
+
+        return true;
     }
 
     private bool ConnectorDisconnect()
