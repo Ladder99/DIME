@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     "net8.0": {
+      "Disruptor/6.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Disruptor.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Disruptor.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "libplctag/1.5.2": {
         "type": "package",
         "dependencies": {
@@ -99,6 +112,21 @@
     }
   },
   "libraries": {
+    "Disruptor/6.0.0": {
+      "sha512": "J8KohDdP4QQp2+uMO8q+I1amRtMCmfqDoUcY5uRqyhJrpuSjM8SWR4wEagGaBT4zQ1pPwCUyedqvaO5ZCxQXOw==",
+      "type": "package",
+      "path": "disruptor/6.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "disruptor.6.0.0.nupkg.sha512",
+        "disruptor.nuspec",
+        "lib/net6.0/Disruptor.dll",
+        "lib/net6.0/Disruptor.xml",
+        "lib/netstandard2.1/Disruptor.dll",
+        "lib/netstandard2.1/Disruptor.xml"
+      ]
+    },
     "libplctag/1.5.2": {
       "sha512": "v16WtxKMr6YiPc/ws5C/MdhOvZgLrlDwJ1FQPB4PLrWNpBQXr8fUXaHI12rl3sNyJZ2ocB+zeSPUDFT8zK4pDA==",
       "type": "package",
@@ -244,6 +272,7 @@
   },
   "projectFileDependencyGroups": {
     "net8.0": [
+      "Disruptor >= 6.0.0",
       "MQTTnet >= 5.0.0.1214-RC",
       "NLog >= 5.3.4",
       "NModbus >= 3.0.81",
@@ -297,6 +326,10 @@
       "net8.0": {
         "targetAlias": "net8.0",
         "dependencies": {
+          "Disruptor": {
+            "target": "Package",
+            "version": "[6.0.0, )"
+          },
           "MQTTnet": {
             "target": "Package",
             "version": "[5.0.0.1214-RC, )"

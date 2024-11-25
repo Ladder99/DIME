@@ -1,6 +1,7 @@
 namespace IDS.Transporter.Configuration;
 
-public abstract class ConnectorConfiguration<TItem> where TItem: ConnectorItem
+public abstract class ConnectorConfiguration<TItem> : IConnectorConfiguration
+    where TItem: ConnectorItem
 {
     public ConnectorDirectionEnum Direction { get; set; }
     public string Name { get; set; }

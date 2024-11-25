@@ -14,7 +14,7 @@ sources:
     type: !!int 5
     address: 192.168.111.20
     path: 1,0
-    log: !!int 3
+    log: !!int 0
     timeout: !!int 1000
     items:
       - name: boolTag1

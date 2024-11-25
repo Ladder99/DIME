@@ -43,12 +43,12 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool CreateImplementation()
     {
+        LibPlcTag.LogEvent += LibPlcTagOnLogEvent;
         return true;
     }
 
     protected override bool ConnectImplementation()
     {
-        LibPlcTag.LogEvent += LibPlcTagOnLogEvent;
         return true;
     }
 

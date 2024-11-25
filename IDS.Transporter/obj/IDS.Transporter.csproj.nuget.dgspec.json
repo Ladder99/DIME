@@ -46,6 +46,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Disruptor": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
             "MQTTnet": {
               "target": "Package",
               "version": "[5.0.0.1214-RC, )"

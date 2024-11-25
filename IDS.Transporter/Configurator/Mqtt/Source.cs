@@ -1,11 +1,11 @@
 using IDS.Transporter.Connectors;
-using IDS.Transporter.Configuration.EthernetIp;
+using IDS.Transporter.Configuration.Mqtt;
 
-namespace IDS.Transporter.Configurator;
+namespace IDS.Transporter.Configurator.Mqtt;
 
-public partial class Configurator
+public static class Source
 {
-    public static IConnector CreateEthernetIpConnector(Dictionary<object, object> section)
+    public static IConnector Create(Dictionary<object, object> section)
     {
         var config = new ConnectorConfiguration();
         config.ConnectorType = Convert.ToString(section["connector"]);
@@ -13,11 +13,8 @@ public partial class Configurator
         config.Enabled = Convert.ToBoolean(section["enabled"]);
         config.ScanInterval = Convert.ToInt32(section["scan_interval"]);
         config.Name = Convert.ToString(section["name"]);
-        config.PlcType = Convert.ToInt32(section["type"]);
         config.IpAddress = Convert.ToString(section["address"]);
-        config.Path = Convert.ToString(section["path"]);
-        config.Log = Convert.ToInt32(section["log"]);
-        config.Timeout = Convert.ToInt32(section["timeout"]);
+        config.Port = Convert.ToInt32(section["port"]);
         config.Items = new List<ConnectorItem>();
 
         foreach (Dictionary<object, object> item in section["items"] as List<object>)
@@ -26,12 +23,11 @@ public partial class Configurator
             {
                 Enabled = Convert.ToBoolean(item["enabled"]),
                 Name = Convert.ToString(item["name"]),
-                Type = Convert.ToString(item["type"]),
                 Address = Convert.ToString(item["address"])
             });
         }
 
-        var connector = new Connectors.EthernetIp.Source(config);
+        var connector = new Connectors.Mqtt.Source(config);
 
         return connector;
     }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("IDS.Transporter")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2ebbc6d4e198a7aae0186d00043539909dc3dfdb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+baa91209c83d8354126a32ae0c019825da2b8509")]
 [assembly: System.Reflection.AssemblyProductAttribute("IDS.Transporter")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IDS.Transporter")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

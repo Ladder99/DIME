@@ -1,12 +1,18 @@
 using IDS.Transporter.Configuration.Mqtt;
 using MQTTnet;
+using MQTTnet.Protocol;
+using Newtonsoft.Json;
 
 namespace IDS.Transporter.Connectors.Mqtt;
 
 public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 {
     private IMqttClient _client = null;
-    
+
+    public Sink(ConnectorConfiguration configuration) : base(configuration)
+    {
+    }
+
     protected override bool InitializeImplementation()
     {
         Properties.SetProperty("client_id", Guid.NewGuid().ToString());
@@ -37,15 +43,19 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool WriteImplementation()
     {
-        /*
-        var message = new MqttApplicationMessageBuilder()
-            .WithTopic($"{_configuration.GetProperty<string>("base_topic")}/{sourceConfiguration.GetProperty<string>("name")}")
-            .WithPayload(JsonConvert.SerializeObject(sourceResult))
-            .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
-            .Build();
+        foreach (var response in DeltaReadResponses)
+        {
+            Console.WriteLine($"{response.Path} = {response.Data}");
+            
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic($"{Configuration.BaseTopic}/{response.Path}")
+                .WithPayload(JsonConvert.SerializeObject(response))
+                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
+                .Build();
 
-        _client.PublishAsync(message);
-         */
+            _client.PublishAsync(message);
+        }
+        
         return true;
     }
 

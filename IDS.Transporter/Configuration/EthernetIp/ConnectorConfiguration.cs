@@ -1,6 +1,6 @@
 namespace IDS.Transporter.Configuration.EthernetIp;
 
-public sealed class ConnectorConfiguration : ConnectorConfiguration<ConnectorItem>
+public sealed class ConnectorConfiguration : Configuration.ConnectorConfiguration<ConnectorItem>
 {
     public int PlcType { get; set; }
     public string IpAddress { get; set; }

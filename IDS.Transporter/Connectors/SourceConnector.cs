@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using IDS.Transporter.Configuration;
 
 namespace IDS.Transporter.Connectors;
@@ -17,15 +18,23 @@ public abstract class SourceConnector<TConfig, TItem>: IConnector
     where TConfig : ConnectorConfiguration<TItem>
     where TItem : ConnectorItem
 {
+    IConnectorConfiguration IConnector.Configuration 
+    {
+        get
+        {
+            return Configuration;
+        }
+    }
+    
     protected readonly NLog.Logger Logger;
     public FaultContextEnum FaultContext { get; set; }
     public bool IsFaulted {get; private set;}
     public Exception FaultReason { get; set; }
     public TConfig Configuration { get; set; }
     protected PropertyBag Properties { get; set; }
-    public List<ReadResponse> DeltaReadResponses { get; set; }
-    public List<ReadResponse> SampleReadResponses { get; set; }
-    public List<ReadResponse> CurrentReadResponses { get; set; }
+    public ConcurrentBag<ReadResponse> DeltaReadResponses { get; set; }
+    public ConcurrentBag<ReadResponse> SampleReadResponses { get; set; }
+    public ConcurrentBag<ReadResponse> CurrentReadResponses { get; set; }
     public bool IsInitialized { get; private set; }
     public bool IsCreated { get; private set; }
     public bool IsConnected { get; protected set; }
@@ -35,9 +44,9 @@ public abstract class SourceConnector<TConfig, TItem>: IConnector
         Logger = NLog.LogManager.GetLogger(GetType().FullName);
         Configuration = configuration;
         Properties = new PropertyBag();
-        DeltaReadResponses = new List<ReadResponse>();
-        SampleReadResponses = new List<ReadResponse>();
-        CurrentReadResponses = new List<ReadResponse>();
+        DeltaReadResponses = new ConcurrentBag<ReadResponse>();
+        SampleReadResponses = new ConcurrentBag<ReadResponse>();
+        CurrentReadResponses = new ConcurrentBag<ReadResponse>();
     }
     
     protected abstract bool InitializeImplementation();
@@ -203,8 +212,8 @@ public abstract class SourceConnector<TConfig, TItem>: IConnector
         }
         catch (Exception e)
         {
-            Disconnect();
             MarkFaulted(e);
+            Disconnect();
             return false;
         }
     }
@@ -215,7 +224,18 @@ public abstract class SourceConnector<TConfig, TItem>: IConnector
 
         foreach (var sampleResponse in SampleReadResponses)
         {
-            var matchingCurrent = CurrentReadResponses.Find(x => x.Path == sampleResponse.Path);
+            ReadResponse matchingCurrent = null;
+
+            try
+            {
+                matchingCurrent = CurrentReadResponses
+                    .Where(x => x.Path == sampleResponse.Path)
+                    .First();
+            }
+            catch (InvalidOperationException e)
+            {
+            }
+            
             // sample does not exist in current, it is a new sample
             if (matchingCurrent is null)
             {
@@ -241,6 +261,11 @@ public abstract class SourceConnector<TConfig, TItem>: IConnector
     public virtual bool AfterRead()
     {
         return true;
+    }
+
+    public virtual bool Write()
+    {
+        throw new NotSupportedException();
     }
     
     protected abstract bool DisconnectImplementation();
@@ -289,7 +314,7 @@ public abstract class SourceConnector<TConfig, TItem>: IConnector
     
     protected void MarkFaulted(Exception ex)
     {
-        if(!IsFaulted) Logger.Warn($"Fault Set within {FaultContext.ToString()} context. {ex.Message}");
+        if(!IsFaulted) Logger.Warn($"[{Configuration.Name}] Fault Set within {FaultContext.ToString()} context. {ex.Message}");
         IsFaulted = true;
         FaultReason = ex;
     }
@@ -300,7 +325,7 @@ public abstract class SourceConnector<TConfig, TItem>: IConnector
         {
             return;
         }
-        Logger.Info($"Fault Cleared within {FaultContext.ToString()} context.");
+        Logger.Info($"[{Configuration.Name}] Fault Cleared within {FaultContext.ToString()} context.");
         IsFaulted = false;
         FaultReason = null;
     }

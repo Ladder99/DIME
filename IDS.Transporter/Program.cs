@@ -1,9 +1,14 @@
-﻿namespace IDS.Transporter;
+﻿using IDS.Transporter.Connectors;
+using Disruptor.Dsl;
+
+namespace IDS.Transporter;
 
 public static class Program
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     private static List<ConnectorRunner> _runners = new();
+    private static Disruptor<ReadResponse> _disruptor = new(() => new ReadResponse(), 1024);
+    
     public static void Main(string[] args)
     {
         // set working directory
@@ -35,7 +40,7 @@ public static class Program
 
         foreach (var connector in connectors)
         {
-            _runners.Add(new ConnectorRunner(connector));
+            _runners.Add(new ConnectorRunner(connector, _disruptor));
         }
         
         Logger.Info("Starting runners.");
@@ -44,6 +49,10 @@ public static class Program
         {
             runner.Start(exitEvent);
         }
+        
+        Logger.Info("Starting queue.");
+        
+        _disruptor.Start();
     }
     
     private static void Stop()

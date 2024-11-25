@@ -7,6 +7,8 @@ namespace IDS.Transporter.Configurator;
 
 public partial class Configurator
 {
+    private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+    
     public static Dictionary<object,object> Read(string[] configurationFilenames)
     {
         var yaml = "";
@@ -27,18 +29,52 @@ public partial class Configurator
     {
         var _connectors = new List<IConnector>();
 
-        foreach (Dictionary<object, object> section in configuration["sources"] as List<object>)
+        foreach (Dictionary<object, object> section in configuration["sinks"] as List<object>)
         {
+            IConnector connector = null;
+            
             switch (section["connector"].ToString().ToLower())
             {
-                case "ethernetip":
-                    _connectors.Add(CreateEthernetIpConnector(section));
-                    break;
                 case "mqtt":
-                    _connectors.Add(CreateMqttConnector(section));
+                    connector = Mqtt.Sink.Create(section);
                     break;
                 default:
                     break;
+            }
+
+            if (connector.Configuration.Enabled)
+            {
+                _connectors.Add(connector);
+            }
+            else
+            {
+                Logger.Info($"[{connector.Configuration.Name}] Connector is disabled.");
+            }
+        }
+        
+        foreach (Dictionary<object, object> section in configuration["sources"] as List<object>)
+        {
+            IConnector connector = null;
+            
+            switch (section["connector"].ToString().ToLower())
+            {
+                case "ethernetip":
+                    connector = EthernetIp.Source.Create(section);
+                    break;
+                case "mqtt":
+                    connector = Mqtt.Source.Create(section);
+                    break;
+                default:
+                    break;
+            }
+
+            if (connector.Configuration.Enabled)
+            {
+                _connectors.Add(connector);
+            }
+            else
+            {
+                Logger.Info($"[{connector.Configuration.Name}] Connector is disabled.");
             }
         }
 

@@ -1,3 +1,5 @@
+using System.Collections.Concurrent;
+using IDS.Transporter.Configuration;
 using IDS.Transporter.Connectors;
 using IDS.Transporter.Connectors.Mqtt;
 using NLog;
@@ -5,32 +7,45 @@ using Timer = System.Timers.Timer;
 
 namespace IDS.Transporter;
 
-public class ConnectorRunner
+public class ConnectorRunner: Disruptor.IEventHandler<ReadResponse>
 {
     protected readonly NLog.Logger Logger;
     private IConnector _connector;
+    private Disruptor.Dsl.Disruptor<ReadResponse> _disruptor;
+    private BlockingCollection<ReadResponse> _queueSubscription;
     private ManualResetEvent _exitEvents;
     private Timer _timer;
     private bool _isExecuting;
-    private long _executionEnter;
-    private long _executionExit;
+    private long _executionEnter = DateTime.UtcNow.ToEpochMilliseconds();
+    private long _executionExit = DateTime.UtcNow.ToEpochMilliseconds();
     private long _executionDuration;
 
-    public ConnectorRunner(IConnector connector)
+    public ConnectorRunner(IConnector connector, Disruptor.Dsl.Disruptor<ReadResponse> disruptor)
     {
         Logger = NLog.LogManager.GetLogger(GetType().FullName);
         _connector = connector;
+        _disruptor = disruptor;
     }
     
     public void Start(ManualResetEvent exitEvent)
     {
         _exitEvents = exitEvent;
 
+        if (_connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
+        {
+            _disruptor.HandleEventsWith(this);
+        }
+
         ConnectorInitialize();
         ConnectorCreate();
         StartTimer();
     }
 
+    public void OnEvent(ReadResponse data, long sequence, bool endOfBatch)
+    {
+        _connector.DeltaReadResponses.Add(data);
+    }
+    
     private void Execute()
     {
         if (!ExecuteEnter())
@@ -39,7 +54,28 @@ public class ConnectorRunner
         }
 
         ConnectorConnect();
-        ConnectorRead();
+
+        if (_connector.Configuration.Direction == ConnectorDirectionEnum.Source)
+        {
+            ConnectorRead();
+
+            foreach (var response in _connector.DeltaReadResponses)
+            {
+                using (var scope = _disruptor.RingBuffer.PublishEvent())
+                {
+                    var data = scope.Event();
+                    data.Data = response.Data;
+                    data.Path = response.Path;
+                    data.Timestamp = response.Timestamp;
+                }
+            }
+        }
+        
+        if (_connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
+        {
+            ConnectorWrite();
+        }
+
         ExecuteExit();
     }
 
@@ -54,7 +90,7 @@ public class ConnectorRunner
     {
         if (_isExecuting)
         {
-            Logger.Warn($"Execution overlap.  Consider increasing scan interval.  Previous execution duration was {_executionDuration}ms.");
+            Logger.Warn($"[{_connector.Configuration.Name}] Execution overlap.  Consider increasing scan interval.  Previous execution duration was {_executionDuration}ms.");
             return false;
         }
         
@@ -74,18 +110,36 @@ public class ConnectorRunner
     {
         _timer = new Timer();
         _timer.Elapsed += (sender, args) => { Execute(); };
-        _timer.Interval = 1000;// _connector.Configuration.ScanInterval;
+        _timer.Interval = _connector.Configuration.ScanInterval;
         _timer.Enabled = true;
     }
     
     private bool ConnectorInitialize()
     {
-        return _connector.Initialize();
+        if (_connector.Initialize())
+        {
+            Logger.Info($"[{_connector.Configuration.Name}] Connector initialized.");
+            return true;
+        }
+        else
+        {
+            Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector initialization failed.");
+            return false;
+        }
     }
 
     private bool ConnectorCreate()
     {
-        return _connector.Create();
+        if (_connector.Create())
+        {
+            Logger.Info($"[{_connector.Configuration.Name}] Connector created.");
+            return true;
+        }
+        else
+        {
+            Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector creation failed.");
+            return false;
+        }
     }
 
     private bool ConnectorConnect()
@@ -94,16 +148,59 @@ public class ConnectorRunner
         {
             return true;
         }
-        return _connector.Connect();
+        
+        if (_connector.Connect())
+        {
+            Logger.Info($"[{_connector.Configuration.Name}] Connector connected.");
+            return true;
+        }
+        else
+        {
+            Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector connection failed.");
+            return false;
+        }
     }
 
     private bool ConnectorRead()
     {
-        return _connector.Read();
+        if (_connector.Read())
+        {
+            Logger.Info($"[{_connector.Configuration.Name}] Connector read.");
+            return true;
+        }
+        else
+        {
+            Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector reading failed.");
+            return false;
+        }
+    }
+    
+    private bool ConnectorWrite()
+    {
+        if (_connector.Write())
+        {
+            Logger.Info($"[{_connector.Configuration.Name}] Connector written.");
+            _connector.DeltaReadResponses.Clear();
+            return true;
+        }
+        else
+        {
+            Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector writing failed.");
+            return false;
+        }
     }
 
     private bool ConnectorDisconnect()
     {
-        return _connector.Disconnect();
+        if (_connector.Disconnect())
+        {
+            Logger.Info($"[{_connector.Configuration.Name}] Connector disconnected.");
+            return true;
+        }
+        else
+        {
+            Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector disconnection failed.");
+            return false;
+        }
     }
 }

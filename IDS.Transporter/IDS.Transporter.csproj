@@ -10,6 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Disruptor" Version="6.0.0" />
       <PackageReference Include="libplctag" Version="1.5.2" />
       <PackageReference Include="MQTTnet" Version="5.0.0.1214-RC" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />

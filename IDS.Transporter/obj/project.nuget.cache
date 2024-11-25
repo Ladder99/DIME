@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Rx+KFSgHO+A=",
+  "dgSpecHash": "SErMDhb4Od4=",
   "success": true,
   "projectFilePath": "C:\\source\\Ladder99\\__1\\IDS.Transporter\\IDS.Transporter.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\chris\\.nuget\\packages\\disruptor\\6.0.0\\disruptor.6.0.0.nupkg.sha512",
     "C:\\Users\\chris\\.nuget\\packages\\libplctag\\1.5.2\\libplctag.1.5.2.nupkg.sha512",
     "C:\\Users\\chris\\.nuget\\packages\\libplctag.nativeimport\\1.0.41\\libplctag.nativeimport.1.0.41.nupkg.sha512",
     "C:\\Users\\chris\\.nuget\\packages\\mqttnet\\5.0.0.1214-rc\\mqttnet.5.0.0.1214-rc.nupkg.sha512",

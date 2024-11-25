@@ -1,6 +1,6 @@
 namespace IDS.Transporter.Configuration.ModbusTcp;
 
-public sealed class ConnectorConfiguration : ConnectorConfiguration<ConnectorItem>
+public sealed class ConnectorConfiguration : Configuration.ConnectorConfiguration<ConnectorItem>
 {
     public string IpAddress { get; set; }
     public int Port { get; set; }
