@@ -52,22 +52,11 @@ public partial class Configurator
                     var sectionDictionary = section as Dictionary<object, object>;
                     if (sectionDictionary != null)
                     {
-                        IConnector connector = null;
                         var connectorType = (sectionDictionary.ContainsKey("connector")
                             ? Convert.ToString(sectionDictionary["connector"])?.ToLower()
                             : "undefined");
 
-                        switch (connectorType)
-                        {
-                            case "mqtt":
-                                connector = Mqtt.Sink.Create(sectionDictionary, disruptor);
-                                break;
-                            case "mtconnect":
-                                connector = MtConnect.Sink.Create(sectionDictionary, disruptor);
-                                break;
-                            default:
-                                break;
-                        }
+                        var connector = SinkConnectorFactory.Create(connectorType, sectionDictionary, disruptor);
 
                         if (connector == null)
                         {
@@ -108,22 +97,11 @@ public partial class Configurator
                     var sectionDictionary = section as Dictionary<object, object>;
                     if (sectionDictionary != null)
                     {
-                        IConnector connector = null;
                         var connectorType = (sectionDictionary.ContainsKey("connector")
                             ? Convert.ToString(sectionDictionary["connector"])?.ToLower()
                             : "undefined");
 
-                        switch (connectorType)
-                        {
-                            case "ethernetip":
-                                connector = EthernetIp.Source.Create(sectionDictionary, disruptor);
-                                break;
-                            case "mqtt":
-                                connector = Mqtt.Source.Create(sectionDictionary, disruptor);
-                                break;
-                            default:
-                                break;
-                        }
+                        var connector = SourceConnectorFactory.Create(connectorType, sectionDictionary, disruptor);
 
                         if (connector == null)
                         {

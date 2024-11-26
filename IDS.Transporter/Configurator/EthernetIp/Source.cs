@@ -11,14 +11,14 @@ public static class Source
         config.ConnectorType = section.ContainsKey("connector") ? Convert.ToString(section["connector"]) : "EthernetIP";
         config.Direction = Configuration.ConnectorDirectionEnum.Source;
         config.Enabled = section.ContainsKey("enabled") ? Convert.ToBoolean(section["enabled"]) : true;
-        config.ScanInterval = section.ContainsKey("scan_interval") ? Convert.ToInt32(section["scan_interval"]) : 1000;
+        config.ScanIntervalMs = section.ContainsKey("scan_interval") ? Convert.ToInt32(section["scan_interval"]) : 1000;
         config.ReportByException = section.ContainsKey("rbe") ? Convert.ToBoolean(section["rbe"]) : true;
         config.Name = section.ContainsKey("name") ? Convert.ToString(section["name"]) : Guid.NewGuid().ToString();
         config.PlcType = section.ContainsKey("type") ? Convert.ToInt32(section["type"]) : 0;
         config.IpAddress = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "0.0.0.0";
         config.Path = section.ContainsKey("path") ? Convert.ToString(section["path"]) : "1,0";
         config.Log = section.ContainsKey("log") ? Convert.ToInt32(section["log"]) : 0;
-        config.Timeout = section.ContainsKey("timeout") ? Convert.ToInt32(section["timeout"]) : 1000;
+        config.TimeoutMs = section.ContainsKey("timeout") ? Convert.ToInt32(section["timeout"]) : 1000;
         config.Items = new List<ConnectorItem>();
 
         var items = section["items"] as List<object>;

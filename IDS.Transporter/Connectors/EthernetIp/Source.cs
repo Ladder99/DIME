@@ -68,7 +68,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
                         Path = Configuration.Path,
                         PlcType = Properties.GetProperty<PlcType>("typeEnum"),
                         Protocol = Protocol.ab_eip,
-                        Timeout = TimeSpan.FromMilliseconds(Configuration.Timeout),
+                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
                         DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
                     }.Read();
                     break;
@@ -80,7 +80,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
                         Path = Configuration.Path,
                         PlcType = Properties.GetProperty<PlcType>("typeEnum"),
                         Protocol = Protocol.ab_eip,
-                        Timeout = TimeSpan.FromMilliseconds(Configuration.Timeout),
+                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
                         DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
                     }.Read();
                     break;
@@ -92,7 +92,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
                         Path = Configuration.Path,
                         PlcType = Properties.GetProperty<PlcType>("typeEnum"),
                         Protocol = Protocol.ab_eip,
-                        Timeout = TimeSpan.FromMilliseconds(Configuration.Timeout),
+                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
                         DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
                     }.Read();
                     break;
@@ -104,7 +104,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
                         Path = Configuration.Path,
                         PlcType = Properties.GetProperty<PlcType>("typeEnum"),
                         Protocol = Protocol.ab_eip,
-                        Timeout = TimeSpan.FromMilliseconds(Configuration.Timeout),
+                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
                         DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
                     }.Read();
                     break;
@@ -116,7 +116,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
                         Path = Configuration.Path,
                         PlcType = Properties.GetProperty<PlcType>("typeEnum"),
                         Protocol = Protocol.ab_eip,
-                        Timeout = TimeSpan.FromMilliseconds(Configuration.Timeout),
+                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
                         DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
                     }.Read();
                     break;
@@ -128,7 +128,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
                         Path = Configuration.Path,
                         PlcType = Properties.GetProperty<PlcType>("typeEnum"),
                         Protocol = Protocol.ab_eip,
-                        Timeout = TimeSpan.FromMilliseconds(Configuration.Timeout),
+                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
                         DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
                     }.Read();
                     break;
@@ -140,7 +140,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
                         Path = Configuration.Path,
                         PlcType = Properties.GetProperty<PlcType>("typeEnum"),
                         Protocol = Protocol.ab_eip,
-                        Timeout = TimeSpan.FromMilliseconds(Configuration.Timeout),
+                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
                         DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
                     }.Read();
                     break;

@@ -30,14 +30,14 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
             Configuration.IpAddress,
             Configuration.Port
         );
-        task.Wait(Configuration.Timeout);
+        task.Wait(Configuration.TimeoutMs);
         if (!tcpClient.Connected)
         {
             return false;
         }
         _client = new ModbusFactory().CreateMaster(tcpClient);
-        _client.Transport.ReadTimeout = Configuration.Timeout;
-        _client.Transport.WriteTimeout = Configuration.Timeout;
+        _client.Transport.ReadTimeout = Configuration.TimeoutMs;
+        _client.Transport.WriteTimeout = Configuration.TimeoutMs;
         
         return true;
     }

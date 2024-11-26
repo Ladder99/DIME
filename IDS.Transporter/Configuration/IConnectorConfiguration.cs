@@ -6,5 +6,5 @@ public interface IConnectorConfiguration
     public string Name { get; }
     public bool Enabled { get; }
     public string ConnectorType { get; }
-    public int ScanInterval { get; }
+    public int ScanIntervalMs { get; }
 }

@@ -1,8 +1,6 @@
 using System.Collections.Concurrent;
 using IDS.Transporter.Configuration;
 using IDS.Transporter.Connectors;
-using IDS.Transporter.Connectors.Mqtt;
-using NLog;
 using Timer = System.Timers.Timer;
 
 namespace IDS.Transporter;
@@ -109,7 +107,7 @@ public class ConnectorRunner
     {
         _timer = new Timer();
         _timer.Elapsed += (sender, args) => { Execute(); };
-        _timer.Interval = _connector.Configuration.ScanInterval;
+        _timer.Interval = _connector.Configuration.ScanIntervalMs;
         _timer.Enabled = true;
     }
     

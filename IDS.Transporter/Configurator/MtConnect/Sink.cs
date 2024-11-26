@@ -11,7 +11,7 @@ public static class Sink
         config.ConnectorType = section.ContainsKey("connector") ? Convert.ToString(section["connector"]) : "MQTT";
         config.Direction = Configuration.ConnectorDirectionEnum.Sink;
         config.Enabled = section.ContainsKey("enabled") ? Convert.ToBoolean(section["enabled"]) : true;
-        config.ScanInterval = section.ContainsKey("scan_interval") ? Convert.ToInt32(section["scan_interval"]) : 1000;
+        config.ScanIntervalMs = section.ContainsKey("scan_interval") ? Convert.ToInt32(section["scan_interval"]) : 1000;
         config.Name = section.ContainsKey("name") ? Convert.ToString(section["name"]) : Guid.NewGuid().ToString();
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 1883;
         config.DeviceKey = section.ContainsKey("device_key") ? Convert.ToString(section["device_key"]) : null;
