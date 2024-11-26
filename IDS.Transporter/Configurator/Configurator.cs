@@ -38,7 +38,7 @@ public partial class Configurator
         return dictionary;
     }
 
-    public static List<IConnector> CreateConnectors(Dictionary<object, object> configuration, Disruptor.Dsl.Disruptor<BoxMessage> disruptor)
+    public static List<IConnector> CreateConnectors(Dictionary<object, object> configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
     {
         var _connectors = new List<IConnector>();
 

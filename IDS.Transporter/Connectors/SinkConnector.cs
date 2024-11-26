@@ -7,11 +7,11 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
     where TConfig : ConnectorConfiguration<TItem>
     where TItem : ConnectorItem
 {
-    public ConcurrentBag<BoxMessage> Outbox { get; set; }
+    public ConcurrentBag<MessageBoxMessage> Outbox { get; set; }
     
-    public SinkConnector(TConfig configuration, Disruptor.Dsl.Disruptor<BoxMessage> disruptor): base(configuration, disruptor)
+    public SinkConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
     {
-        Outbox = new ConcurrentBag<BoxMessage>();
+        Outbox = new ConcurrentBag<MessageBoxMessage>();
     }
     
     protected virtual bool BeforeWrite()

@@ -7,12 +7,12 @@ using Timer = System.Timers.Timer;
 
 namespace IDS.Transporter;
 
-public class ConnectorRunner: Disruptor.IEventHandler<BoxMessage>
+public class ConnectorRunner: Disruptor.IEventHandler<MessageBoxMessage>
 {
     protected readonly NLog.Logger Logger;
     private IConnector _connector;
-    private Disruptor.Dsl.Disruptor<BoxMessage> _disruptor;
-    private BlockingCollection<BoxMessage> _queueSubscription;
+    private Disruptor.Dsl.Disruptor<MessageBoxMessage> _disruptor;
+    private BlockingCollection<MessageBoxMessage> _queueSubscription;
     private ManualResetEvent _exitEvents;
     private Timer _timer;
     private bool _isExecuting;
@@ -20,7 +20,7 @@ public class ConnectorRunner: Disruptor.IEventHandler<BoxMessage>
     private long _executionExit = DateTime.UtcNow.ToEpochMilliseconds();
     private long _executionDuration;
 
-    public ConnectorRunner(IConnector connector, Disruptor.Dsl.Disruptor<BoxMessage> disruptor)
+    public ConnectorRunner(IConnector connector, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
     {
         Logger = NLog.LogManager.GetLogger(GetType().FullName);
         _connector = connector;
@@ -41,7 +41,7 @@ public class ConnectorRunner: Disruptor.IEventHandler<BoxMessage>
         StartTimer();
     }
 
-    public void OnEvent(BoxMessage data, long sequence, bool endOfBatch)
+    public void OnEvent(MessageBoxMessage data, long sequence, bool endOfBatch)
     {
         (_connector as ISinkConnector).Outbox.Add(data);
     }

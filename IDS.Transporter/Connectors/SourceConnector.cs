@@ -7,19 +7,20 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     where TConfig : ConnectorConfiguration<TItem>
     where TItem : ConnectorItem
 {
-    public ConcurrentBag<BoxMessage> Inbox { get; set; }
-    public ConcurrentBag<BoxMessage> SampleReadResponses { get; set; }
-    public ConcurrentBag<BoxMessage> CurrentReadResponses { get; set; }
+    public ConcurrentBag<MessageBoxMessage> Inbox { get; set; }
+    public ConcurrentBag<MessageBoxMessage> Samples { get; set; }
+    public ConcurrentBag<MessageBoxMessage> Current { get; set; }
     
-    public SourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<BoxMessage> disruptor): base(configuration, disruptor)
+    public SourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
     {
-        Inbox = new ConcurrentBag<BoxMessage>();
-        SampleReadResponses = new ConcurrentBag<BoxMessage>();
-        CurrentReadResponses = new ConcurrentBag<BoxMessage>();
+        Inbox = new ConcurrentBag<MessageBoxMessage>();
+        Samples = new ConcurrentBag<MessageBoxMessage>();
+        Current = new ConcurrentBag<MessageBoxMessage>();
     }
     
     protected virtual bool BeforeRead()
     {
+        Samples.Clear();
         return true;
     }
     
@@ -84,34 +85,41 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     {
         Inbox.Clear();
 
-        foreach (var sampleResponse in SampleReadResponses)
+        foreach (var sampleResponse in Samples)
         {
-            BoxMessage matchingCurrent = null;
+            MessageBoxMessage matchingCurrent = null;
 
             try
             {
-                matchingCurrent = CurrentReadResponses
+                matchingCurrent = Current
                     .Where(x => x.Path == sampleResponse.Path)
                     .First();
             }
             catch (InvalidOperationException e)
             {
             }
-            
+
             // sample does not exist in current, it is a new sample
             if (matchingCurrent is null)
             {
                 Inbox.Add(sampleResponse);
-                CurrentReadResponses.Add(sampleResponse);
+                Current.Add(sampleResponse);
             }
             // sample data is different, it is an updated sample
             else
             {
-                if (!matchingCurrent.Data.Equals(sampleResponse.Data))
+                if (Configuration.ReportByException)
+                {
+                    if (!matchingCurrent.Data.Equals(sampleResponse.Data))
+                    {
+                        Inbox.Add(sampleResponse);
+                    }
+                }
+                else
                 {
                     Inbox.Add(sampleResponse);
                 }
-                
+
                 matchingCurrent.Data = sampleResponse.Data;
                 matchingCurrent.Timestamp = sampleResponse.Timestamp;
             }

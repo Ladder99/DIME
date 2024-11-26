@@ -5,13 +5,13 @@ namespace IDS.Transporter.Connectors;
 
 public interface ISourceConnector: IConnector
 {
-    public ConcurrentBag<BoxMessage> Inbox { get; }
+    public ConcurrentBag<MessageBoxMessage> Inbox { get; }
     public bool Read();
 }
 
 public interface ISinkConnector: IConnector
 {
-    public ConcurrentBag<BoxMessage> Outbox { get; }
+    public ConcurrentBag<MessageBoxMessage> Outbox { get; }
     public bool Write();
 }
 

@@ -15,7 +15,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
         public long Timestamp { get; set; }
     }
 
-    public Source(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<BoxMessage> disruptor) : base(configuration, disruptor)
+    public Source(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
     }
 
@@ -58,13 +58,11 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool ReadImplementation()
     {
-        SampleReadResponses.Clear();
-
         while (_incomingQueue.Count > 0)
         {
             var message = _incomingQueue.Dequeue();
             
-            SampleReadResponses.Add(new BoxMessage()
+            Samples.Add(new MessageBoxMessage()
             {
                 Path = $"{Configuration.Name}/{message.Topic}",
                 Data = message.Payload,

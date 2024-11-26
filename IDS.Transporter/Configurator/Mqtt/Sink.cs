@@ -5,7 +5,7 @@ namespace IDS.Transporter.Configurator.Mqtt;
 
 public static class Sink
 {
-    public static IConnector Create(Dictionary<object, object> section, Disruptor.Dsl.Disruptor<BoxMessage> disruptor)
+    public static IConnector Create(Dictionary<object, object> section, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
     {
         ConnectorConfiguration config = new();
         config.ConnectorType = section.ContainsKey("connector") ? Convert.ToString(section["connector"]) : "MQTT";

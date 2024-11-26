@@ -8,7 +8,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
 {
     private IModbusMaster _client = null;
 
-    public Source(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<BoxMessage> disruptor) : base(configuration, disruptor)
+    public Source(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
     }
 
@@ -44,8 +44,6 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool ReadImplementation()
     {
-        SampleReadResponses.Clear();
-        
         foreach (var item in Configuration.Items)
         {
             object response = null;
@@ -82,7 +80,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
             }
             
             
-            SampleReadResponses.Add(new BoxMessage()
+            Samples.Add(new MessageBoxMessage()
             {
                 Path = $"{Configuration.Name}/{item.Name}",
                 Data = response,

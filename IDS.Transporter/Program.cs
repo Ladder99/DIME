@@ -7,7 +7,7 @@ public static class Program
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     private static List<ConnectorRunner> _runners = new();
-    private static Disruptor<BoxMessage> _disruptor = new(() => new BoxMessage(), 1024);
+    private static Disruptor<MessageBoxMessage> _disruptor = new(() => new MessageBoxMessage(), 1024);
     
     public static void Main(string[] args)
     {

@@ -32,12 +32,12 @@ public abstract class Connector<TConfig, TItem>: IConnector
     public Exception FaultReason { get; set; }
     public TConfig Configuration { get; set; }
     protected PropertyBag Properties { get; set; }
-    protected Disruptor.Dsl.Disruptor<BoxMessage> Disruptor { get; set; }
+    protected Disruptor.Dsl.Disruptor<MessageBoxMessage> Disruptor { get; set; }
     public bool IsInitialized { get; private set; }
     public bool IsCreated { get; private set; }
     public bool IsConnected { get; protected set; }
 
-    public Connector(TConfig configuration, Disruptor.Dsl.Disruptor<BoxMessage> disruptor)
+    public Connector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
     {
         Logger = NLog.LogManager.GetLogger(GetType().FullName);
         Configuration = configuration;

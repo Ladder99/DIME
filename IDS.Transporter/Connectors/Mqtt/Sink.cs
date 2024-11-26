@@ -9,7 +9,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 {
     private IMqttClient _client = null;
 
-    public Sink(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<BoxMessage> disruptor) : base(configuration, disruptor)
+    public Sink(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
     }
 
