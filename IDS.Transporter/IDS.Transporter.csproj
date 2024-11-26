@@ -13,6 +13,7 @@
       <PackageReference Include="Disruptor" Version="6.0.0" />
       <PackageReference Include="libplctag" Version="1.5.2" />
       <PackageReference Include="MQTTnet" Version="5.0.0.1214-RC" />
+      <PackageReference Include="MTConnect.NET-SHDR" Version="6.5.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="NLog" Version="5.3.4" />
       <PackageReference Include="NModbus" Version="3.0.81" />

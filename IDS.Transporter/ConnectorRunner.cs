@@ -7,7 +7,22 @@ using Timer = System.Timers.Timer;
 
 namespace IDS.Transporter;
 
-public class ConnectorRunner: Disruptor.IEventHandler<MessageBoxMessage>
+public class SinkMessageHandler : Disruptor.IEventHandler<MessageBoxMessage>
+{
+    ISinkConnector _connector;
+    
+    public SinkMessageHandler(ISinkConnector connector)
+    {
+        _connector = connector;
+    }
+    
+    public void OnEvent(MessageBoxMessage data, long sequence, bool endOfBatch)
+    {
+        _connector.Outbox.Add(data);
+    }
+}
+
+public class ConnectorRunner
 {
     protected readonly NLog.Logger Logger;
     private IConnector _connector;
@@ -33,7 +48,7 @@ public class ConnectorRunner: Disruptor.IEventHandler<MessageBoxMessage>
 
         if (_connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
         {
-            _disruptor.HandleEventsWith(this);
+            _disruptor.HandleEventsWith(new SinkMessageHandler(_connector as ISinkConnector));
         }
 
         ConnectorInitialize();
@@ -41,11 +56,6 @@ public class ConnectorRunner: Disruptor.IEventHandler<MessageBoxMessage>
         StartTimer();
     }
 
-    public void OnEvent(MessageBoxMessage data, long sequence, bool endOfBatch)
-    {
-        (_connector as ISinkConnector).Outbox.Add(data);
-    }
-    
     private void Execute()
     {
         if (!ExecuteEnter())

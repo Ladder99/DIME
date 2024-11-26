@@ -62,11 +62,18 @@ public partial class Configurator
                             case "mqtt":
                                 connector = Mqtt.Sink.Create(sectionDictionary, disruptor);
                                 break;
+                            case "mtconnect":
+                                connector = MtConnect.Sink.Create(sectionDictionary, disruptor);
+                                break;
                             default:
                                 break;
                         }
 
-                        if ((bool)connector?.Configuration.Enabled)
+                        if (connector == null)
+                        {
+                            Logger.Error($"[Configurator.Sinks] Connector type is not supported: '{connectorType}'");
+                        }
+                        else if (connector.Configuration.Enabled)
                         {
                             _connectors.Add(connector);
                         }
@@ -118,7 +125,11 @@ public partial class Configurator
                                 break;
                         }
 
-                        if ((bool)connector?.Configuration.Enabled)
+                        if (connector == null)
+                        {
+                            Logger.Error($"[Configurator.Sources] Connector type is not supported: '{connectorType}'");
+                        }
+                        if (connector.Configuration.Enabled)
                         {
                             _connectors.Add(connector);
                         }

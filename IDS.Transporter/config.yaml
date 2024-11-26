@@ -6,6 +6,14 @@ sinks:
     address: wss.sharc.tech
     port: !!int 1883
     base_topic: ids
+  - name: shdrSink1
+    enabled: !!bool true
+    scan_interval: !!int 1000
+    connector: MTConnect
+    port: !!int 7878
+    device_key: ~
+    heartbeat_ms: !!int 10000
+    filter_duplicates: !!bool true
 sources:
   - name: plcSource1
     enabled: !!bool true
@@ -27,7 +35,7 @@ sources:
         type: bool
         address: B3:0/3
   - name: mqttSource1
-    enabled: !!bool true
+    enabled: !!bool false
     scan_interval: !!int 1000
     rbe: !!bool true
     connector: MQTT
