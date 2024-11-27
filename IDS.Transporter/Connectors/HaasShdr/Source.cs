@@ -9,6 +9,13 @@ namespace IDS.Transporter.Connectors.HaasShdr;
 
 public class Source: SourceConnector<ConnectorConfiguration, Configuration.ConnectorItem>
 {
+    private class IncomingMessage
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public long Timestamp { get; set; }
+    }
+    
     // connection
     private TcpClient _client = null;
     private NetworkStream _stream = null;
@@ -27,7 +34,7 @@ public class Source: SourceConnector<ConnectorConfiguration, Configuration.Conne
     private int _lineCounter = 0;
     private string _lastLineFromPreviousPacket = string.Empty;
     // message hold
-    private readonly Dictionary<string, object> _incomingBuffer = new();
+    private readonly Queue<IncomingMessage> _incomingBuffer = new();
     
     public Source(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
@@ -81,19 +88,17 @@ public class Source: SourceConnector<ConnectorConfiguration, Configuration.Conne
 
     protected override bool ReadImplementation()
     {
-        /* TODO
         while (_incomingBuffer.Count > 0)
         {
             var message = _incomingBuffer.Dequeue();
             
             Samples.Add(new MessageBoxMessage()
             {
-                Path = $"{Configuration.Name}/{message.Topic}",
-                Data = message.Payload,
+                Path = $"{Configuration.Name}/{message.Key}",
+                Data = message.Value,
                 Timestamp = message.Timestamp
             });
         }
-        */
         
         return true;
     }
@@ -269,7 +274,7 @@ public class Source: SourceConnector<ConnectorConfiguration, Configuration.Conne
                     // if last line of previous packet is empty then we drop this first line
                     if (!shdrLine.StartsWith('|') && !string.IsNullOrEmpty(_lastLineFromPreviousPacket))
                     {
-                        Logger.Info($"[{Configuration.Name}] Recovering truncated line '{_lastLineFromPreviousPacket}'<=>'{shdrLine}'");
+                        Logger.Debug($"[{Configuration.Name}] Recovering truncated line '{_lastLineFromPreviousPacket}'<=>'{shdrLine}'");
                         ProcessShdrLine($"{_lastLineFromPreviousPacket}{shdrLine}");
                     }
                     else
@@ -323,7 +328,7 @@ public class Source: SourceConnector<ConnectorConfiguration, Configuration.Conne
             //.ToArray();
         bool wasAlarm = false;
         
-        Logger.Info($"[{Configuration.Name}] line: {shdrLine} tokens:{JsonConvert.SerializeObject(shdrTokens)}");
+        Logger.Trace($"[{Configuration.Name}] line: {shdrLine} tokens:{JsonConvert.SerializeObject(shdrTokens)}");
         
         for(var i=1; i < shdrTokens.Length; i+=2) 
         {
@@ -338,16 +343,14 @@ public class Source: SourceConnector<ConnectorConfiguration, Configuration.Conne
                 wasAlarm = true;
             }
 
-            Logger.Info($"[{Configuration.Name}] i: {i}");
+            //Logger.Info($"[{Configuration.Name}] i: {i}");
             
-            if (_incomingBuffer.ContainsKey(shdrTokens[i]))
+            _incomingBuffer.Enqueue(new IncomingMessage()
             {
-                _incomingBuffer[shdrTokens[i]] = shdrTokens[i + 1];
-            }
-            else
-            {
-                _incomingBuffer.Add(shdrTokens[i], shdrTokens[i + 1]);
-            }
+                Key = shdrTokens[i],
+                Value = shdrTokens[i + 1],
+                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
+            });
         }
     }
 }

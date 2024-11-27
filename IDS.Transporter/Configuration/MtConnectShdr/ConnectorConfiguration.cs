@@ -1,4 +1,4 @@
-namespace IDS.Transporter.Configuration.MtConnect;
+namespace IDS.Transporter.Configuration.MtConnectShdr;
 
 public sealed class ConnectorConfiguration : Configuration.ConnectorConfiguration<Configuration.ConnectorItem>
 {

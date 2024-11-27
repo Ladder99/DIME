@@ -13,12 +13,16 @@ public static class SourceConnectorFactory
             case "ethernetip":
                 connector = EthernetIp.Source.Create(section, disruptor);
                 break;
-            case "mqtt":
-                connector = Mqtt.Source.Create(section, disruptor);
-                break;
             case "haasshdr":
                 connector = HaasShdr.Source.Create(section, disruptor);
                 break;
+            case "modbustcp":
+                connector = ModbusTcp.Source.Create(section, disruptor);
+                break;
+            case "mqtt":
+                connector = Mqtt.Source.Create(section, disruptor);
+                break;
+            
             default:
                 break;
         }

@@ -1,11 +1,8 @@
-using IDS.Transporter.Configuration.MtConnect;
-using MQTTnet;
-using MQTTnet.Protocol;
+using IDS.Transporter.Configuration.MtConnectShdr;
 using MTConnect.Adapters;
 using MTConnect.Shdr;
-using Newtonsoft.Json;
 
-namespace IDS.Transporter.Connectors.MtConnect;
+namespace IDS.Transporter.Connectors.MtConnectShdr;
 
 public class Sink: SinkConnector<ConnectorConfiguration, Configuration.ConnectorItem>
 {

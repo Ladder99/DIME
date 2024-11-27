@@ -13,8 +13,8 @@ public static class SinkConnectorFactory
             case "mqtt":
                 connector = Mqtt.Sink.Create(section, disruptor);
                 break;
-            case "mtconnect":
-                connector = MtConnect.Sink.Create(section, disruptor);
+            case "mtconnectshdr":
+                connector = MtConnectShdr.Sink.Create(section, disruptor);
                 break;
             default:
                 break;

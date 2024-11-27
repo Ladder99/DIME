@@ -7,16 +7,16 @@ sinks:
     port: !!int 1883
     base_topic: ids
   - name: shdrSink1
-    enabled: !!bool true
+    enabled: !!bool false
     scan_interval: !!int 1000
-    connector: MTConnect
+    connector: MTConnectSHDR
     port: !!int 7878
     device_key: ~
-    heartbeat_ms: !!int 10000
+    heartbeat_interval: !!int 10000
     filter_duplicates: !!bool true
 sources:
-  - name: plcSource1
-    enabled: !!bool true
+  - name: eipSource1
+    enabled: !!bool false
     scan_interval: !!int 1000
     connector: EthernetIP
     rbe: !!bool true
@@ -34,11 +34,36 @@ sources:
         enabled: !!bool true
         type: bool
         address: B3:0/3
+  - name: haasSource1
+    enabled: !!bool true
+    scan_interval: !!int 1000
+    connector: HaasSHDR
+    rbe: !!bool true
+    address: 192.168.111.221
+    port: !!int 9998
+    timeout: !!int 1000
+    heartbeat_interval: !!int 4000
+    retry_interval: !!int 10000
+  - name: modbusSource1
+    enabled: !!bool false
+    scan_interval: !!int 1000
+    connector: ModbusTCP
+    rbe: !!bool true
+    address: 192.168.111.20
+    port: !!int 502
+    slave: !!int 1
+    timeout: !!int 1000
+    items:
+      - name: coilTag1
+        enabled: !!bool true
+        type: !!int 1
+        address: !!int 1
+        count: !!int 10
   - name: mqttSource1
     enabled: !!bool false
     scan_interval: !!int 1000
-    rbe: !!bool true
     connector: MQTT
+    rbe: !!bool true
     address: wss.sharc.tech
     port: !!int 1883
     items:
