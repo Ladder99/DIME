@@ -2,5 +2,4 @@ namespace IDS.Transporter.Configuration.HaasShdr;
 
 public sealed class ConnectorItem : Configuration.ConnectorItem
 {
-    public string Address { get; set; }
 }

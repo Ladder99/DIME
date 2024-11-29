@@ -4,7 +4,7 @@ using NModbus;
 
 namespace IDS.Transporter.Connectors.ModbusTcp;
 
-public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
+public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorItem>
 {
     private IModbusMaster _client = null;
 
@@ -42,55 +42,44 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
         return true;
     }
 
-    protected override bool ReadImplementation()
+    protected override object ReadFromDevice(ConnectorItem item)
     {
-        foreach (var item in Configuration.Items)
+        object response = null;
+            
+        switch (item.Type)
         {
-            object response = null;
-            
-            switch (item.Type)
-            {
-                case 1:
-                    response = _client
-                        .ReadCoils(Configuration.Slave, 
-                            item.Address, 
-                            item.Count);
-                    break;
-                case 2:
-                    response = _client
-                        .ReadInputs(Configuration.Slave, 
-                            item.Address, 
-                            item.Count);
-                    break;
-                case 3:
-                    response = _client
-                        .ReadHoldingRegisters(Configuration.Slave, 
-                            item.Address, 
-                            item.Count);
-                    break;
-                case 4:
-                    response = _client
-                        .ReadInputRegisters(Configuration.Slave, 
-                            item.Address, 
-                            item.Count);
-                    break;
-                default:
-                    response = null;
-                    break;
-            }
-            
-            
-            Samples.Add(new MessageBoxMessage()
-            {
-                Path = $"{Configuration.Name}/{item.Name}",
-                Data = response,
-                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
-            });
+            case 1:
+                response = _client
+                    .ReadCoils(Configuration.Slave, 
+                        Convert.ToUInt16(item.Address), 
+                        item.Count);
+                break;
+            case 2:
+                response = _client
+                    .ReadInputs(Configuration.Slave, 
+                        Convert.ToUInt16(item.Address), 
+                        item.Count);
+                break;
+            case 3:
+                response = _client
+                    .ReadHoldingRegisters(Configuration.Slave, 
+                        Convert.ToUInt16(item.Address), 
+                        item.Count);
+                break;
+            case 4:
+                response = _client
+                    .ReadInputRegisters(Configuration.Slave, 
+                        Convert.ToUInt16(item.Address), 
+                        item.Count);
+                break;
+            default:
+                response = null;
+                break;
         }
         
-        return true;
+        return response;
     }
-
+    
     protected override bool DisconnectImplementation()
     {
         return true;

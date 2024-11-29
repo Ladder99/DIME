@@ -1,6 +1,6 @@
 haasSource1: &haasSource1
   name: haasSource1
-  enabled: !!bool true
+  enabled: !!bool false
   scan_interval: !!int 1000
   connector: HaasSHDR
   rbe: !!bool true
@@ -10,6 +10,11 @@ haasSource1: &haasSource1
   timeout: !!int 1000
   heartbeat_interval: !!int 0
   retry_interval: !!int 10000
+  init_script: |
+    luanet.load_assembly("System")
+    CLR = {
+      env = luanet.import_type("System.Environment")
+    };
   items:
     - name: scriptTag1
       enabled: !!bool true

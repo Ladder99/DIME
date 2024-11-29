@@ -1,12 +1,27 @@
 mqttSource1: &mqttSource1
   name: mqttSource1
-  enabled: !!bool false
+  enabled: !!bool true
   scan_interval: !!int 1000
   connector: MQTT
   rbe: !!bool true
+  itemized_read: !!bool false
   address: wss.sharc.tech
   port: !!int 1883
+  init_script: |
+    luanet.load_assembly("System")
+    CLR = {
+      env = luanet.import_type("System.Environment")
+    };
+    -- https://github.com/iryont/lua-struct
+    struct = require('struct')
+    -- https://github.com/rxi/json.lua
+    json = require('json');
   items:
     - name: subscribe1
       enabled: !!bool true
       address: sharc/+/evt/#
+    - name: ffe4Sensor
+      enabled: !!bool true
+      address: sharc/08d1f953ffe4/evt/io/s1
+      script: |
+        return json.decode(result).v.s1.v;

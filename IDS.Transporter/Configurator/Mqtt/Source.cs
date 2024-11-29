@@ -14,24 +14,30 @@ public static class Source
         config.ScanIntervalMs = section.ContainsKey("scan_interval") ? Convert.ToInt32(section["scan_interval"]) : 1000;
         config.ReportByException = section.ContainsKey("rbe") ? Convert.ToBoolean(section["rbe"]) : true;
         config.Name = section.ContainsKey("name") ? Convert.ToString(section["name"]) : Guid.NewGuid().ToString();
+        config.InitScript = section.ContainsKey("init_script") ? Convert.ToString(section["init_script"]) : null;
+        config.ItemizedRead = section.ContainsKey("itemized_read") ? Convert.ToBoolean(section["itemized_read"]) : false;
         config.IpAddress = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 1883;
         config.Items = new List<ConnectorItem>();
 
-        var items = section["items"] as List<object>;
-        if (items != null)
+        if (section.ContainsKey("items"))
         {
-            foreach (var item in items)
+            var items = section["items"] as List<object>;
+            if (items != null)
             {
-                var itemDictionary = item as Dictionary<object, object>;
-                if (itemDictionary != null)
+                foreach (var item in items)
                 {
-                    config.Items.Add(new ConnectorItem()
+                    var itemDictionary = item as Dictionary<object, object>;
+                    if (itemDictionary != null)
                     {
-                        Enabled = itemDictionary.ContainsKey("enabled") ? Convert.ToBoolean(itemDictionary["enabled"]) : true,
-                        Name = itemDictionary.ContainsKey("name") ? Convert.ToString(itemDictionary["name"]) : Guid.NewGuid().ToString(),
-                        Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : "topic1"
-                    });
+                        config.Items.Add(new ConnectorItem()
+                        {
+                            Enabled = itemDictionary.ContainsKey("enabled") ? Convert.ToBoolean(itemDictionary["enabled"]) : true,
+                            Name = itemDictionary.ContainsKey("name") ? Convert.ToString(itemDictionary["name"]) : Guid.NewGuid().ToString(),
+                            Script = itemDictionary.ContainsKey("script") ? Convert.ToString(itemDictionary["script"]) : null,
+                            Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : null
+                        });
+                    }
                 }
             }
         }

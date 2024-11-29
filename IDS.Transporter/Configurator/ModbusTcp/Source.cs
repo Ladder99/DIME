@@ -33,7 +33,7 @@ public static class Source
                         Enabled = itemDictionary.ContainsKey("enabled") ? Convert.ToBoolean(itemDictionary["enabled"]) : true,
                         Name = itemDictionary.ContainsKey("name") ? Convert.ToString(itemDictionary["name"]) : Guid.NewGuid().ToString(),
                         Type = itemDictionary.ContainsKey("type") ? Convert.ToInt32(itemDictionary["type"]) : 1,
-                        Address = itemDictionary.ContainsKey("address") ? Convert.ToUInt16(itemDictionary["address"]) : (ushort)1,
+                        Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : "1",
                         Count = itemDictionary.ContainsKey("count") ? Convert.ToUInt16(itemDictionary["count"]) : (ushort)1,
                     });
                 }

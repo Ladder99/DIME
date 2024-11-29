@@ -15,7 +15,7 @@ public class LuaRunner
             _state = new NLua.Lua();
             _state.LoadCLRPackage();
             _state["result"] = null;
-            _state.DoString(connectorConfiguration.InitScript ?? "");
+            var initResult = _state.DoString(connectorConfiguration.InitScript ?? "");
             return true;
         }
         catch (Exception e)

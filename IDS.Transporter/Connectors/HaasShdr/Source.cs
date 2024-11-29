@@ -8,15 +8,8 @@ using Timer = System.Timers.Timer;
 
 namespace IDS.Transporter.Connectors.HaasShdr;
 
-public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
+public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorItem>
 {
-    private class IncomingMessage
-    {
-        public string Key { get; set; }
-        public string Value { get; set; }
-        public long Timestamp { get; set; }
-    }
-    
     // connection
     private TcpClient _client = null;
     private NetworkStream _stream = null;
@@ -34,10 +27,6 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
     private long _packetCounter = 0;
     private int _lineCounter = 0;
     private string _lastLineFromPreviousPacket = string.Empty;
-    // message hold
-    //private readonly Queue<IncomingMessage> _incomingBuffer = new();
-    private readonly ConcurrentBag<IncomingMessage> _incomingBuffer = new();
-    private readonly object _incomingBufferLock = new();
     
     public Source(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
@@ -88,80 +77,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
         
         return true;
     }
-
-    protected override bool ReadImplementation()
-    {
-        if (Configuration.ItemizedRead)
-        {
-            lock (_incomingBufferLock)
-            {
-                foreach (var item in Configuration.Items.Where(x => x.Enabled))
-                {
-                    IEnumerable<IncomingMessage> messages = null;
-
-                    if (item.Address != null)
-                    {
-                        messages = _incomingBuffer.Where(x => x.Key == item.Address);
-
-                        foreach (var message in messages)
-                        {
-                            Samples.Add(new MessageBoxMessage()
-                            {
-                                Path = $"{Configuration.Name}/{message.Key}",
-                                Data = item.Script == null ? message.Value : ExecuteScript(message.Value, item.Script),
-                                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
-                            });
-                        }
-                    }
-                    else if (item.Script != null)
-                    {
-                        Samples.Add(new MessageBoxMessage()
-                        {
-                            Path = $"{Configuration.Name}/{item.Name}",
-                            Data = ExecuteScript(null, item.Script),
-                            Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
-                        });
-                    }
-                }
-
-                _incomingBuffer.Clear();
-            }
-        }
-        else
-        {
-            lock (_incomingBufferLock)
-            {
-                foreach (var message in _incomingBuffer.ToArray())
-                {
-                    try
-                    {
-                        var item = Configuration.Items
-                            .First(x => x.Enabled && x.Address == message.Key && x.Script != null);
-                        Samples.Add(new MessageBoxMessage()
-                        {
-                            Path = $"{Configuration.Name}/{message.Key}",
-                            Data = ExecuteScript(message.Value, item.Script),
-                            Timestamp = message.Timestamp
-                        });
-                    }
-                    catch (InvalidOperationException e)
-                    {
-                        Samples.Add(new MessageBoxMessage()
-                        {
-                            Path = $"{Configuration.Name}/{message.Key}",
-                            Data = message.Value,
-                            Timestamp = message.Timestamp
-                        });
-                    }
-                }
-
-                _incomingBuffer.Clear();
-            }
-        }
-
-        return true;
-    }
-
+    
     protected override bool DisconnectImplementation()
     {
         try
