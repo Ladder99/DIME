@@ -7,6 +7,9 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     where TConfig : ConnectorConfiguration<TItem>
     where TItem : ConnectorItem
 {
+    private bool? _wasConnected = null;
+    private bool? _wasFaulted = null;
+    
     public ConcurrentBag<MessageBoxMessage> Inbox { get; set; }
     public ConcurrentBag<MessageBoxMessage> Samples { get; set; }
     public ConcurrentBag<MessageBoxMessage> Current { get; set; }
@@ -17,8 +20,8 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         Samples = new ConcurrentBag<MessageBoxMessage>();
         Current = new ConcurrentBag<MessageBoxMessage>();
     }
-    
-    protected virtual bool BeforeRead()
+
+    public override bool BeforeUpdate()
     {
         Samples.Clear();
         return true;
@@ -50,9 +53,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
 
         try
         {
-            BeforeRead();
             var result = ReadImplementation();
-            AfterRead();
 
             if (result)
             {
@@ -73,7 +74,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         }
     }
 
-    protected virtual bool AfterRead()
+    public override bool AfterUpdate()
     {
         FillInbox();
         PublishInbox();
@@ -84,7 +85,38 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     private void FillInbox()
     {
         Inbox.Clear();
-
+        
+        if (_wasConnected != IsConnected)
+        {
+            Inbox.Add(new MessageBoxMessage()
+            {
+                Path = $"{Configuration.Name}/$SYSTEM/IsConnected",
+                Data = IsConnected,
+                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
+            });
+            
+            _wasConnected = IsConnected;
+        }
+        
+        if (_wasFaulted != IsFaulted)
+        {
+            Inbox.Add(new MessageBoxMessage()
+            {
+                Path = $"{Configuration.Name}/$SYSTEM/IsFaulted",
+                Data = IsFaulted,
+                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
+            });
+            
+            Inbox.Add(new MessageBoxMessage()
+            {
+                Path = $"{Configuration.Name}/$SYSTEM/Fault",
+                Data = FaultReason,
+                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
+            });
+            
+            _wasFaulted = IsFaulted;
+        }
+        
         foreach (var sampleResponse in Samples)
         {
             MessageBoxMessage matchingCurrent = null;

@@ -36,8 +36,12 @@ public static class Program
     private static void Start(string[] args, ManualResetEvent exitEvent)
     {
         Logger.Info("Creating connectors.");
-        
-        var yaml = Configurator.Configurator.Read(new[] { "config.yaml" });
+
+        var configFiles = Directory.GetFiles("./Configs", "*.yaml");
+        configFiles = configFiles.Where(x => !x.EndsWith("main.yaml"))
+            .Concat(configFiles.Where(x => x.EndsWith("main.yaml")))
+            .ToArray();
+        var yaml = Configurator.Configurator.Read(configFiles);
         var connectors = Configurator.Configurator.CreateConnectors(yaml, _disruptor);
         
         Logger.Info("Creating runners.");

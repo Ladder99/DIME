@@ -1,0 +1,12 @@
+mqttSource1: &mqttSource1
+  name: mqttSource1
+  enabled: !!bool false
+  scan_interval: !!int 1000
+  connector: MQTT
+  rbe: !!bool true
+  address: wss.sharc.tech
+  port: !!int 1883
+  items:
+    - name: subscribe1
+      enabled: !!bool true
+      address: sharc/+/evt/#

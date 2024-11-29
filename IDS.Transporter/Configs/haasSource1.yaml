@@ -1,0 +1,11 @@
+haasSource1: &haasSource1
+  name: haasSource1
+  enabled: !!bool false
+  scan_interval: !!int 1000
+  connector: HaasSHDR
+  rbe: !!bool true
+  address: 192.168.111.221
+  port: !!int 9998
+  timeout: !!int 1000
+  heartbeat_interval: !!int 0
+  retry_interval: !!int 10000

@@ -80,7 +80,6 @@ public class ConnectorRunner
     {
         _timer.Stop();
         ConnectorDisconnect();
-        _connector.Disconnect();
     }
 
     private bool ExecuteEnter()
@@ -93,6 +92,9 @@ public class ConnectorRunner
         
         _isExecuting = true;
         _executionEnter = DateTime.UtcNow.ToEpochMilliseconds();
+
+        _connector.BeforeUpdate();
+        
         return true;
     }
 
@@ -101,6 +103,8 @@ public class ConnectorRunner
         _isExecuting = false;
         _executionExit = DateTime.UtcNow.ToEpochMilliseconds();
         _executionDuration = _executionExit - _executionEnter;
+        
+        _connector.AfterUpdate();
     }
 
     private void StartTimer()

@@ -120,6 +120,16 @@ public abstract class Connector<TConfig, TItem>: IConnector
         
         return IsCreated;
     }
+
+    public virtual bool BeforeUpdate()
+    {
+        return true;
+    }
+
+    public virtual bool AfterUpdate()
+    {
+        return true;
+    }
     
     protected abstract bool ConnectImplementation();
 
@@ -142,7 +152,7 @@ public abstract class Connector<TConfig, TItem>: IConnector
         try
         {
             IsConnected = ConnectImplementation();
-
+            
             if (IsConnected)
             {
                 ClearFault();
@@ -189,7 +199,7 @@ public abstract class Connector<TConfig, TItem>: IConnector
 
             if (isDisconnected)
             {
-                ClearFault();
+                //ClearFault();
             }
             else
             {
@@ -219,6 +229,7 @@ public abstract class Connector<TConfig, TItem>: IConnector
         {
             return;
         }
+        
         Logger.Info($"[{Configuration.Name}] Fault Cleared within {FaultContext.ToString()} context.");
         IsFaulted = false;
         FaultReason = null;

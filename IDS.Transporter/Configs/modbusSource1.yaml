@@ -1,0 +1,16 @@
+modbusSource1: &modbusSource1
+  name: modbusSource1
+  enabled: !!bool false
+  scan_interval: !!int 1000
+  connector: ModbusTCP
+  rbe: !!bool true
+  address: 192.168.111.20
+  port: !!int 502
+  slave: !!int 1
+  timeout: !!int 1000
+  items:
+    - name: coilTag1
+      enabled: !!bool true
+      type: !!int 1
+      address: !!int 16
+      count: !!int 12

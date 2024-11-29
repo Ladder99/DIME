@@ -14,7 +14,18 @@ public partial class Configurator
     {
         Logger.Debug("[Configurator.Read] Reading files {0}", configurationFilenames);
         var yaml = "";
-        foreach (var configFile in configurationFilenames) yaml += File.ReadAllText(configFile);
+        foreach (var configFile in configurationFilenames)
+        {
+            try
+            {
+                yaml += File.ReadAllText(configFile);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, $"[Configurator.Read] Problem with {configFile}");
+            }
+            
+        }
         Logger.Trace("[Configurator.Read] YAML \r\n{0}", yaml);
         var stringReader = new StringReader(yaml);
         var parser = new Parser(stringReader);

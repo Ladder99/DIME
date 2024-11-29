@@ -1,3 +1,4 @@
+using System.Net.NetworkInformation;
 using IDS.Transporter.Configuration.EthernetIp;
 using libplctag;
 using libplctag.DataTypes;
@@ -49,7 +50,12 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool ConnectImplementation()
     {
-        return true;
+        var pingSender = new Ping();
+        string host = Configuration.IpAddress;
+        int timeout = 1000;
+
+        var reply = pingSender.Send(host, timeout);
+        return reply.Status == IPStatus.Success;
     }
 
     protected override bool ReadImplementation()
@@ -58,7 +64,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
         {
             object response = null;
             
-            switch (item.Type)
+            switch (item.Type.ToLower())
             {
                 case "bool":
                     response = new Tag<BoolPlcMapper, bool>()

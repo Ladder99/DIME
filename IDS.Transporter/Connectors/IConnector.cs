@@ -23,6 +23,8 @@ public interface IConnector
     public bool IsConnected { get; }
     public bool Initialize();
     public bool Create();
+    public bool BeforeUpdate();
     public bool Connect();
+    public bool AfterUpdate();
     public bool Disconnect();
 }

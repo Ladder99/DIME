@@ -248,7 +248,7 @@ solution
 | rbe                | bool   | report by exception                        |
 | connector          | string | connector type, `MTConnectSHDR`            |
 | port               | int    | tcp listener port                          |
-| device_key         | string | unique item name                           |
+| device_key         | string | mtconnect device key                       |
 | heartbeat_interval | int    | heartbeat frequency in milliseconds        |
 | filter_duplicates  | bool   | filter duplicate data items at the adapter |
 
