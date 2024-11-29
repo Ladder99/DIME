@@ -1,6 +1,6 @@
 eipSource1: &eipSource1
   name: eipSource1
-  enabled: !!bool true
+  enabled: !!bool false
   scan_interval: !!int 1000
   connector: EthernetIP
   rbe: !!bool true
@@ -9,7 +9,18 @@ eipSource1: &eipSource1
   path: 1,0
   log: !!int 0
   timeout: !!int 1000
+  init_script: |
+    luanet.load_assembly("System")
+    CLR = {
+      env = luanet.import_type("System.Environment")
+    };
   items:
+    - name: scriptTag1
+      enabled: !!bool true
+      script: return CLR.env.MachineName;
+    - name: scriptTag2
+      enabled: !!bool true
+      script: return os.date("%Y-%m-%d %H:%M:%S")
     - name: boolTag1
       enabled: !!bool true
       type: bool
@@ -18,3 +29,6 @@ eipSource1: &eipSource1
       enabled: !!bool true
       type: bool
       address: B3:0/3
+      script: |
+        local m = { [0]='Ready', [1]='Active' };
+        return m[result and 1 or 0];

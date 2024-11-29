@@ -60,96 +60,104 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool ReadImplementation()
     {
-        foreach (var item in Configuration.Items)
+        foreach (var item in Configuration.Items.Where(x => x.Enabled))
         {
             object response = null;
             
-            switch (item.Type.ToLower())
+            if (item.Address != null)
             {
-                case "bool":
-                    response = new Tag<BoolPlcMapper, bool>()
-                    {
-                        Name = item.Address,
-                        Gateway = Configuration.IpAddress,
-                        Path = Configuration.Path,
-                        PlcType = Properties.GetProperty<PlcType>("typeEnum"),
-                        Protocol = Protocol.ab_eip,
-                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
-                        DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
-                    }.Read();
-                    break;
-                case "sint":
-                    response = new Tag<SintPlcMapper, sbyte>()
-                    {
-                        Name = item.Address,
-                        Gateway = Configuration.IpAddress,
-                        Path = Configuration.Path,
-                        PlcType = Properties.GetProperty<PlcType>("typeEnum"),
-                        Protocol = Protocol.ab_eip,
-                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
-                        DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
-                    }.Read();
-                    break;
-                case "int":
-                    response = new Tag<IntPlcMapper, short>()
-                    {
-                        Name = item.Address,
-                        Gateway = Configuration.IpAddress,
-                        Path = Configuration.Path,
-                        PlcType = Properties.GetProperty<PlcType>("typeEnum"),
-                        Protocol = Protocol.ab_eip,
-                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
-                        DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
-                    }.Read();
-                    break;
-                case "dint":
-                    response = new Tag<DintPlcMapper, int>()
-                    {
-                        Name = item.Address,
-                        Gateway = Configuration.IpAddress,
-                        Path = Configuration.Path,
-                        PlcType = Properties.GetProperty<PlcType>("typeEnum"),
-                        Protocol = Protocol.ab_eip,
-                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
-                        DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
-                    }.Read();
-                    break;
-                case "lint":
-                    response = new Tag<LintPlcMapper, long>()
-                    {
-                        Name = item.Address,
-                        Gateway = Configuration.IpAddress,
-                        Path = Configuration.Path,
-                        PlcType = Properties.GetProperty<PlcType>("typeEnum"),
-                        Protocol = Protocol.ab_eip,
-                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
-                        DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
-                    }.Read();
-                    break;
-                case "real":
-                    response = new Tag<RealPlcMapper, float>()
-                    {
-                        Name = item.Address,
-                        Gateway = Configuration.IpAddress,
-                        Path = Configuration.Path,
-                        PlcType = Properties.GetProperty<PlcType>("typeEnum"),
-                        Protocol = Protocol.ab_eip,
-                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
-                        DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
-                    }.Read();
-                    break;
-                case "string":
-                    response = new Tag<StringPlcMapper, string>()
-                    {
-                        Name = item.Address,
-                        Gateway = Configuration.IpAddress,
-                        Path = Configuration.Path,
-                        PlcType = Properties.GetProperty<PlcType>("typeEnum"),
-                        Protocol = Protocol.ab_eip,
-                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
-                        DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
-                    }.Read();
-                    break;
+                switch (item.Type.ToLower())
+                {
+                    case "bool":
+                        response = new Tag<BoolPlcMapper, bool>()
+                        {
+                            Name = item.Address,
+                            Gateway = Configuration.IpAddress,
+                            Path = Configuration.Path,
+                            PlcType = Properties.GetProperty<PlcType>("typeEnum"),
+                            Protocol = Protocol.ab_eip,
+                            Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
+                            DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
+                        }.Read();
+                        break;
+                    case "sint":
+                        response = new Tag<SintPlcMapper, sbyte>()
+                        {
+                            Name = item.Address,
+                            Gateway = Configuration.IpAddress,
+                            Path = Configuration.Path,
+                            PlcType = Properties.GetProperty<PlcType>("typeEnum"),
+                            Protocol = Protocol.ab_eip,
+                            Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
+                            DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
+                        }.Read();
+                        break;
+                    case "int":
+                        response = new Tag<IntPlcMapper, short>()
+                        {
+                            Name = item.Address,
+                            Gateway = Configuration.IpAddress,
+                            Path = Configuration.Path,
+                            PlcType = Properties.GetProperty<PlcType>("typeEnum"),
+                            Protocol = Protocol.ab_eip,
+                            Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
+                            DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
+                        }.Read();
+                        break;
+                    case "dint":
+                        response = new Tag<DintPlcMapper, int>()
+                        {
+                            Name = item.Address,
+                            Gateway = Configuration.IpAddress,
+                            Path = Configuration.Path,
+                            PlcType = Properties.GetProperty<PlcType>("typeEnum"),
+                            Protocol = Protocol.ab_eip,
+                            Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
+                            DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
+                        }.Read();
+                        break;
+                    case "lint":
+                        response = new Tag<LintPlcMapper, long>()
+                        {
+                            Name = item.Address,
+                            Gateway = Configuration.IpAddress,
+                            Path = Configuration.Path,
+                            PlcType = Properties.GetProperty<PlcType>("typeEnum"),
+                            Protocol = Protocol.ab_eip,
+                            Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
+                            DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
+                        }.Read();
+                        break;
+                    case "real":
+                        response = new Tag<RealPlcMapper, float>()
+                        {
+                            Name = item.Address,
+                            Gateway = Configuration.IpAddress,
+                            Path = Configuration.Path,
+                            PlcType = Properties.GetProperty<PlcType>("typeEnum"),
+                            Protocol = Protocol.ab_eip,
+                            Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
+                            DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
+                        }.Read();
+                        break;
+                    case "string":
+                        response = new Tag<StringPlcMapper, string>()
+                        {
+                            Name = item.Address,
+                            Gateway = Configuration.IpAddress,
+                            Path = Configuration.Path,
+                            PlcType = Properties.GetProperty<PlcType>("typeEnum"),
+                            Protocol = Protocol.ab_eip,
+                            Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
+                            DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
+                        }.Read();
+                        break;
+                }
+            }
+
+            if (item.Script != null)
+            {
+                response = ExecuteScript(response, item.Script);
             }
             
             Samples.Add(new MessageBoxMessage()

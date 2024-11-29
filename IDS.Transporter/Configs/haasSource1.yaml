@@ -1,6 +1,6 @@
 haasSource1: &haasSource1
   name: haasSource1
-  enabled: !!bool false
+  enabled: !!bool true
   scan_interval: !!int 1000
   connector: HaasSHDR
   rbe: !!bool true
@@ -9,3 +9,14 @@ haasSource1: &haasSource1
   timeout: !!int 1000
   heartbeat_interval: !!int 0
   retry_interval: !!int 10000
+  items:
+    - name: scriptTag1
+      enabled: !!bool true
+      address: CPU
+      script: |
+        local cpu = tonumber(result);
+        if cpu > 0.5 then
+          return 'HIGH'
+        else
+          return 'LOW'
+        end

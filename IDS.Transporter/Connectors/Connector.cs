@@ -84,7 +84,7 @@ public abstract class Connector<TConfig, TItem>: IConnector
 
     public virtual bool Create()
     {
-        FaultContext = FaultContextEnum.Initialize;
+        FaultContext = FaultContextEnum.Create;
         
         if (!IsInitialized)
         {

@@ -7,4 +7,5 @@ public interface IConnectorConfiguration
     public bool Enabled { get; }
     public string ConnectorType { get; }
     public int ScanIntervalMs { get; }
+    public string InitScript { get; }
 }

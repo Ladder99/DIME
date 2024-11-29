@@ -10,17 +10,30 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     private bool? _wasConnected = null;
     private bool? _wasFaulted = null;
     
+    protected LuaRunner ScriptRunner { get; set; }
     public ConcurrentBag<MessageBoxMessage> Inbox { get; set; }
     public ConcurrentBag<MessageBoxMessage> Samples { get; set; }
     public ConcurrentBag<MessageBoxMessage> Current { get; set; }
     
     public SourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
     {
+        ScriptRunner = new LuaRunner();
         Inbox = new ConcurrentBag<MessageBoxMessage>();
         Samples = new ConcurrentBag<MessageBoxMessage>();
         Current = new ConcurrentBag<MessageBoxMessage>();
     }
 
+    public override bool Initialize()
+    {
+        return base.Initialize() && ScriptRunner.Initialize(Configuration);
+    }
+
+    protected object ExecuteScript(object intermediateResult, string script)
+    {
+        ScriptRunner["result"] = intermediateResult;
+        return ScriptRunner.DoString(script)[0];
+    }
+    
     public override bool BeforeUpdate()
     {
         Samples.Clear();
@@ -124,8 +137,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
             try
             {
                 matchingCurrent = Current
-                    .Where(x => x.Path == sampleResponse.Path)
-                    .First();
+                    .First(x => x.Path == sampleResponse.Path);
             }
             catch (InvalidOperationException e)
             {

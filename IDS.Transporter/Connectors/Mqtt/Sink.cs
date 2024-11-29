@@ -43,17 +43,17 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool WriteImplementation()
     {
-        foreach (var response in Outbox)
+        foreach (var message in Outbox)
         {
-            Console.WriteLine($"{response.Path} = {response.Data}");
+            Console.WriteLine($"{message.Path} = {message.Data}");
             
-            var message = new MqttApplicationMessageBuilder()
-                .WithTopic($"{Configuration.BaseTopic}/{response.Path}")
-                .WithPayload(JsonConvert.SerializeObject(response))
+            var msg = new MqttApplicationMessageBuilder()
+                .WithTopic($"{Configuration.BaseTopic}/{message.Path}")
+                .WithPayload(JsonConvert.SerializeObject(message))
                 .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
                 .Build();
 
-            _client.PublishAsync(message);
+            _client.PublishAsync(msg);
         }
         
         return true;

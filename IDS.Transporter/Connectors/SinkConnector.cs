@@ -14,7 +14,7 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         Outbox = new ConcurrentBag<MessageBoxMessage>();
     }
     
-    protected virtual bool BeforeWrite()
+    public override bool BeforeUpdate()
     {
         return true;
     }
@@ -45,9 +45,7 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
 
         try
         {
-            BeforeWrite();
             var result = WriteImplementation();
-            AfterWrite();
 
             if (result)
             {
@@ -68,7 +66,7 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         }
     }
 
-    protected virtual bool AfterWrite()
+    public override bool AfterUpdate()
     {
         Outbox.Clear();
         return true;

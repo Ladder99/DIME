@@ -14,6 +14,7 @@ public static class Source
         config.ScanIntervalMs = section.ContainsKey("scan_interval") ? Convert.ToInt32(section["scan_interval"]) : 1000;
         config.ReportByException = section.ContainsKey("rbe") ? Convert.ToBoolean(section["rbe"]) : true;
         config.Name = section.ContainsKey("name") ? Convert.ToString(section["name"]) : Guid.NewGuid().ToString();
+        config.InitScript = section.ContainsKey("init_script") ? Convert.ToString(section["init_script"]) : null;
         config.PlcType = section.ContainsKey("type") ? Convert.ToInt32(section["type"]) : 0;
         config.IpAddress = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "0.0.0.0";
         config.Path = section.ContainsKey("path") ? Convert.ToString(section["path"]) : "1,0";
@@ -21,25 +22,29 @@ public static class Source
         config.TimeoutMs = section.ContainsKey("timeout") ? Convert.ToInt32(section["timeout"]) : 1000;
         config.Items = new List<ConnectorItem>();
 
-        var items = section["items"] as List<object>;
-        if (items != null)
+        if (section.ContainsKey("items"))
         {
-            foreach (var item in items)
+            var items = section["items"] as List<object>;
+            if (items != null)
             {
-                var itemDictionary = item as Dictionary<object, object>;
-                if (itemDictionary != null)
+                foreach (var item in items)
                 {
-                    config.Items.Add(new ConnectorItem()
+                    var itemDictionary = item as Dictionary<object, object>;
+                    if (itemDictionary != null)
                     {
-                        Enabled = itemDictionary.ContainsKey("enabled") ? Convert.ToBoolean(itemDictionary["enabled"]) : true,
-                        Name = itemDictionary.ContainsKey("name") ? Convert.ToString(itemDictionary["name"]) : Guid.NewGuid().ToString(),
-                        Type = itemDictionary.ContainsKey("type") ? Convert.ToString(itemDictionary["type"]) : "bool",
-                        Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : "B0:0/0"
-                    });
+                        config.Items.Add(new ConnectorItem()
+                        {
+                            Enabled = itemDictionary.ContainsKey("enabled") ? Convert.ToBoolean(itemDictionary["enabled"]) : true,
+                            Name = itemDictionary.ContainsKey("name") ? Convert.ToString(itemDictionary["name"]) : Guid.NewGuid().ToString(),
+                            Script = itemDictionary.ContainsKey("script") ? Convert.ToString(itemDictionary["script"]) : null,
+                            Type = itemDictionary.ContainsKey("type") ? Convert.ToString(itemDictionary["type"]) : null,
+                            Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : null
+                        });
+                    }
                 }
             }
         }
-
+        
         var connector = new Connectors.EthernetIp.Source(config, disruptor);
 
         return connector;

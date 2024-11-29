@@ -16,6 +16,7 @@
       <PackageReference Include="MTConnect.NET-SHDR" Version="6.5.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="NLog" Version="5.3.4" />
+      <PackageReference Include="NLua" Version="1.7.3" />
       <PackageReference Include="NModbus" Version="3.0.81" />
       <PackageReference Include="YamlDotNet" Version="16.2.0" />
     </ItemGroup>

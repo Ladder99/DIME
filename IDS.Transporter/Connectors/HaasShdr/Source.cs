@@ -7,7 +7,7 @@ using Timer = System.Timers.Timer;
 
 namespace IDS.Transporter.Connectors.HaasShdr;
 
-public class Source: SourceConnector<ConnectorConfiguration, Configuration.ConnectorItem>
+public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
 {
     private class IncomingMessage
     {
@@ -91,13 +91,27 @@ public class Source: SourceConnector<ConnectorConfiguration, Configuration.Conne
         while (_incomingBuffer.Count > 0)
         {
             var message = _incomingBuffer.Dequeue();
-            
-            Samples.Add(new MessageBoxMessage()
+
+            try
             {
-                Path = $"{Configuration.Name}/{message.Key}",
-                Data = message.Value,
-                Timestamp = message.Timestamp
-            });
+                var item = Configuration.Items
+                    .First(x => x.Enabled && x.Address == message.Key && x.Script != null);
+                Samples.Add(new MessageBoxMessage()
+                {
+                    Path = $"{Configuration.Name}/{message.Key}",
+                    Data = ExecuteScript(message.Value, item.Script),
+                    Timestamp = message.Timestamp
+                });
+            }
+            catch (InvalidOperationException e)
+            {
+                Samples.Add(new MessageBoxMessage()
+                {
+                    Path = $"{Configuration.Name}/{message.Key}",
+                    Data = message.Value,
+                    Timestamp = message.Timestamp
+                });
+            }
         }
         
         return true;

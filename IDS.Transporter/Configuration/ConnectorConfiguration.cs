@@ -9,5 +9,6 @@ public abstract class ConnectorConfiguration<TItem> : IConnectorConfiguration
     public string ConnectorType { get; set; }
     public int ScanIntervalMs { get; set; }
     public bool ReportByException { get; set; }
+    public string InitScript { get; set; }
     public List<TItem> Items { get; set; }
 }

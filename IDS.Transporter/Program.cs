@@ -46,6 +46,30 @@ public static class Program
         
         Logger.Info("Creating runners.");
 
+        /*
+         ConnectorRunner
+          .Start
+            Connector
+              .Initialize
+              .InitializeImplementation
+              .Create
+              .CreateImplementation
+          .Execute
+            Connector
+              .BeforeUpdate
+              .Connect
+              .ConnectImplementation
+              .Read
+              .ReadImplementation
+              .Write
+              .WriteImplementation
+              .AfterUpdate
+          .Stop
+            Connector
+              .Disconnect
+              .DisconnectImplementation
+         */
+        
         foreach (var connector in connectors)
         {
             _runners.Add(new ConnectorRunner(connector, _disruptor));
