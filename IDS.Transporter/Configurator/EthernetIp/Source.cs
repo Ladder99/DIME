@@ -15,6 +15,7 @@ public static class Source
         config.ReportByException = section.ContainsKey("rbe") ? Convert.ToBoolean(section["rbe"]) : true;
         config.Name = section.ContainsKey("name") ? Convert.ToString(section["name"]) : Guid.NewGuid().ToString();
         config.InitScript = section.ContainsKey("init_script") ? Convert.ToString(section["init_script"]) : null;
+        config.ItemizedRead = true;
         config.PlcType = section.ContainsKey("type") ? Convert.ToInt32(section["type"]) : 0;
         config.IpAddress = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "0.0.0.0";
         config.Path = section.ContainsKey("path") ? Convert.ToString(section["path"]) : "1,0";

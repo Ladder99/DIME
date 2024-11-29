@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -34,7 +35,9 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
     private int _lineCounter = 0;
     private string _lastLineFromPreviousPacket = string.Empty;
     // message hold
-    private readonly Queue<IncomingMessage> _incomingBuffer = new();
+    //private readonly Queue<IncomingMessage> _incomingBuffer = new();
+    private readonly ConcurrentBag<IncomingMessage> _incomingBuffer = new();
+    private readonly object _incomingBufferLock = new();
     
     public Source(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
@@ -88,32 +91,74 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool ReadImplementation()
     {
-        while (_incomingBuffer.Count > 0)
+        if (Configuration.ItemizedRead)
         {
-            var message = _incomingBuffer.Dequeue();
+            lock (_incomingBufferLock)
+            {
+                foreach (var item in Configuration.Items.Where(x => x.Enabled))
+                {
+                    IEnumerable<IncomingMessage> messages = null;
 
-            try
-            {
-                var item = Configuration.Items
-                    .First(x => x.Enabled && x.Address == message.Key && x.Script != null);
-                Samples.Add(new MessageBoxMessage()
-                {
-                    Path = $"{Configuration.Name}/{message.Key}",
-                    Data = ExecuteScript(message.Value, item.Script),
-                    Timestamp = message.Timestamp
-                });
-            }
-            catch (InvalidOperationException e)
-            {
-                Samples.Add(new MessageBoxMessage()
-                {
-                    Path = $"{Configuration.Name}/{message.Key}",
-                    Data = message.Value,
-                    Timestamp = message.Timestamp
-                });
+                    if (item.Address != null)
+                    {
+                        messages = _incomingBuffer.Where(x => x.Key == item.Address);
+
+                        foreach (var message in messages)
+                        {
+                            Samples.Add(new MessageBoxMessage()
+                            {
+                                Path = $"{Configuration.Name}/{message.Key}",
+                                Data = item.Script == null ? message.Value : ExecuteScript(message.Value, item.Script),
+                                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
+                            });
+                        }
+                    }
+                    else if (item.Script != null)
+                    {
+                        Samples.Add(new MessageBoxMessage()
+                        {
+                            Path = $"{Configuration.Name}/{item.Name}",
+                            Data = ExecuteScript(null, item.Script),
+                            Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
+                        });
+                    }
+                }
+
+                _incomingBuffer.Clear();
             }
         }
-        
+        else
+        {
+            lock (_incomingBufferLock)
+            {
+                foreach (var message in _incomingBuffer.ToArray())
+                {
+                    try
+                    {
+                        var item = Configuration.Items
+                            .First(x => x.Enabled && x.Address == message.Key && x.Script != null);
+                        Samples.Add(new MessageBoxMessage()
+                        {
+                            Path = $"{Configuration.Name}/{message.Key}",
+                            Data = ExecuteScript(message.Value, item.Script),
+                            Timestamp = message.Timestamp
+                        });
+                    }
+                    catch (InvalidOperationException e)
+                    {
+                        Samples.Add(new MessageBoxMessage()
+                        {
+                            Path = $"{Configuration.Name}/{message.Key}",
+                            Data = message.Value,
+                            Timestamp = message.Timestamp
+                        });
+                    }
+                }
+
+                _incomingBuffer.Clear();
+            }
+        }
+
         return true;
     }
 
@@ -358,13 +403,17 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
             }
 
             //Logger.Info($"[{Configuration.Name}] i: {i}");
-            
-            _incomingBuffer.Enqueue(new IncomingMessage()
+
+            lock (_incomingBufferLock)
             {
-                Key = shdrTokens[i],
-                Value = shdrTokens[i + 1],
-                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
-            });
+                _incomingBuffer.Add(new IncomingMessage()
+                {
+                    Key = shdrTokens[i],
+                    Value = shdrTokens[i + 1],
+                    Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
+                });
+            }
+            
         }
     }
 }

@@ -88,17 +88,19 @@ solution
 | enabled         | bool         | is connector enabled                                                        |
 | scan_interval   | int          | scanning frequency in milliseconds                                          |
 | rbe             | bool         | report by exception                                                         |
+| init_script     | string       | startup lua script                                                          |
 | connector       | string       | connector type, `EthernetIP`                                                |
 | type            | int          | plc type (see: https://github.com/libplctag/libplctag)                      |
 | address         | string       | plc hostname                                                                |
 | path            | string       | plc path (see: https://github.com/libplctag/libplctag)                      |
 | log             | int          | plc library log level (see: https://github.com/libplctag/libplctag)         |
 | timeout         | int          | connection timeout in milliseconds                                          |
-| items           | object array | subscription topics                                                         |
+| items           | object array | plc items                                                                   |
 | items[].name    | string       | unique item name                                                            |
 | items[].enabled | bool         | is item enabled                                                             |
 | items[].type    | string       | plc register type (`bool`, `sint`, `int`, `dint`, `lint`, `real`, `string`) |
 | items[].address | string       | plc register address                                                        |
+| items[].script  | string       | lua script                                                                  |
 
 #### Source Example
 
@@ -126,18 +128,25 @@ solution
 
 ### Haas SHDR
 
-| Name               | Type   | Description                         |
-|--------------------|--------|-------------------------------------|
-| name               | string | unique connector name               |
-| enabled            | bool   | is connector enabled                |
-| scan_interval      | int    | scanning frequency in milliseconds  |
-| rbe                | bool   | report by exception                 |
-| connector          | string | connector type, `HaasSHDR`          |
-| address            | string | machine hostname                    |
-| port               | int    | machine port                        |
-| timeout            | int    | connection timeout in milliseconds  |
-| heartbeat_interval | int    | heartbeat frequency in milliseconds |
-| retry_interval     | int    | retry frequency in milliseconds     |
+| Name               | Type         | Description                         |
+|--------------------|--------------|-------------------------------------|
+| name               | string       | unique connector name               |
+| enabled            | bool         | is connector enabled                |
+| scan_interval      | int          | scanning frequency in milliseconds  |
+| rbe                | bool         | report by exception                 |
+| init_script        | string       | startup lua script                  |
+| itemized_read      | string       | iterate connector items             |
+| connector          | string       | connector type, `HaasSHDR`          |
+| address            | string       | machine hostname                    |
+| port               | int          | machine port                        |
+| timeout            | int          | connection timeout in milliseconds  |
+| heartbeat_interval | int          | heartbeat frequency in milliseconds |
+| retry_interval     | int          | retry frequency in milliseconds     |
+| items              | object array | device items                        |
+| items[].name       | string       | unique item name                    |
+| items[].enabled    | bool         | is item enabled                     |
+| items[].address    | string       | device item address                 |
+| items[].script     | string       | lua script                          |
 
 #### Source Example
 
