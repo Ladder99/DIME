@@ -27,7 +27,6 @@ public class ConnectorRunner
     public  IConnector Connector { get; }
     private Disruptor.Dsl.Disruptor<MessageBoxMessage> _disruptor;
     private BlockingCollection<MessageBoxMessage> _queueSubscription;
-    private ManualResetEvent _exitEvent;
     private Timer _timer;
     private bool _isExecuting;
     private long _executionEnter = DateTime.UtcNow.ToEpochMilliseconds();
@@ -42,10 +41,8 @@ public class ConnectorRunner
         _disruptor = disruptor;
     }
     
-    public void Start(ManualResetEvent exitEvent)
+    public void Start()
     {
-        _exitEvent = exitEvent;
-
         if (Connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
         {
             _disruptor.HandleEventsWith(new SinkMessageHandler(Connector as ISinkConnector));

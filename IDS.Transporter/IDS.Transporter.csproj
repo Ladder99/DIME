@@ -18,6 +18,8 @@
       <PackageReference Include="NLog" Version="5.3.4" />
       <PackageReference Include="NLua" Version="1.7.3" />
       <PackageReference Include="NModbus" Version="3.0.81" />
+      <PackageReference Include="Topshelf" Version="4.3.0" />
+      <PackageReference Include="Topshelf.NLog" Version="4.3.0" />
       <PackageReference Include="YamlDotNet" Version="16.2.0" />
     </ItemGroup>
 

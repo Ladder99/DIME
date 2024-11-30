@@ -280,13 +280,13 @@ solution
 
 ## Scripting
 
-Each connector configuration provides allows for Lua script execution.  The `init_script` property is executed on 
+Each connector configuration allows for Lua script execution.  The `init_script` property is executed on 
 startup and is used to import additional .NET or Lua libraries.  Within each item script, the primary cache can be 
 accessed using the `cache(path, defaultValue)` function call.  The `path` refers to the item's unique path which 
 is a combination of the connector's and item's name (e.g. `eipSource1/boolTag2`, `mqttSource1/ffe4Sensor`). 
 Within the connector's execution context, the connector name can be omitted and replaced with a period, `./boolTag2`. 
 A secondary cache can be accessed using the `get(key, defaultValue)` and `set(key, value)` function calls.  This 
-user defined cache is scoped to the individual connector.
+user-defined cache is scoped to the individual connector.
 
 ```yaml
 eipSource1: &eipSource1
