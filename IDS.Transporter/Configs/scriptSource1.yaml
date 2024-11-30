@@ -1,0 +1,33 @@
+scriptSource1: &scriptSource1
+  name: scriptSource1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: Script
+  rbe: !!bool true
+  init_script: |
+    -- https://github.com/rxi/json.lua
+    json = require('json');
+    -- https://github.com/Yonaba/Moses
+    moses = require('moses');
+    pcArray = {}
+  items:
+    - name: scripTag1
+      enabled: !!bool true
+      script: |
+        table.insert(pcArray, cache('mqttSource1/ffe4Sensor', nil));
+        pcArray = moses.last(pcArray, 100);
+        return moses.median(pcArray);
+    - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/PartCount
+      enabled: !!bool true
+      rbe: !!bool false
+      script: |
+        return cache('mqttSource1/ffe4Sensor', nil)
+    - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/ReportPeriod
+      enabled: !!bool true
+      rbe: !!bool false
+      script: |
+        return cache('mqttSource1/ffe4SensorAndDelta', nil)[1]
+    - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/Execution
+      enabled: !!bool true
+      script: |
+        return cache('eipSource1/boolTag3', nil)

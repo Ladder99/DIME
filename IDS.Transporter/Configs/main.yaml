@@ -6,3 +6,4 @@ sources:
   - *haasSource1
   - *modbusSource1
   - *mqttSource1
+  - *scriptSource1

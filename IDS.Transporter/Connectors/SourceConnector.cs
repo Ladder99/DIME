@@ -31,7 +31,8 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     protected object ExecuteScript(object intermediateResult, string script)
     {
         ScriptRunner["result"] = intermediateResult;
-        return ScriptRunner.DoString(script)[0];
+        var scriptResult = ScriptRunner.DoString(script);
+        return scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
     }
     
     public override bool BeforeUpdate()

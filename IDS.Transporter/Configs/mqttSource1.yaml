@@ -20,6 +20,12 @@ mqttSource1: &mqttSource1
       address: sharc/08d1f953ffe4/evt/io/s1
       script: |
         return json.decode(result).v.s1.v;
+    - name: ffe4SensorAndDelta
+      enabled: !!bool true
+      rbe: !!bool false
+      address: sharc/08d1f953ffe4/evt/io/s1
+      script: |
+        return json.decode(result).v.s1.v, json.decode(result).v.s1.d;
     - name: randomNumberFromEip
       enabled: !!bool true
       script: |
