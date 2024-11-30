@@ -26,3 +26,7 @@ mqttSource1: &mqttSource1
       address: sharc/08d1f953ffe4/evt/io/s1
       script: |
         return json.decode(result).v.s1.v;
+    - name: randomNumberFromEip
+      enabled: !!bool true
+      script: |
+        return cache('eipSource1/scriptTag5', -1);

@@ -30,6 +30,13 @@ eipSource1: &eipSource1
       script: |
         local a = cache('mqttSource1/ffe4Sensor', nil);
         return a;
+    - name: scriptTag5
+      script: |
+        local a = set('random', math.random(500));
+        return a;
+    - name: scriptTag6
+      script: |
+        return get('random', -1);
     - name: boolTag1
       enabled: !!bool false
       type: bool
