@@ -23,9 +23,9 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         Current = new ConcurrentBag<MessageBoxMessage>();
     }
 
-    public override bool Initialize()
+    public override bool Initialize(ConnectorRunner runner)
     {
-        return base.Initialize() && ScriptRunner.Initialize(Configuration);
+        return base.Initialize(runner) && ScriptRunner.Initialize(this);
     }
 
     protected object ExecuteScript(object intermediateResult, string script)
@@ -105,7 +105,11 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
             {
                 Path = $"{Configuration.Name}/$SYSTEM/IsConnected",
                 Data = IsConnected,
-                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
+                Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
+                ConnectorItemRef = new ConnectorItem()
+                {
+                    Configuration = Configuration
+                }
             });
             
             _wasConnected = IsConnected;
@@ -117,14 +121,22 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
             {
                 Path = $"{Configuration.Name}/$SYSTEM/IsFaulted",
                 Data = IsFaulted,
-                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
+                Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
+                ConnectorItemRef = new ConnectorItem()
+                {
+                    Configuration = Configuration
+                }
             });
             
             Inbox.Add(new MessageBoxMessage()
             {
                 Path = $"{Configuration.Name}/$SYSTEM/Fault",
                 Data = FaultReason,
-                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
+                Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
+                ConnectorItemRef = new ConnectorItem()
+                {
+                    Configuration = Configuration
+                }
             });
             
             _wasFaulted = IsFaulted;
@@ -152,7 +164,10 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
             // sample data is different, it is an updated sample
             else
             {
-                if (Configuration.ReportByException)
+                var confRbe = Configuration.ReportByException;
+                var itemRbe = sampleResponse.ConnectorItemRef == null || sampleResponse.ConnectorItemRef.ReportByException;
+
+                if (!confRbe && itemRbe || confRbe && itemRbe)
                 {
                     if (!matchingCurrent.Data.Equals(sampleResponse.Data))
                     {
@@ -183,6 +198,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                     data.Data = response.Data;
                     data.Path = response.Path;
                     data.Timestamp = response.Timestamp;
+                    data.ConnectorItemRef = response.ConnectorItemRef;
                     index++;
                 }
             }

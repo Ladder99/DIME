@@ -30,11 +30,14 @@ public static class Source
                 {
                     config.Items.Add(new ConnectorItem()
                     {
+                        Configuration = config,
                         Enabled = itemDictionary.ContainsKey("enabled") ? Convert.ToBoolean(itemDictionary["enabled"]) : true,
                         Name = itemDictionary.ContainsKey("name") ? Convert.ToString(itemDictionary["name"]) : Guid.NewGuid().ToString(),
+                        ReportByException = itemDictionary.ContainsKey("rbe") ? Convert.ToBoolean(itemDictionary["rbe"]) : config.ReportByException,
                         Type = itemDictionary.ContainsKey("type") ? Convert.ToInt32(itemDictionary["type"]) : 1,
                         Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : "1",
                         Count = itemDictionary.ContainsKey("count") ? Convert.ToUInt16(itemDictionary["count"]) : (ushort)1,
+                        Meta = itemDictionary.ContainsKey("meta") ? itemDictionary["meta"] as Dictionary<object, object> : null
                     });
                 }
             }

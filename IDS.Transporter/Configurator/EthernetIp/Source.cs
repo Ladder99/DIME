@@ -35,11 +35,14 @@ public static class Source
                     {
                         config.Items.Add(new ConnectorItem()
                         {
+                            Configuration = config,
                             Enabled = itemDictionary.ContainsKey("enabled") ? Convert.ToBoolean(itemDictionary["enabled"]) : true,
                             Name = itemDictionary.ContainsKey("name") ? Convert.ToString(itemDictionary["name"]) : Guid.NewGuid().ToString(),
+                            ReportByException = itemDictionary.ContainsKey("rbe") ? Convert.ToBoolean(itemDictionary["rbe"]) : config.ReportByException,
                             Script = itemDictionary.ContainsKey("script") ? Convert.ToString(itemDictionary["script"]) : null,
                             Type = itemDictionary.ContainsKey("type") ? Convert.ToString(itemDictionary["type"]) : null,
-                            Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : null
+                            Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : null,
+                            Meta = itemDictionary.ContainsKey("meta") ? itemDictionary["meta"] as Dictionary<object, object> : null,
                         });
                     }
                 }

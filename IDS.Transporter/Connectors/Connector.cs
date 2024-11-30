@@ -27,6 +27,7 @@ public abstract class Connector<TConfig, TItem>: IConnector
     }
     
     protected readonly NLog.Logger Logger;
+    public ConnectorRunner Runner { get; private set; }
     public FaultContextEnum FaultContext { get; set; }
     public bool IsFaulted {get; private set;}
     public Exception FaultReason { get; set; }
@@ -47,9 +48,9 @@ public abstract class Connector<TConfig, TItem>: IConnector
     
     protected abstract bool InitializeImplementation();
 
-    public virtual bool Initialize()
+    public virtual bool Initialize(ConnectorRunner runner)
     {
-        FaultContext = FaultContextEnum.None;
+        FaultContext = FaultContextEnum.Initialize;
         
         if (IsInitialized)
         {
@@ -59,6 +60,7 @@ public abstract class Connector<TConfig, TItem>: IConnector
 
         try
         {
+            Runner = runner;
             IsInitialized = InitializeImplementation();
 
             if (IsInitialized)

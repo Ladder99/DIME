@@ -7,46 +7,48 @@ namespace IDS.Transporter;
 
 public class SinkMessageHandler : Disruptor.IEventHandler<MessageBoxMessage>
 {
-    ISinkConnector _connector;
+    ISinkConnector Connector;
     
     public SinkMessageHandler(ISinkConnector connector)
     {
-        _connector = connector;
+        Connector = connector;
     }
     
     public void OnEvent(MessageBoxMessage data, long sequence, bool endOfBatch)
     {
-        _connector.Outbox.Add(data);
+        Connector.Outbox.Add(data);
     }
 }
 
 public class ConnectorRunner
 {
     protected readonly NLog.Logger Logger;
-    private IConnector _connector;
+    public List<ConnectorRunner> Runners { get;}
+    public  IConnector Connector { get; }
     private Disruptor.Dsl.Disruptor<MessageBoxMessage> _disruptor;
     private BlockingCollection<MessageBoxMessage> _queueSubscription;
-    private ManualResetEvent _exitEvents;
+    private ManualResetEvent _exitEvent;
     private Timer _timer;
     private bool _isExecuting;
     private long _executionEnter = DateTime.UtcNow.ToEpochMilliseconds();
     private long _executionExit = DateTime.UtcNow.ToEpochMilliseconds();
     private long _executionDuration;
 
-    public ConnectorRunner(IConnector connector, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
+    public ConnectorRunner(List<ConnectorRunner> runners, IConnector connector, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
     {
         Logger = NLog.LogManager.GetLogger(GetType().FullName);
-        _connector = connector;
+        Runners = runners;
+        Connector = connector;
         _disruptor = disruptor;
     }
     
     public void Start(ManualResetEvent exitEvent)
     {
-        _exitEvents = exitEvent;
+        _exitEvent = exitEvent;
 
-        if (_connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
+        if (Connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
         {
-            _disruptor.HandleEventsWith(new SinkMessageHandler(_connector as ISinkConnector));
+            _disruptor.HandleEventsWith(new SinkMessageHandler(Connector as ISinkConnector));
         }
 
         ConnectorInitialize();
@@ -63,12 +65,12 @@ public class ConnectorRunner
 
         ConnectorConnect();
 
-        if (_connector.Configuration.Direction == ConnectorDirectionEnum.Source)
+        if (Connector.Configuration.Direction == ConnectorDirectionEnum.Source)
         {
             ConnectorRead();
         }
         
-        if (_connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
+        if (Connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
         {
             ConnectorWrite();
         }
@@ -86,14 +88,14 @@ public class ConnectorRunner
     {
         if (_isExecuting)
         {
-            Logger.Warn($"[{_connector.Configuration.Name}] Execution overlap.  Consider increasing scan interval.  Previous execution duration was {_executionDuration}ms.");
+            Logger.Warn($"[{Connector.Configuration.Name}] Execution overlap.  Consider increasing scan interval.  Previous execution duration was {_executionDuration}ms.");
             return false;
         }
         
         _isExecuting = true;
         _executionEnter = DateTime.UtcNow.ToEpochMilliseconds();
 
-        _connector.BeforeUpdate();
+        Connector.BeforeUpdate();
         
         return true;
     }
@@ -104,76 +106,76 @@ public class ConnectorRunner
         _executionExit = DateTime.UtcNow.ToEpochMilliseconds();
         _executionDuration = _executionExit - _executionEnter;
         
-        _connector.AfterUpdate();
+        Connector.AfterUpdate();
     }
 
     private void StartTimer()
     {
         _timer = new Timer();
         _timer.Elapsed += (sender, args) => { Execute(); };
-        _timer.Interval = _connector.Configuration.ScanIntervalMs;
+        _timer.Interval = Connector.Configuration.ScanIntervalMs;
         _timer.Enabled = true;
     }
     
     private bool ConnectorInitialize()
     {
-        if (_connector.Initialize())
+        if (Connector.Initialize(this))
         {
-            Logger.Info($"[{_connector.Configuration.Name}] Connector initialized.");
+            Logger.Info($"[{Connector.Configuration.Name}] Connector initialized.");
             return true;
         }
         else
         {
-            Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector initialization failed.");
+            Logger.Error(Connector.FaultReason, $"[{Connector.Configuration.Name}] Connector initialization failed.");
             return false;
         }
     }
 
     private bool ConnectorCreate()
     {
-        if (_connector.Create())
+        if (Connector.Create())
         {
-            Logger.Info($"[{_connector.Configuration.Name}] Connector created.");
+            Logger.Info($"[{Connector.Configuration.Name}] Connector created.");
             return true;
         }
         else
         {
-            Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector creation failed.");
+            Logger.Error(Connector.FaultReason, $"[{Connector.Configuration.Name}] Connector creation failed.");
             return false;
         }
     }
 
     private bool ConnectorConnect()
     {
-        if (_connector.IsConnected)
+        if (Connector.IsConnected)
         {
             return true;
         }
         
-        if (_connector.Connect())
+        if (Connector.Connect())
         {
-            Logger.Info($"[{_connector.Configuration.Name}] Connector connected.");
+            Logger.Info($"[{Connector.Configuration.Name}] Connector connected.");
             return true;
         }
         else
         {
-            Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector connection failed.");
+            Logger.Error(Connector.FaultReason, $"[{Connector.Configuration.Name}] Connector connection failed.");
             return false;
         }
     }
 
     private bool ConnectorRead()
     {
-        if (_connector.Configuration.Direction == ConnectorDirectionEnum.Source)
+        if (Connector.Configuration.Direction == ConnectorDirectionEnum.Source)
         {
-            if ((_connector as ISourceConnector).Read())
+            if ((Connector as ISourceConnector).Read())
             {
-                Logger.Info($"[{_connector.Configuration.Name}] Connector read.");
+                Logger.Info($"[{Connector.Configuration.Name}] Connector read.");
                 return true;
             }
             else
             {
-                Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector reading failed.");
+                Logger.Error(Connector.FaultReason, $"[{Connector.Configuration.Name}] Connector reading failed.");
                 return false;
             }
         }
@@ -183,16 +185,16 @@ public class ConnectorRunner
     
     private bool ConnectorWrite()
     {
-        if (_connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
+        if (Connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
         {
-            if ((_connector as ISinkConnector).Write())
+            if ((Connector as ISinkConnector).Write())
             {
-                Logger.Info($"[{_connector.Configuration.Name}] Connector written.");
+                Logger.Info($"[{Connector.Configuration.Name}] Connector written.");
                 return true;
             }
             else
             {
-                Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector writing failed.");
+                Logger.Error(Connector.FaultReason, $"[{Connector.Configuration.Name}] Connector writing failed.");
                 return false;
             }
         }
@@ -202,14 +204,14 @@ public class ConnectorRunner
 
     private bool ConnectorDisconnect()
     {
-        if (_connector.Disconnect())
+        if (Connector.Disconnect())
         {
-            Logger.Info($"[{_connector.Configuration.Name}] Connector disconnected.");
+            Logger.Info($"[{Connector.Configuration.Name}] Connector disconnected.");
             return true;
         }
         else
         {
-            Logger.Error(_connector.FaultReason, $"[{_connector.Configuration.Name}] Connector disconnection failed.");
+            Logger.Error(Connector.FaultReason, $"[{Connector.Configuration.Name}] Connector disconnection failed.");
             return false;
         }
     }

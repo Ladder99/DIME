@@ -72,7 +72,7 @@ public static class Program
         
         foreach (var connector in connectors)
         {
-            _runners.Add(new ConnectorRunner(connector, _disruptor));
+            _runners.Add(new ConnectorRunner(_runners, connector, _disruptor));
         }
         
         Logger.Info("Starting runners.");

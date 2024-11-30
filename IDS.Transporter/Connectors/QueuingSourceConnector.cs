@@ -53,9 +53,10 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                             {
                                 Samples.Add(new MessageBoxMessage()
                                 {
-                                    Path = $"{Configuration.Name}/{message.Key}",
+                                    Path = $"{Configuration.Name}/{item.Name}",
                                     Data = result,
-                                    Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
+                                    Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
+                                    ConnectorItemRef = item
                                 });
                             }
                         }
@@ -70,7 +71,8 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                             {
                                 Path = $"{Configuration.Name}/{item.Name}",
                                 Data = result,
-                                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
+                                Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
+                                ConnectorItemRef = item
                             });
                         }
                     }
@@ -104,7 +106,8 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                             {
                                 Path = $"{Configuration.Name}/{message.Key}",
                                 Data = result,
-                                Timestamp = message.Timestamp
+                                Timestamp = message.Timestamp,
+                                ConnectorItemRef = item
                             });
                         }
                     }
@@ -114,7 +117,11 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                         {
                             Path = $"{Configuration.Name}/{message.Key}",
                             Data = message.Value,
-                            Timestamp = message.Timestamp
+                            Timestamp = message.Timestamp,
+                            ConnectorItemRef = new ConnectorItem()
+                            {
+                                Configuration = Configuration
+                            }
                         });
                     }
                 }

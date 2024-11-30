@@ -38,7 +38,8 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
                 {
                     Path = $"{Configuration.Name}/{item.Name}",
                     Data = response,
-                    Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
+                    Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
+                    ConnectorItemRef = item
                 });
             }
         }

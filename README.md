@@ -98,6 +98,7 @@ solution
 | items           | object array | plc items                                                                   |
 | items[].name    | string       | unique item name                                                            |
 | items[].enabled | bool         | is item enabled                                                             |
+| items[].rbe     | bool         | report by exception override                                                |
 | items[].type    | string       | plc register type (`bool`, `sint`, `int`, `dint`, `lint`, `real`, `string`) |
 | items[].address | string       | plc register address                                                        |
 | items[].script  | string       | lua script                                                                  |
@@ -128,25 +129,26 @@ solution
 
 ### Haas SHDR
 
-| Name               | Type         | Description                         |
-|--------------------|--------------|-------------------------------------|
-| name               | string       | unique connector name               |
-| enabled            | bool         | is connector enabled                |
-| scan_interval      | int          | scanning frequency in milliseconds  |
-| rbe                | bool         | report by exception                 |
-| init_script        | string       | startup lua script                  |
-| itemized_read      | string       | iterate connector items             |
-| connector          | string       | connector type, `HaasSHDR`          |
-| address            | string       | machine hostname                    |
-| port               | int          | machine port                        |
-| timeout            | int          | connection timeout in milliseconds  |
-| heartbeat_interval | int          | heartbeat frequency in milliseconds |
-| retry_interval     | int          | retry frequency in milliseconds     |
-| items              | object array | device items                        |
-| items[].name       | string       | unique item name                    |
-| items[].enabled    | bool         | is item enabled                     |
-| items[].address    | string       | device item address                 |
-| items[].script     | string       | lua script                          |
+| Name               | Type         | Description                                                 |
+|--------------------|--------------|-------------------------------------------------------------|
+| name               | string       | unique connector name                                       |
+| enabled            | bool         | is connector enabled                                        |
+| scan_interval      | int          | scanning frequency in milliseconds                          |
+| rbe                | bool         | report by exception                                         |
+| init_script        | string       | startup lua script                                          |
+| itemized_read      | string       | iterate connector items                                     |
+| connector          | string       | connector type, `HaasSHDR`                                  |
+| address            | string       | machine hostname                                            |
+| port               | int          | machine port                                                |
+| timeout            | int          | connection timeout in milliseconds                          |
+| heartbeat_interval | int          | heartbeat frequency in milliseconds                         |
+| retry_interval     | int          | retry frequency in milliseconds                             |
+| items              | object array | device items                                                |
+| items[].name       | string       | unique item name                                            |
+| items[].enabled    | bool         | is item enabled                                             |
+| items[].rbe        | bool         | report by exception override                                |
+| items[].address    | string       | device item address                                         |
+| items[].script     | string       | lua script                                                  |
 
 #### Source Example
 
@@ -178,6 +180,7 @@ solution
 | items           | object array | subscription topics                                                                      |
 | items[].name    | string       | unique item name                                                                         |
 | items[].enabled | bool         | is item enabled                                                                          |
+| items[].rbe     | bool         | report by exception override                                                             |
 | items[].address | string       | device register address                                                                  |
 | items[].type    | int          | device register type (`1`: coil, `2`: input, `3`: holding register, `4`: input register) |
 | items[].count   | int          | count of registers                                                                       |
@@ -204,20 +207,21 @@ solution
 
 ### MQTT
 
-| Name            | Type         | Description                          |
-|-----------------|--------------|--------------------------------------|
-| name            | string       | unique connector name                |
-| enabled         | bool         | is connector enabled                 |
-| scan_interval   | int          | scanning frequency in milliseconds   |
-| rbe             | bool         | report by exception                  |
-| connector       | string       | connector type, `MQTT`               |
-| address         | string       | broker hostname                      |
-| port            | int          | broker port                          |
-| base_topic      | string       | base topic where to publish messages |
-| items           | object array | subscription topics                  |
-| items[].name    | string       | unique item name                     |
-| items[].enabled | bool         | is item enabled                      |
-| items[].address | string       | topic                                |
+| Name            | Type         | Description                            |
+|-----------------|--------------|----------------------------------------|
+| name            | string       | unique connector name                  |
+| enabled         | bool         | is connector enabled                   |
+| scan_interval   | int          | scanning frequency in milliseconds     |
+| rbe             | bool         | report by exception                    |
+| connector       | string       | connector type, `MQTT`                 |
+| address         | string       | broker hostname                        |
+| port            | int          | broker port                            |
+| base_topic      | string       | base topic where to publish messages   |
+| items           | object array | subscription topics                    |
+| items[].name    | string       | unique item name                       |
+| items[].enabled | bool         | is item enabled                        |
+| items[].rbe     | bool         | report by exception override           |
+| items[].address | string       | topic                                  |
 
 #### Sink Example
 

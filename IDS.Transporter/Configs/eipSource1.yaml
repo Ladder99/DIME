@@ -1,6 +1,6 @@
 eipSource1: &eipSource1
   name: eipSource1
-  enabled: !!bool false
+  enabled: !!bool true
   scan_interval: !!int 1000
   connector: EthernetIP
   rbe: !!bool true
@@ -17,18 +17,33 @@ eipSource1: &eipSource1
   items:
     - name: scriptTag1
       enabled: !!bool true
+      rbe: !!bool true
       script: return CLR.env.MachineName;
     - name: scriptTag2
       enabled: !!bool true
       script: return os.date("%Y-%m-%d %H:%M:%S")
+    - name: scriptTag3
+      script: |
+        local a = cache('./scriptTag1', nil);
+        return a;
+    - name: scriptTag4
+      script: |
+        local a = cache('mqttSource1/ffe4Sensor', nil);
+        return a;
     - name: boolTag1
-      enabled: !!bool true
+      enabled: !!bool false
       type: bool
       address: B3:0/2
     - name: boolTag2
-      enabled: !!bool true
+      enabled: !!bool false
       type: bool
       address: B3:0/3
       script: |
         local m = { [0]='Ready', [1]='Active' };
         return m[result and 1 or 0];
+      meta:
+        mtconnect:
+          component: Device/Controller/Path 
+          category: EVENT
+          type: EXECUTION
+    

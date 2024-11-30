@@ -7,7 +7,7 @@ namespace IDS.Transporter.Connectors.MtConnectShdr;
 public class Sink: SinkConnector<ConnectorConfiguration, Configuration.ConnectorItem>
 {
     private ShdrQueueAdapter _client = null;
-
+    
     public Sink(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
     }
@@ -39,6 +39,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
         _client.AgentConnected += (sender, s) =>
         {
             Logger.Info($"[{Configuration.Name}] MTC Agent connected. {s}");
+            _client.SendChanged();
         };
 
         _client.SendError += (sender, args) =>
