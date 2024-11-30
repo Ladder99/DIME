@@ -1,7 +1,7 @@
 eipSource1: &eipSource1
   name: eipSource1
   enabled: !!bool true
-  scan_interval: !!int 1000
+  scan_interval: !!int 500
   connector: EthernetIP
   rbe: !!bool true
   type: !!int 5
@@ -18,10 +18,12 @@ eipSource1: &eipSource1
     - name: scriptTag1
       enabled: !!bool true
       rbe: !!bool true
-      script: return CLR.env.MachineName;
+      script: |
+        return CLR.env.MachineName;
     - name: scriptTag2
       enabled: !!bool true
-      script: return os.date("%Y-%m-%d %H:%M:%S")
+      script: |
+        return os.date("%Y-%m-%d %H:%M:%S")
     - name: scriptTag3
       script: |
         local a = cache('./scriptTag1', nil);
@@ -38,11 +40,18 @@ eipSource1: &eipSource1
       script: |
         return get('random', -1);
     - name: boolTag1
-      enabled: !!bool false
+      enabled: !!bool true
       type: bool
       address: B3:0/2
+      script: |
+        set('boolTag', result);
+        return nil;
     - name: boolTag2
-      enabled: !!bool false
+      enabled: !!bool true
+      script: |
+        return get('boolTag', false);
+    - name: boolTag3
+      enabled: !!bool true
       type: bool
       address: B3:0/3
       script: |

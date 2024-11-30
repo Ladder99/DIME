@@ -7,6 +7,5 @@ public sealed class ConnectorConfiguration : Configuration.ConnectorConfiguratio
     public bool CleanSession { get; set; }
     public string Username { get; set; }
     public string Password { get; set; }
-    
     public string BaseTopic { get; set; }
 }

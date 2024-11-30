@@ -8,12 +8,6 @@ mqttSource1: &mqttSource1
   address: wss.sharc.tech
   port: !!int 1883
   init_script: |
-    luanet.load_assembly("System")
-    CLR = {
-      env = luanet.import_type("System.Environment")
-    };
-    -- https://github.com/iryont/lua-struct
-    struct = require('struct')
     -- https://github.com/rxi/json.lua
     json = require('json');
   items:
