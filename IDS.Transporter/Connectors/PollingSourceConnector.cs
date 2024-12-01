@@ -21,17 +21,21 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
         foreach (var item in Configuration.Items.Where(x => x.Enabled))
         {
             object response = null;
+            object readResult = "n/a";
+            object scriptResult = "n/a";
             
             if (item.Address != null)
             {
                 response = ReadFromDevice(item);
+                readResult = response;
             }
 
             if (item.Script != null)
             {
                 response = ExecuteScript(response, item.Script);
+                scriptResult = response;
             }
-
+            
             if (response != null)
             {
                 Samples.Add(new MessageBoxMessage()
@@ -42,6 +46,11 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
                     ConnectorItemRef = item
                 });
             }
+            
+            Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
+                         $"Read={(readResult==null ? "<null>" : readResult)}, " +
+                         $"Script={(scriptResult==null ? "<null>" : scriptResult)}, " +
+                         $"Sample={(response == null ? "DROPPED" : "ADDED")}");
         }
         
         return true;

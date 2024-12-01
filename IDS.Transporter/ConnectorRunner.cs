@@ -1,24 +1,8 @@
-using System.Collections.Concurrent;
 using IDS.Transporter.Configuration;
 using IDS.Transporter.Connectors;
 using Timer = System.Timers.Timer;
 
 namespace IDS.Transporter;
-
-public class SinkMessageHandler : Disruptor.IEventHandler<MessageBoxMessage>
-{
-    ISinkConnector Connector;
-    
-    public SinkMessageHandler(ISinkConnector connector)
-    {
-        Connector = connector;
-    }
-    
-    public void OnEvent(MessageBoxMessage data, long sequence, bool endOfBatch)
-    {
-        Connector.Outbox.Add(data);
-    }
-}
 
 public class ConnectorRunner
 {
@@ -26,7 +10,6 @@ public class ConnectorRunner
     public List<ConnectorRunner> Runners { get;}
     public  IConnector Connector { get; }
     private Disruptor.Dsl.Disruptor<MessageBoxMessage> _disruptor;
-    private BlockingCollection<MessageBoxMessage> _queueSubscription;
     private Timer _timer;
     private bool _isExecuting;
     private long _executionEnter = DateTime.UtcNow.ToEpochMilliseconds();
@@ -45,7 +28,7 @@ public class ConnectorRunner
     {
         if (Connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
         {
-            _disruptor.HandleEventsWith(new SinkMessageHandler(Connector as ISinkConnector));
+            _disruptor.HandleEventsWith(new SinkMessageHandler((ISinkConnector)Connector));
         }
 
         ConnectorInitialize();
@@ -109,7 +92,7 @@ public class ConnectorRunner
     private void StartTimer()
     {
         _timer = new Timer();
-        _timer.Elapsed += (sender, args) => { Execute(); };
+        _timer.Elapsed += (_, _) => { Execute(); };
         _timer.Interval = Connector.Configuration.ScanIntervalMs;
         _timer.Enabled = true;
     }
@@ -165,7 +148,7 @@ public class ConnectorRunner
     {
         if (Connector.Configuration.Direction == ConnectorDirectionEnum.Source)
         {
-            if ((Connector as ISourceConnector).Read())
+            if (((ISourceConnector)Connector).Read())
             {
                 Logger.Info($"[{Connector.Configuration.Name}] Connector read.");
                 return true;
@@ -184,7 +167,7 @@ public class ConnectorRunner
     {
         if (Connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
         {
-            if ((Connector as ISinkConnector).Write())
+            if (((ISinkConnector)Connector).Write())
             {
                 Logger.Info($"[{Connector.Configuration.Name}] Connector written.");
                 return true;

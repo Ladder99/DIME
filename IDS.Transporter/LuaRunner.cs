@@ -5,7 +5,7 @@ namespace IDS.Transporter;
 
 public class LuaRunner
 {
-    private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+    protected NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     
     private NLua.Lua _state;
     private ISourceConnector _connector;

@@ -1,6 +1,7 @@
 sinks:
   - *mqttSink1
   - *shdrSink1
+  - *mtconnectSink1
 sources:
   - *eipSource1
   - *haasSource1

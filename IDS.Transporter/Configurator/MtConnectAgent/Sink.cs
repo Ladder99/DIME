@@ -1,7 +1,7 @@
 using IDS.Transporter.Connectors;
-using IDS.Transporter.Configuration.MtConnectShdr;
+using IDS.Transporter.Configuration.MtConnectAgent;
 
-namespace IDS.Transporter.Configurator.MtConnectShdr;
+namespace IDS.Transporter.Configurator.MtConnectAgent;
 
 public static class Sink
 {
@@ -13,11 +13,11 @@ public static class Sink
         config.Enabled = section.ContainsKey("enabled") ? Convert.ToBoolean(section["enabled"]) : true;
         config.ScanIntervalMs = section.ContainsKey("scan_interval") ? Convert.ToInt32(section["scan_interval"]) : 1000;
         config.Name = section.ContainsKey("name") ? Convert.ToString(section["name"]) : Guid.NewGuid().ToString();
-        config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 7878;
-        config.DeviceKey = section.ContainsKey("device_key") ? Convert.ToString(section["device_key"]) : null;
-        config.HeartbeatMs = section.ContainsKey("heartbeat_interval") ? Convert.ToInt32(section["heartbeat_interval"]) : 10000;
-        config.FilterDuplicates = section.ContainsKey("filter_duplicates") ? Convert.ToBoolean(section["filter_duplicates"]) : true;
-        var connector = new Connectors.MtConnectShdr.Sink(config, disruptor);
+        config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 5000;
+        config.DeviceUuid = section.ContainsKey("device_uuid") ? Convert.ToString(section["device_uuid"]) : Guid.NewGuid().ToString();
+        config.DeviceId = section.ContainsKey("device_id") ? Convert.ToString(section["device_id"]) : Guid.NewGuid().ToString();
+        config.DeviceName = section.ContainsKey("device_name") ? Convert.ToString(section["device_name"]) : Guid.NewGuid().ToString();
+        var connector = new Connectors.MtConnectAgent.Sink(config, disruptor);
 
         return connector;
     }

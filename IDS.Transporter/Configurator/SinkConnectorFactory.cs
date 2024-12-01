@@ -16,6 +16,9 @@ public static class SinkConnectorFactory
             case "mtconnectshdr":
                 connector = MtConnectShdr.Sink.Create(section, disruptor);
                 break;
+            case "mtconnectagent":
+                connector = MtConnectAgent.Sink.Create(section, disruptor);
+                break;
             default:
                 break;
         }

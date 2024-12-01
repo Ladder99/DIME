@@ -1,7 +1,7 @@
 scriptSource1: &scriptSource1
   name: scriptSource1
   enabled: !!bool true
-  scan_interval: !!int 1000
+  scan_interval: !!int 5000
   connector: Script
   rbe: !!bool true
   init_script: |
@@ -11,23 +11,31 @@ scriptSource1: &scriptSource1
     moses = require('moses');
     pcArray = {}
   items:
-    - name: scripTag1
-      enabled: !!bool true
+    - name: scriptTag1
+      enabled: !!bool false
       script: |
         table.insert(pcArray, cache('mqttSource1/ffe4Sensor', nil));
         pcArray = moses.last(pcArray, 100);
         return moses.median(pcArray);
     - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/PartCount
-      enabled: !!bool true
+      enabled: !!bool false
       rbe: !!bool false
       script: |
         return cache('mqttSource1/ffe4Sensor', nil)
     - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/ReportPeriod
-      enabled: !!bool true
+      enabled: !!bool false
       rbe: !!bool false
       script: |
         return cache('mqttSource1/ffe4SensorAndDelta', nil)[1]
     - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/Execution
-      enabled: !!bool true
+      enabled: !!bool false
       script: |
         return cache('eipSource1/boolTag3', nil)
+    - name: OverallAvailability
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        local n = cache('eipSource1/$SYSTEM/IsConnected', nil);
+        return n==true and 'Available' or 'Unavailable';
+      meta:
+        mtconnect: Device[name=device1]/Availability[category=Event]

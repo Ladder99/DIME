@@ -102,7 +102,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         
         if (_wasConnected != IsConnected)
         {
-            Inbox.Add(new MessageBoxMessage()
+            Samples.Add(new MessageBoxMessage()
             {
                 Path = $"{Configuration.Name}/$SYSTEM/IsConnected",
                 Data = IsConnected,
@@ -113,12 +113,14 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                 }
             });
             
+            Logger.Debug($"[{Configuration.Name}] Fill Inbox. Emit $SYSTEM/IsConnected = {IsConnected}");
+            
             _wasConnected = IsConnected;
         }
         
         if (_wasFaulted != IsFaulted)
         {
-            Inbox.Add(new MessageBoxMessage()
+            Samples.Add(new MessageBoxMessage()
             {
                 Path = $"{Configuration.Name}/$SYSTEM/IsFaulted",
                 Data = IsFaulted,
@@ -129,7 +131,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                 }
             });
             
-            Inbox.Add(new MessageBoxMessage()
+            Samples.Add(new MessageBoxMessage()
             {
                 Path = $"{Configuration.Name}/$SYSTEM/Fault",
                 Data = FaultReason,
@@ -139,6 +141,9 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                     Configuration = Configuration
                 }
             });
+            
+            Logger.Debug($"[{Configuration.Name}] Fill Inbox. Emit $SYSTEM/IsFaulted = {IsFaulted}");
+            Logger.Debug($"[{Configuration.Name}] Fill Inbox. Emit $SYSTEM/Fault = {FaultReason}");
             
             _wasFaulted = IsFaulted;
         }
@@ -159,6 +164,8 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
             // sample does not exist in current, it is a new sample
             if (matchingCurrent is null)
             {
+                Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. New sample added to inbox.");
+                
                 Inbox.Add(sampleResponse);
                 Current.Add(sampleResponse);
             }
@@ -172,11 +179,21 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                 {
                     if (!matchingCurrent.Data.Equals(sampleResponse.Data))
                     {
+                        Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE sample added to inbox. " +
+                                     $"Current={matchingCurrent.Data}, Sample={sampleResponse.Data}");
+                        
                         Inbox.Add(sampleResponse);
+                    }
+                    else
+                    {
+                        Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE sample dropped. " +
+                                     $"Current={matchingCurrent.Data}, Sample={sampleResponse.Data}");
                     }
                 }
                 else
                 {
+                    Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. Non-RBE sample added to inbox.");
+                    
                     Inbox.Add(sampleResponse);
                 }
 

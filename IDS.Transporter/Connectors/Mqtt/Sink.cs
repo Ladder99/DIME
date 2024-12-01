@@ -45,7 +45,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     {
         foreach (var message in Outbox)
         {
-            Console.WriteLine($"{message.Path} = {message.Data}");
+            //Console.WriteLine($"{message.Path} = {message.Data}");
             
             var msg = new MqttApplicationMessageBuilder()
                 .WithTopic($"{Configuration.BaseTopic}/{message.Path}")

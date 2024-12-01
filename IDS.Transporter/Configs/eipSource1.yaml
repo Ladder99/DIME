@@ -1,7 +1,7 @@
 eipSource1: &eipSource1
   name: eipSource1
   enabled: !!bool true
-  scan_interval: !!int 500
+  scan_interval: !!int 5000
   connector: EthernetIP
   rbe: !!bool true
   type: !!int 5
@@ -17,26 +17,30 @@ eipSource1: &eipSource1
   items:
     - name: scriptTag1
       enabled: !!bool true
-      rbe: !!bool true
+      rbe: !!bool false
       script: |
         return CLR.env.MachineName;
     - name: scriptTag2
-      enabled: !!bool true
+      enabled: !!bool false
       script: |
         return os.date("%Y-%m-%d %H:%M:%S")
     - name: scriptTag3
+      enabled: !!bool true
       script: |
         local a = cache('./scriptTag1', nil);
         return a;
     - name: scriptTag4
+      enabled: !!bool true
       script: |
         local a = cache('mqttSource1/ffe4Sensor', nil);
         return a;
     - name: scriptTag5
+      enabled: !!bool false
       script: |
         local a = set('random', math.random(500));
         return a;
     - name: scriptTag6
+      enabled: !!bool false
       script: |
         return get('random', -1);
     - name: boolTag1
@@ -58,8 +62,4 @@ eipSource1: &eipSource1
         local m = { [0]='Ready', [1]='Active' };
         return m[result and 1 or 0];
       meta:
-        mtconnect:
-          component: Device/Controller/Path 
-          category: EVENT
-          type: EXECUTION
-    
+        mtconnect: Device[name=device1]/Controller/Path/Execution[category=Event]

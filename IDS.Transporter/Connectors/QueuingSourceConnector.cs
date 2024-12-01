@@ -43,10 +43,13 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                         foreach (var message in messages)
                         {
                             object result = message.Value;
+                            object readResult = result;
+                            object scriptResult = "n/a";
 
                             if (item.Script != null)
                             {
                                 result = ExecuteScript(message.Value, item.Script);
+                                scriptResult = result;
                             }
 
                             if (result != null)
@@ -59,6 +62,11 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                                     ConnectorItemRef = item
                                 });
                             }
+                            
+                            Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
+                                         $"Read={(readResult==null ? "<null>" : readResult)}, " +
+                                         $"Script={(scriptResult==null ? "<null>" : scriptResult)}, " +
+                                         $"Sample={(result == null ? "DROPPED" : "ADDED")}");
                         }
                     }
                     else if (item.Script != null)
@@ -75,6 +83,11 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                                 ConnectorItemRef = item
                             });
                         }
+                        
+                        Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
+                                     $"Read=<null>, " +
+                                     $"Script={(result==null ? "<null>" : result)}, " +
+                                     $"Sample={(result == null ? "DROPPED" : "ADDED")}");
                     }
                 }
 
