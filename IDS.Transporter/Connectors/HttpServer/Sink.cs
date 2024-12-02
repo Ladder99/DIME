@@ -106,15 +106,26 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
             HttpListenerResponse response = context.Response;
 
             var responseString = "{}";
-            
-            if (_messages.ContainsKey(request.RawUrl.Substring(1)))
+
+            if (request.RawUrl == "/items")
             {
-                responseString = JsonConvert.SerializeObject(_messages[request.RawUrl.Substring(1)]);
+                responseString = JsonConvert.SerializeObject(_messages);
                 response.StatusCode = 200;
             }
-            else
+            else if (request.RawUrl.StartsWith("/items/"))
             {
-                response.StatusCode = 404;
+                var itemPath = request.RawUrl.Replace("/items/", "");
+                var itemDict = _messages.Where(x => x.Key.StartsWith(itemPath)).ToDictionary();
+                
+                if (itemDict.Any())
+                {
+                    responseString = JsonConvert.SerializeObject(itemDict);
+                    response.StatusCode = 200;
+                }
+                else
+                {
+                    response.StatusCode = 404;
+                }
             }
             
             byte[] buffer = Encoding.UTF8.GetBytes(responseString);
