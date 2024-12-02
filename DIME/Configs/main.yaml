@@ -1,0 +1,11 @@
+sinks:
+  - *mqttSink1
+  - *shdrSink1
+  - *mtconnectSink1
+  - *httpServerSink1
+sources:
+  - *eipSource1
+  - *haasSource1
+  - *modbusSource1
+  - *mqttSource1
+  - *scriptSource1

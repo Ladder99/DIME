@@ -1,4 +1,4 @@
-# Industrial Data Transporter
+# Data In Motion Enterprise
 
 Move data from industrial sources to message queues, databases, and other sinks.  
 

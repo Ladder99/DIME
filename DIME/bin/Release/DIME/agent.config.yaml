@@ -1,0 +1,4 @@
+modules:
+
+  - http-server:
+      port: 5000
