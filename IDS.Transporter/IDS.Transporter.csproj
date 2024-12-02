@@ -61,10 +61,13 @@
       <None Update="Configs\scriptSource1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Configs\mtconnectSink.yaml">
+      <None Update="Configs\mtconnectSink1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="agent.config.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Configs\httpServerSink1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

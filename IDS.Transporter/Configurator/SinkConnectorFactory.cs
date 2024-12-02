@@ -10,6 +10,9 @@ public static class SinkConnectorFactory
         
         switch (connectorType)
         {
+            case "httpserver":
+                connector = HttpServer.Sink.Create(section, disruptor);
+                break;
             case "mqtt":
                 connector = Mqtt.Sink.Create(section, disruptor);
                 break;

@@ -133,6 +133,27 @@ sources:
     retry_interval: !!int 10000
 ```
 
+### Http Server
+
+| Name            | Type         | Description                          |
+|-----------------|--------------|--------------------------------------|
+| name            | string       | unique connector name                |
+| enabled         | bool         | is connector enabled                 |
+| scan_interval   | int          | scanning frequency in milliseconds   |
+| rbe             | bool         | report by exception                  |
+| connector       | string       | connector type, `HttpServer`         |
+| uri             | string       | base uri                             |
+
+#### Sink Example
+
+```yaml
+  - name: httpServerSink1
+    enabled: !!bool true
+    scan_interval: !!int 1000
+    connector: HttpServer
+    uri: http://localhost:8080/
+```
+
 ### Modbus TCP
 
 | Name            | Type         | Description                                                                              |
