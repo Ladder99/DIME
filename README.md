@@ -289,85 +289,169 @@ A secondary cache can be accessed using the `get(key, defaultValue)` and `set(ke
 user-defined cache is scoped to the individual connector.
 
 ```yaml
+mqttSink1: &mqttSink1
+   name: mqttSink1
+   enabled: !!bool true
+   scan_interval: !!int 1000
+   connector: MQTT
+   address: wss.sharc.tech
+   port: !!int 1883
+   base_topic: ids
+
 eipSource1: &eipSource1
-  name: eipSource1
-  enabled: !!bool true
-  scan_interval: !!int 1000
-  connector: EthernetIP
-  rbe: !!bool true
-  type: !!int 5
-  address: 192.168.111.20
-  path: 1,0
-  log: !!int 0
-  timeout: !!int 1000
-  init_script: |
-    luanet.load_assembly("System")
-    CLR = {
-      env = luanet.import_type("System.Environment")
-    };
-  items:
-    - name: scriptTag1
-      enabled: !!bool true
-      rbe: !!bool true
-      script: return CLR.env.MachineName;
-    - name: scriptTag2
-      enabled: !!bool true
-      script: return os.date("%Y-%m-%d %H:%M:%S")
-    - name: scriptTag3
-      script: |
-        local a = cache('./scriptTag1', nil);
-        return a;
-    - name: scriptTag4
-      script: |
-        local a = cache('mqttSource1/ffe4Sensor', nil);
-        return a;
-    - name: scriptTag5
-      script: |
-        local a = set('random', math.random(500));
-        return a;
-    - name: scriptTag6
-      script: |
-        return get('random', -1);
-    - name: boolTag1
-      enabled: !!bool false
-      type: bool
-      address: B3:0/2
-    - name: boolTag2
-      enabled: !!bool false
-      type: bool
-      address: B3:0/3
-      script: |
-        local m = { [0]='Ready', [1]='Active' };
-        return m[result and 1 or 0];
+   name: eipSource1
+   enabled: !!bool true
+   scan_interval: !!int 1000
+   connector: EthernetIP
+   rbe: !!bool true
+   type: !!int 5
+   address: 192.168.111.20
+   path: 1,0
+   log: !!int 0
+   timeout: !!int 1000
+   init_script: ~
+   items:
+      - name: boolSetUserCacheOnly
+        enabled: !!bool true
+        type: bool
+        address: B3:0/2
+        script: |
+           set('boolTag', result);
+           return nil;
+      - name: boolGetUserCache
+        enabled: !!bool true
+        script: |
+           return get('boolTag', false);
+      - name: Execution
+        enabled: !!bool true
+        type: bool
+        address: B3:0/3
+        script: |
+           local m = { [0]='Ready', [1]='Active' };
+           return m[result and 1 or 0];
         
 mqttSource1: &mqttSource1
-  name: mqttSource1
-  enabled: !!bool true
-  scan_interval: !!int 1000
-  connector: MQTT
-  rbe: !!bool true
-  itemized_read: !!bool true
-  address: wss.sharc.tech
-  port: !!int 1883
-  init_script: |
-    -- https://github.com/rxi/json.lua
-    json = require('json');
-  items:
-    - name: ffe4Sensor
-      enabled: !!bool true
-      rbe: !!bool false
-      address: sharc/08d1f953ffe4/evt/io/s1
-      script: |
-        return json.decode(result).v.s1.v;
-    - name: randomNumberFromEip
-      enabled: !!bool true
-      script: |
-        return cache('eipSource1/scriptTag5', -1);
+   name: mqttSource1
+   enabled: !!bool true
+   scan_interval: !!int 1000
+   connector: MQTT
+   rbe: !!bool true
+   itemized_read: !!bool true
+   address: wss.sharc.tech
+   port: !!int 1883
+   init_script: |
+      -- https://github.com/rxi/json.lua
+      json = require('json');
+   items:
+      - name: subscribe1
+        enabled: !!bool false
+        address: sharc/+/evt/#
+      - name: ffe4Sensor
+        enabled: !!bool true
+        rbe: !!bool false
+        address: sharc/08d1f953ffe4/evt/io/s1
+        script: |
+           return json.decode(result).v.s1.v;
+      - name: ffe4SensorAndDelta
+        enabled: !!bool true
+        rbe: !!bool false
+        address: sharc/08d1f953ffe4/evt/io/s1
+        script: |
+           return json.decode(result).v.s1.v, json.decode(result).v.s1.d;
+
+scriptSource1: &scriptSource1
+   name: scriptSource1
+   enabled: !!bool true
+   scan_interval: !!int 1000
+   connector: Script
+   rbe: !!bool true
+   init_script: |
+      luanet.load_assembly("System")
+      CLR = {
+        env = luanet.import_type("System.Environment")
+      };
+      -- https://github.com/rxi/json.lua
+      json = require('json');
+      -- https://github.com/Yonaba/Moses
+      moses = require('moses');
+      pcArray = {}
+   items:
+      - name: machineNameDiscrete
+        enabled: !!bool true
+        rbe: !!bool false
+        script: |
+           return CLR.env.MachineName;
+      - name: machineNameByRefRbe
+        enabled: !!bool true
+        rbe: !!bool true
+        script: |
+           return cache('./machineNameDiscrete', nil);
+      - name: dateTime
+        enabled: !!bool true
+        rbe: !!bool true
+        script: |
+           return os.date("%Y-%m-%d %H:%M:%S");
+      - name: randomUserCacheOnly
+        enabled: !!bool true
+        rbe: !!bool true
+        script: |
+           set('random', math.random(500));
+           return nil;
+      - name: randomFromUserCache
+        enabled: !!bool true
+        rbe: !!bool true
+        script: |
+           return get('random', -1);
+      - name: mqttSensorReading
+        enabled: !!bool true
+        rbe: !!bool true
+        script: |
+           return cache('mqttSource1/ffe4Sensor', nil);
+      - name: mqttSensorReadingMedian
+        enabled: !!bool true
+        rbe: !!bool true
+        script: |
+           table.insert(pcArray, cache('mqttSource1/ffe4Sensor', 0));
+           pcArray = moses.last(pcArray, 100);
+           return moses.median(pcArray);
+      - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/PartCount
+        enabled: !!bool true
+        rbe: !!bool false
+        script: |
+           return cache('mqttSource1/ffe4Sensor', nil)
+      - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/ReportPeriod
+        enabled: !!bool true
+        rbe: !!bool false
+        script: |
+           return cache('mqttSource1/ffe4SensorAndDelta', {0, 0})[1]
+      - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/Execution
+        enabled: !!bool true
+        rbe: !!bool true
+        script: |
+           return cache('eipSource1/Execution', nil)
+      - name: OverallAvailabilityArrayNonRbe
+        enabled: !!bool true
+        rbe: !!bool false
+        script: |
+           local n = cache('eipSource1/$SYSTEM/IsConnected', nil);
+           return n, n==true;
+      - name: OverallAvailabilityArrayRbe
+        enabled: !!bool true
+        rbe: !!bool true
+        script: |
+           local n = cache('eipSource1/$SYSTEM/IsConnected', nil);
+           return n, n==true;
+      - name: OverallAvailabilityRbe
+        enabled: !!bool true
+        rbe: !!bool true
+        script: |
+           local n = cache('eipSource1/$SYSTEM/IsConnected', nil);
+           return n==true and 'Available' or 'Unavailable';
 
 sinks:
    - *mqttSink1
-   - *shdrSink1
 sources:
    - *eipSource1
    - *mqttSource1
+   - *scriptSource1
 ```

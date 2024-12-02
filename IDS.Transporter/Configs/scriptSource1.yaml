@@ -1,37 +1,86 @@
 scriptSource1: &scriptSource1
   name: scriptSource1
   enabled: !!bool true
-  scan_interval: !!int 5000
+  scan_interval: !!int 1000
   connector: Script
   rbe: !!bool true
   init_script: |
+    luanet.load_assembly("System")
+    CLR = {
+      env = luanet.import_type("System.Environment")
+    };
     -- https://github.com/rxi/json.lua
     json = require('json');
     -- https://github.com/Yonaba/Moses
     moses = require('moses');
     pcArray = {}
   items:
-    - name: scriptTag1
-      enabled: !!bool false
+    - name: machineNameDiscrete
+      enabled: !!bool true
+      rbe: !!bool false
       script: |
-        table.insert(pcArray, cache('mqttSource1/ffe4Sensor', nil));
+        return CLR.env.MachineName;
+    - name: machineNameByRefRbe
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        return cache('./machineNameDiscrete', nil);
+    - name: dateTime
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        return os.date("%Y-%m-%d %H:%M:%S");
+    - name: randomUserCacheOnly
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        set('random', math.random(500));
+        return nil;
+    - name: randomFromUserCache
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        return get('random', -1);
+    - name: mqttSensorReading
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        return cache('mqttSource1/ffe4Sensor', nil);
+    - name: mqttSensorReadingMedian
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        table.insert(pcArray, cache('mqttSource1/ffe4Sensor', 0));
         pcArray = moses.last(pcArray, 100);
         return moses.median(pcArray);
     - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/PartCount
-      enabled: !!bool false
+      enabled: !!bool true
       rbe: !!bool false
       script: |
         return cache('mqttSource1/ffe4Sensor', nil)
     - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/ReportPeriod
-      enabled: !!bool false
+      enabled: !!bool true
       rbe: !!bool false
       script: |
-        return cache('mqttSource1/ffe4SensorAndDelta', nil)[1]
+        return cache('mqttSource1/ffe4SensorAndDelta', {0, 0})[1]
     - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/Execution
-      enabled: !!bool false
+      enabled: !!bool true
+      rbe: !!bool true
       script: |
-        return cache('eipSource1/boolTag3', nil)
-    - name: OverallAvailability
+        return cache('eipSource1/Execution', nil)
+    - name: OverallAvailabilityArrayNonRbe
+      enabled: !!bool true
+      rbe: !!bool false
+      script: |
+        local n = cache('eipSource1/$SYSTEM/IsConnected', nil);
+        return n, n==true;
+    - name: OverallAvailabilityArrayRbe
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        local n = cache('eipSource1/$SYSTEM/IsConnected', nil);
+        return n, n==true;
+    - name: OverallAvailabilityRbe
       enabled: !!bool true
       rbe: !!bool true
       script: |

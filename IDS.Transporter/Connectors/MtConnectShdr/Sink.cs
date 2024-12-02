@@ -78,6 +78,14 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
         {
             Console.WriteLine($"{response.Path} = {response.Data}");
 
+            if (response.ConnectorItemRef != null && 
+                response.ConnectorItemRef.Meta != null &&
+                response.ConnectorItemRef.Meta.ContainsKey("mtconnect"))
+            {
+                string mtconnectPath = response.ConnectorItemRef.Meta["mtconnect"].ToString();
+                string mtconnectSource = response.Path;
+            }
+            
             _client.AddDataItem(new ShdrDataItem(response.Path, response.Data, response.Timestamp));
         }
 

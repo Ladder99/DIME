@@ -12,7 +12,7 @@ modbusSource1: &modbusSource1
     -- https://github.com/iryont/lua-struct
     struct = require('struct')
   items:
-    - name: DigitalOutputsRead
+    - name: DigitalOutputsSetUserCache
       enabled: !!bool true
       type: !!int 1
       address: !!int 16
@@ -24,4 +24,7 @@ modbusSource1: &modbusSource1
       enabled: !!bool true
       script: |
         return get('outputs', nil)[0];
-    
+    - name: DO1
+      enabled: !!bool true
+      script: |
+        return get('outputs', nil)[1];

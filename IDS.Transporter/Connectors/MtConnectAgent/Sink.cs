@@ -31,7 +31,8 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
 
     protected override bool ConnectImplementation()
     {
-        _client.StartAgent(new AgentApplicationConfiguration());
+        //_client.StartAgent(new AgentApplicationConfiguration());
+        _client.Run(["run", "agent.config.yaml"]);
         _module = new Module(_client.Agent, this);
         _module.Start();
         IsConnected = true;
@@ -61,6 +62,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
 public class Module : MTConnectInputAgentModule
 {
     Sink _connector = null;
+    private Device _device = null;
     
     public Module(IMTConnectAgentBroker agent, Sink connector) : base(agent)
     {
@@ -80,19 +82,21 @@ public class Module : MTConnectInputAgentModule
             //SerialNumber = _connector.Configuration.DeviceSerialNumber
         };
 
+        _device = device;
         return device;
     }
     
     protected override void OnRead()
     {
-        
         foreach (var message in _connector.Outbox)
         {
-            
+            //_device.AddComponent();
+            //AddValueObservation();
         }
         
         _connector.Outbox.Clear();
         
+        /*
         Log(MTConnect.Logging.MTConnectLogLevel.Information, "Read PLC Data");
 
         AddValueObservation<AvailabilityDataItem>(Availability.AVAILABLE);
@@ -113,6 +117,7 @@ public class Module : MTConnectInputAgentModule
         AddValueObservation<LinearComponent, PositionDataItem>(200.0000, "Z", PositionDataItem.SubTypes.PROGRAMMED);
         AddValueObservation<LinearComponent, PositionDataItem>(200.0003, "Z", PositionDataItem.SubTypes.ACTUAL);
         AddValueObservation<LinearComponent, LoadDataItem>(6.3, "Z");
+        */
     }
 
 

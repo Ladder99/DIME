@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using IDS.Transporter.Configuration;
+using Newtonsoft.Json;
 
 namespace IDS.Transporter.Connectors;
 
@@ -7,9 +8,6 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     where TConfig : ConnectorConfiguration<TItem>
     where TItem : ConnectorItem
 {
-    private bool? _wasConnected = null;
-    private bool? _wasFaulted = null;
-    
     protected LuaRunner ScriptRunner { get; set; }
     public ConcurrentBag<MessageBoxMessage> Inbox { get; set; }
     public ConcurrentBag<MessageBoxMessage> Samples { get; set; }
@@ -28,10 +26,10 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         return base.Initialize(runner) && ScriptRunner.Initialize(this);
     }
 
-    protected object ExecuteScript(object intermediateResult, string script)
+    protected object ExecuteScript(object intermediateResult, ConnectorItem item)
     {
         ScriptRunner["result"] = intermediateResult;
-        var scriptResult = ScriptRunner.DoString(script);
+        var scriptResult = ScriptRunner.DoString(item);
         return scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
     }
     
@@ -90,64 +88,71 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
 
     public override bool AfterUpdate()
     {
+        AddSystemSamples();
         FillInbox();
         PublishInbox();
+        Inbox.Clear();
         
         return true;
     }
 
+    private void AddSystemSamples()
+    {
+        Samples.Add(new MessageBoxMessage()
+        {
+            Path = $"{Configuration.Name}/$SYSTEM/ExecutionDuration",
+            Data = Runner.ExecutionDuration,
+            Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
+            ConnectorItemRef = new ConnectorItem()
+            {
+                Configuration = Configuration,
+                ReportByException = false
+            }
+        });
+        Logger.Debug($"[{Configuration.Name}] Add Sample. Emit $SYSTEM/ExecutionDuration = {Runner.ExecutionDuration}");
+        
+        Samples.Add(new MessageBoxMessage()
+        {
+            Path = $"{Configuration.Name}/$SYSTEM/IsConnected",
+            Data = IsConnected,
+            Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
+            ConnectorItemRef = new ConnectorItem()
+            {
+                Configuration = Configuration,
+                ReportByException = true
+            }
+        });
+        Logger.Debug($"[{Configuration.Name}] Add Sample. Emit $SYSTEM/IsConnected = {IsConnected}");
+   
+        Samples.Add(new MessageBoxMessage()
+        {
+            Path = $"{Configuration.Name}/$SYSTEM/IsFaulted",
+            Data = IsFaulted,
+            Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
+            ConnectorItemRef = new ConnectorItem()
+            {
+                Configuration = Configuration,
+                ReportByException = true
+            }
+        });
+        Logger.Debug($"[{Configuration.Name}] Add Sample. Emit $SYSTEM/IsFaulted = {IsFaulted}");
+        
+        Samples.Add(new MessageBoxMessage()
+        {
+            Path = $"{Configuration.Name}/$SYSTEM/Fault",
+            Data = FaultReason is null ? null : FaultReason.Message,
+            Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
+            ConnectorItemRef = new ConnectorItem()
+            {
+                Configuration = Configuration,
+                ReportByException = true
+            }
+        });
+        Logger.Debug($"[{Configuration.Name}] Add Sample. Emit $SYSTEM/Fault = {(FaultReason is null ? "<null>" : FaultReason)}");
+    }
+    
     private void FillInbox()
     {
-        Inbox.Clear();
-        
-        if (_wasConnected != IsConnected)
-        {
-            Samples.Add(new MessageBoxMessage()
-            {
-                Path = $"{Configuration.Name}/$SYSTEM/IsConnected",
-                Data = IsConnected,
-                Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
-                ConnectorItemRef = new ConnectorItem()
-                {
-                    Configuration = Configuration
-                }
-            });
-            
-            Logger.Debug($"[{Configuration.Name}] Fill Inbox. Emit $SYSTEM/IsConnected = {IsConnected}");
-            
-            _wasConnected = IsConnected;
-        }
-        
-        if (_wasFaulted != IsFaulted)
-        {
-            Samples.Add(new MessageBoxMessage()
-            {
-                Path = $"{Configuration.Name}/$SYSTEM/IsFaulted",
-                Data = IsFaulted,
-                Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
-                ConnectorItemRef = new ConnectorItem()
-                {
-                    Configuration = Configuration
-                }
-            });
-            
-            Samples.Add(new MessageBoxMessage()
-            {
-                Path = $"{Configuration.Name}/$SYSTEM/Fault",
-                Data = FaultReason,
-                Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
-                ConnectorItemRef = new ConnectorItem()
-                {
-                    Configuration = Configuration
-                }
-            });
-            
-            Logger.Debug($"[{Configuration.Name}] Fill Inbox. Emit $SYSTEM/IsFaulted = {IsFaulted}");
-            Logger.Debug($"[{Configuration.Name}] Fill Inbox. Emit $SYSTEM/Fault = {FaultReason}");
-            
-            _wasFaulted = IsFaulted;
-        }
-        
         foreach (var sampleResponse in Samples)
         {
             MessageBoxMessage matchingCurrent = null;
@@ -164,7 +169,8 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
             // sample does not exist in current, it is a new sample
             if (matchingCurrent is null)
             {
-                Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. New sample added to inbox.");
+                Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. New sample added to inbox. " +
+                             $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
                 
                 Inbox.Add(sampleResponse);
                 Current.Add(sampleResponse);
@@ -173,26 +179,78 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
             else
             {
                 var confRbe = Configuration.ReportByException;
-                var itemRbe = sampleResponse.ConnectorItemRef == null || sampleResponse.ConnectorItemRef.ReportByException;
+                var itemRbe = sampleResponse.ConnectorItemRef is null || sampleResponse.ConnectorItemRef.ReportByException;
 
+                // rbe is enabled
                 if (!confRbe && itemRbe || confRbe && itemRbe)
                 {
-                    if (!matchingCurrent.Data.Equals(sampleResponse.Data))
+                    // either data is null, compare datas as object
+                    if (matchingCurrent.Data is null || sampleResponse.Data is null)
                     {
-                        Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE sample added to inbox. " +
-                                     $"Current={matchingCurrent.Data}, Sample={sampleResponse.Data}");
-                        
-                        Inbox.Add(sampleResponse);
+                        if (matchingCurrent.Data != sampleResponse.Data)
+                        {
+                            Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE (null check) sample object added to inbox. " +
+                                         $"Current={(matchingCurrent.Data is null ? "<null>": matchingCurrent.Data)}, " +
+                                         $"Sample={(sampleResponse.Data is null ? "<null>": sampleResponse.Data)}");
+
+                            Inbox.Add(sampleResponse);
+                        }
+                        else
+                        {
+                            Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE (null check) sample object dropped. " +
+                                         $"Current={(matchingCurrent.Data is null ? "<null>": matchingCurrent.Data)}, " +
+                                         $"Sample={(sampleResponse.Data is null ? "<null>": sampleResponse.Data)}");
+                        }
                     }
+                    // datas are not null
                     else
                     {
-                        Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE sample dropped. " +
-                                     $"Current={matchingCurrent.Data}, Sample={sampleResponse.Data}");
+                        bool isCurrentArray = matchingCurrent.Data.GetType().IsArray;
+                        bool isSampleArray = sampleResponse.Data.GetType().IsArray;
+
+                        // both datas are array, compare datas as sequence
+                        if (isCurrentArray && isSampleArray)
+                        {
+                            if (!((object[])matchingCurrent.Data).SequenceEqual((object[])sampleResponse.Data))
+                            {
+                                Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE sample array added to inbox. " +
+                                             $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
+                                             $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
+
+                                Inbox.Add(sampleResponse);
+                            }
+                            else
+                            {
+                                Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE sample array dropped. " +
+                                             $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
+                                             $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
+                            }
+                        }
+                        // both datas are not arrays, compare datas as object
+                        else
+                        {
+                            if (!matchingCurrent.Data.Equals(sampleResponse.Data))
+                            {
+                                Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE sample object added to inbox. " +
+                                             $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
+                                             $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
+
+                                Inbox.Add(sampleResponse);
+                            }
+                            else
+                            {
+                                Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE sample object dropped. " +
+                                             $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
+                                             $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
+                            }
+                        }
                     }
                 }
+                // rbe is disabled
                 else
                 {
-                    Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. Non-RBE sample added to inbox.");
+                    Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. Non-RBE sample added to inbox. " +
+                                 $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
                     
                     Inbox.Add(sampleResponse);
                 }

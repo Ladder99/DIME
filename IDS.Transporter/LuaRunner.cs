@@ -1,4 +1,5 @@
 using System.Reflection;
+using IDS.Transporter.Configuration;
 using IDS.Transporter.Connectors;
 
 namespace IDS.Transporter;
@@ -38,9 +39,17 @@ public class LuaRunner
         set => _state[key] = value;
     }
 
-    public object[] DoString(string chunk)
+    public object[] DoString(ConnectorItem item)
     {
-        return _state.DoString(chunk);
+        try
+        {
+            return _state.DoString(item.Script);
+        }
+        catch (Exception e)
+        {
+            Logger.Error($"[{_connector.Configuration.Name}/{item.Name}] Chunk execution failed: {item.Script}");
+            throw;
+        }
     }
     
     private object? GetPrimaryCache(string path, object? defaultValue = null)

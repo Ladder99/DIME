@@ -1,5 +1,7 @@
 using System.Collections.Concurrent;
 using IDS.Transporter.Configuration;
+using Newtonsoft.Json;
+
 namespace IDS.Transporter.Connectors;
 
 public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TConfig, TItem>
@@ -48,7 +50,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
 
                             if (item.Script != null)
                             {
-                                result = ExecuteScript(message.Value, item.Script);
+                                result = ExecuteScript(message.Value, item);
                                 scriptResult = result;
                             }
 
@@ -64,14 +66,14 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                             }
                             
                             Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
-                                         $"Read={(readResult==null ? "<null>" : readResult)}, " +
-                                         $"Script={(scriptResult==null ? "<null>" : scriptResult)}, " +
+                                         $"Read={(readResult==null ? "<null>" : JsonConvert.SerializeObject(readResult))}, " +
+                                         $"Script={(scriptResult==null ? "<null>" : JsonConvert.SerializeObject(scriptResult))}, " +
                                          $"Sample={(result == null ? "DROPPED" : "ADDED")}");
                         }
                     }
                     else if (item.Script != null)
                     {
-                        var result = ExecuteScript(null, item.Script);
+                        var result = ExecuteScript(null, item);
 
                         if (result != null)
                         {
@@ -86,7 +88,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                         
                         Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
                                      $"Read=<null>, " +
-                                     $"Script={(result==null ? "<null>" : result)}, " +
+                                     $"Script={(result==null ? "<null>" : JsonConvert.SerializeObject(result))}, " +
                                      $"Sample={(result == null ? "DROPPED" : "ADDED")}");
                     }
                 }
@@ -111,7 +113,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                         var item = Configuration.Items
                             .First(x => x.Enabled && x.Address == message.Key && x.Script != null);
                         
-                        var result = ExecuteScript(message.Value, item.Script);
+                        var result = ExecuteScript(message.Value, item);
 
                         if (result != null)
                         {

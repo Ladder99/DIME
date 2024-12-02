@@ -1,4 +1,6 @@
 using IDS.Transporter.Configuration;
+using Newtonsoft.Json;
+
 namespace IDS.Transporter.Connectors;
 
 public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TConfig, TItem>
@@ -32,7 +34,7 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
 
             if (item.Script != null)
             {
-                response = ExecuteScript(response, item.Script);
+                response = ExecuteScript(response, item);
                 scriptResult = response;
             }
             
@@ -48,8 +50,8 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
             }
             
             Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
-                         $"Read={(readResult==null ? "<null>" : readResult)}, " +
-                         $"Script={(scriptResult==null ? "<null>" : scriptResult)}, " +
+                         $"Read={(readResult==null ? "<null>" : JsonConvert.SerializeObject(readResult))}, " +
+                         $"Script={(scriptResult==null ? "<null>" : JsonConvert.SerializeObject(scriptResult))}, " +
                          $"Sample={(response == null ? "DROPPED" : "ADDED")}");
         }
         

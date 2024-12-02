@@ -14,7 +14,7 @@ public class ConnectorRunner
     private bool _isExecuting;
     private long _executionEnter = DateTime.UtcNow.ToEpochMilliseconds();
     private long _executionExit = DateTime.UtcNow.ToEpochMilliseconds();
-    private long _executionDuration;
+    public long ExecutionDuration { get; private set; }
 
     public ConnectorRunner(List<ConnectorRunner> runners, IConnector connector, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
     {
@@ -68,7 +68,7 @@ public class ConnectorRunner
     {
         if (_isExecuting)
         {
-            Logger.Warn($"[{Connector.Configuration.Name}] Execution overlap.  Consider increasing scan interval.  Previous execution duration was {_executionDuration}ms.");
+            Logger.Warn($"[{Connector.Configuration.Name}] Execution overlap.  Consider increasing scan interval.  Previous execution duration was {ExecutionDuration}ms.");
             return false;
         }
         
@@ -84,7 +84,7 @@ public class ConnectorRunner
     {
         _isExecuting = false;
         _executionExit = DateTime.UtcNow.ToEpochMilliseconds();
-        _executionDuration = _executionExit - _executionEnter;
+        ExecutionDuration = _executionExit - _executionEnter;
         
         Connector.AfterUpdate();
     }

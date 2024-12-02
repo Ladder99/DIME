@@ -1,7 +1,7 @@
 eipSource1: &eipSource1
   name: eipSource1
   enabled: !!bool true
-  scan_interval: !!int 5000
+  scan_interval: !!int 1000
   connector: EthernetIP
   rbe: !!bool true
   type: !!int 5
@@ -9,52 +9,20 @@ eipSource1: &eipSource1
   path: 1,0
   log: !!int 0
   timeout: !!int 1000
-  init_script: |
-    luanet.load_assembly("System")
-    CLR = {
-      env = luanet.import_type("System.Environment")
-    };
+  init_script: ~
   items:
-    - name: scriptTag1
-      enabled: !!bool true
-      rbe: !!bool false
-      script: |
-        return CLR.env.MachineName;
-    - name: scriptTag2
-      enabled: !!bool false
-      script: |
-        return os.date("%Y-%m-%d %H:%M:%S")
-    - name: scriptTag3
-      enabled: !!bool true
-      script: |
-        local a = cache('./scriptTag1', nil);
-        return a;
-    - name: scriptTag4
-      enabled: !!bool true
-      script: |
-        local a = cache('mqttSource1/ffe4Sensor', nil);
-        return a;
-    - name: scriptTag5
-      enabled: !!bool false
-      script: |
-        local a = set('random', math.random(500));
-        return a;
-    - name: scriptTag6
-      enabled: !!bool false
-      script: |
-        return get('random', -1);
-    - name: boolTag1
+    - name: boolSetUserCacheOnly
       enabled: !!bool true
       type: bool
       address: B3:0/2
       script: |
         set('boolTag', result);
         return nil;
-    - name: boolTag2
+    - name: boolGetUserCache
       enabled: !!bool true
       script: |
         return get('boolTag', false);
-    - name: boolTag3
+    - name: Execution
       enabled: !!bool true
       type: bool
       address: B3:0/3
