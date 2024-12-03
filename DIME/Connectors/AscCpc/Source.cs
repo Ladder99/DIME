@@ -36,24 +36,18 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
     protected override object ReadFromDevice(ConnectorItem item)
     {
         object response = null;
+        string prefix = "PathListGet:ReadValues:";
         
         using (TcpClient client = new TcpClient(Configuration.IpAddress, Configuration.Port))
         using (NetworkStream stream = client.GetStream())
         {
-            string query = $"PathListGet:ReadValues:{item.Address}\r\n";
-            byte[] data = Encoding.ASCII.GetBytes(query);
-                
-            // Send the message
+            byte[] data = Encoding.ASCII.GetBytes($"{prefix}{item.Address}\r\n");
             stream.Write(data, 0, data.Length);
-            Console.WriteLine($"Sent: {query}");
-
-            // Read server response
             byte[] buffer = new byte[1024];
             int bytesRead = stream.Read(buffer, 0, buffer.Length);
             response = Encoding.ASCII
                 .GetString(buffer, 0, bytesRead)
-                .Replace("PathListGet:ReadValues:", "");
-            Console.WriteLine($"Server response: {response}");
+                .Replace(prefix, "");
         }
 
         return response;
