@@ -476,3 +476,33 @@ sources:
    - *mqttSource1
    - *scriptSource1
 ```
+
+## Docker
+
+```
+cd ~
+git clone https://github.com/ladder99/DIME
+cd DIME/DIME
+docker build -f Dockerfile --tag=ladder99/dime:1.0.0 --tag=ladder99/dime:latest .
+docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest ladder99/dime:latest
+docker login
+docker push ladder99/dime:1.0.0
+docker push ladder99/dime:latest
+docker logout
+
+cd ~
+mkdir -p volumes/dime/configs
+mkdir -p volumes/dime/lua
+mkdir -p volumes/dime/logs
+cp DIME/DIME/nlog.config volumes/dime/nlog.config
+cp DIME/DIME/Configs/* volumes/dime/configs
+cp DIME/DIME/Lua/* volumes/dime/lua
+
+docker run \
+   -p 8080:8080 \
+   -v ~/volumes/dime/nlog.config:/app/nlog.config \
+   -v ~/volumes/dime/configs:/app/Configs \
+   -v ~/volumes/dime/lua:/app/Lua \
+   -v ~/volumes/dime/logs:/app/Logs \
+   ladder99/dime:latest
+```

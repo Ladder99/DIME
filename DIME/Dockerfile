@@ -1,27 +1,15 @@
-FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
-COPY ["DIME.csproj", "dime/"]
-RUN dotnet restore "dime/DIME.csproj"
-COPY . .
-WORKDIR "/src/dime"
-RUN dotnet build "DIME.csproj" \
-	-c Release \
-	-o /app/build
-FROM build AS publish
-RUN dotnet publish "DIME.csproj" \
-	-c Release \
-	-o /app/publish
+COPY DIME.csproj ./
+RUN dotnet restore
 
-FROM base AS final
+COPY . ./
+RUN dotnet publish -c Release -o out
+
+FROM mcr.microsoft.com/dotnet/runtime:8.0
 WORKDIR /app
-COPY --from=publish /app/publish .
-RUN mkdir -p /app/Configs
-RUN mkdir -p /app/Lua
-COPY Configs/* /app/Configs
-COPY Lua/* /app/Lua
+COPY --from=build-env /app/out .
+
 EXPOSE 8080
-EXPOSE 5000
 ENTRYPOINT ["dotnet", "DIME.dll"]
