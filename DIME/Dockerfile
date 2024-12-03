@@ -4,7 +4,7 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["DIME.csproj", "dime/"]
-RUN dotnet restore "DIME.csproj"
+RUN dotnet restore "dime/DIME.csproj"
 COPY . .
 WORKDIR "/src/dime"
 RUN dotnet build "DIME.csproj" \
