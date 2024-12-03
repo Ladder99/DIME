@@ -1,6 +1,6 @@
 scriptSource1: &scriptSource1
   name: scriptSource1
-  enabled: !!bool true
+  enabled: !!bool false
   scan_interval: !!int 1000
   connector: Script
   rbe: !!bool true

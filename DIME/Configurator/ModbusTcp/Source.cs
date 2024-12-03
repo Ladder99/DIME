@@ -14,6 +14,8 @@ public static class Source
         config.ScanIntervalMs = section.ContainsKey("scan_interval") ? Convert.ToInt32(section["scan_interval"]) : 1000;
         config.ReportByException = section.ContainsKey("rbe") ? Convert.ToBoolean(section["rbe"]) : true;
         config.Name = section.ContainsKey("name") ? Convert.ToString(section["name"]) : Guid.NewGuid().ToString();
+        config.InitScript = section.ContainsKey("init_script") ? Convert.ToString(section["init_script"]) : null;
+        config.ItemizedRead = true;
         config.IpAddress = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "0.0.0.0";
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 502;
         config.Slave = section.ContainsKey("slave") ? Convert.ToByte(section["slave"]) : (byte)1;
@@ -34,6 +36,7 @@ public static class Source
                         Enabled = itemDictionary.ContainsKey("enabled") ? Convert.ToBoolean(itemDictionary["enabled"]) : true,
                         Name = itemDictionary.ContainsKey("name") ? Convert.ToString(itemDictionary["name"]) : Guid.NewGuid().ToString(),
                         ReportByException = itemDictionary.ContainsKey("rbe") ? Convert.ToBoolean(itemDictionary["rbe"]) : config.ReportByException,
+                        Script = itemDictionary.ContainsKey("script") ? Convert.ToString(itemDictionary["script"]) : null,
                         Type = itemDictionary.ContainsKey("type") ? Convert.ToInt32(itemDictionary["type"]) : 1,
                         Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : "1",
                         Count = itemDictionary.ContainsKey("count") ? Convert.ToUInt16(itemDictionary["count"]) : (ushort)1,

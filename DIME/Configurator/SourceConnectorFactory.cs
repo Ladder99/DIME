@@ -10,6 +10,9 @@ public static class SourceConnectorFactory
         
         switch (connectorType)
         {
+            case "asccpc":
+                connector = AscCpc.Source.Create(section, disruptor);
+                break;
             case "ethernetip":
                 connector = EthernetIp.Source.Create(section, disruptor);
                 break;

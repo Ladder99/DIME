@@ -4,6 +4,7 @@ sinks:
   - *mtconnectSink1
   - *httpServerSink1
 sources:
+  - *ascCpcSource1
   - *eipSource1
   - *haasSource1
   - *modbusSource1

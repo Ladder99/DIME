@@ -26,13 +26,13 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
             object readResult = "n/a";
             object scriptResult = "n/a";
             
-            if (item.Address != null)
+            if (!string.IsNullOrEmpty(item.Address))
             {
                 response = ReadFromDevice(item);
                 readResult = response;
             }
 
-            if (item.Script != null)
+            if (!string.IsNullOrEmpty(item.Script))
             {
                 response = ExecuteScript(response, item);
                 scriptResult = response;

@@ -70,6 +70,9 @@
       <None Update="Configs\httpServerSink1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Configs\ascCpcSource1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>
