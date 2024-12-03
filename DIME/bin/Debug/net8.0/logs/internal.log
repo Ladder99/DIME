@@ -5531,3 +5531,26 @@
 2024-12-02 16:50:26.6107 Info LogFactory has been closed.
 2024-12-02 16:50:26.6107 Info AppDomain Shutting down. LogFactory closing...
 2024-12-02 16:50:26.6107 Info LogFactory has been closed.
+2024-12-02 20:44:38.7982 Info Registered target NLog.Targets.FileTarget(Name=fileTarget)
+2024-12-02 20:44:38.8080 Info Registered target NLog.Targets.ConsoleTarget(Name=consoleTarget)
+2024-12-02 20:44:38.8318 Info Registered target NLog.Targets.ChainsawTarget(Name=log4j)
+2024-12-02 20:44:38.8318 Info Registered target NLog.Targets.Wrappers.AsyncTargetWrapper(Name=throttle_log4j)
+2024-12-02 20:44:38.8318 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.4.2778. Product version: 5.3.4+73d83d3161d31288ca5c554cc50d27b6bed5f28b. GlobalAssemblyCache: False
+2024-12-02 20:44:38.9256 Info Validating config: TargetNames=fileTarget, consoleTarget, throttle_log4j, ConfigItems=40, FilePath=C:\source\Ladder99\__1\DIME\bin\Debug\net8.0\NLog.config
+2024-12-02 20:44:38.9453 Info Configuration initialized.
+2024-12-02 20:44:39.0798 Info Loading NLog config from XML file: C:\source\Ladder99\__1\DIME\bin\Debug\net8.0\NLog.config
+2024-12-02 20:44:39.0798 Info Registered target NLog.Targets.FileTarget(Name=fileTarget)
+2024-12-02 20:44:39.0798 Info Registered target NLog.Targets.ConsoleTarget(Name=consoleTarget)
+2024-12-02 20:44:39.1090 Info Registered target NLog.Targets.ChainsawTarget(Name=log4j)
+2024-12-02 20:44:39.1090 Info Registered target NLog.Targets.Wrappers.AsyncTargetWrapper(Name=throttle_log4j)
+2024-12-02 20:44:39.1097 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.4.2778. Product version: 5.3.4+73d83d3161d31288ca5c554cc50d27b6bed5f28b. GlobalAssemblyCache: False
+2024-12-02 20:44:39.1097 Info Validating config: TargetNames=fileTarget, consoleTarget, throttle_log4j, ConfigItems=40, FilePath=C:\source\Ladder99\__1\DIME\bin\Debug\net8.0\NLog.config
+2024-12-02 20:44:39.1097 Info Configuration initialized.
+2024-12-02 20:45:44.7408 Info Validating config: TargetNames=fileTarget, consoleTarget, throttle_log4j, ConfigItems=40, FilePath=C:\source\Ladder99\__1\DIME\bin\Debug\net8.0\NLog.config
+2024-12-02 20:45:44.7501 Info Shutdown() called. Logger closing...
+2024-12-02 20:45:44.7501 Info Closing old configuration.
+2024-12-02 20:45:44.7501 Info Logger has been closed down.
+2024-12-02 20:45:44.7663 Info AppDomain Shutting down. LogFactory closing...
+2024-12-02 20:45:44.7663 Info LogFactory has been closed.
+2024-12-02 20:45:44.7663 Info AppDomain Shutting down. LogFactory closing...
+2024-12-02 20:45:44.7663 Info LogFactory has been closed.

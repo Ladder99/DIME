@@ -1,6 +1,4 @@
-﻿using DIME.Connectors;
-using Disruptor.Dsl;
-using Topshelf;
+﻿using Topshelf;
 
 namespace DIME;
 
@@ -17,6 +15,7 @@ public static class Program
                 s.WhenStopped(tc => tc.Stop());
             });
             x.RunAsLocalSystem();
+            x.EnableHandleCtrlBreak();
             x.SetServiceName("DIME");
             x.SetDisplayName("DIME");
             x.SetDescription("Data in Motion Enterprise");

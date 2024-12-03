@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DIME")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+eabcfc73fa65a7424fffa8ee36ab80258683354d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3c8fdbfac2eefe21a9e175f9100b33a7807565a3")]
 [assembly: System.Reflection.AssemblyProductAttribute("DIME")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DIME")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

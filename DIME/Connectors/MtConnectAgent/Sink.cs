@@ -88,6 +88,8 @@ public class Module : MTConnectInputAgentModule
     
     protected override void OnRead()
     {
+        
+        
         foreach (var message in _connector.Outbox)
         {
             //_device.AddComponent();

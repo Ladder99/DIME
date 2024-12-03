@@ -5,4 +5,4 @@ mqttSink1: &mqttSink1
   connector: MQTT
   address: wss.sharc.tech
   port: !!int 1883
-  base_topic: ids
+  base_topic: dime

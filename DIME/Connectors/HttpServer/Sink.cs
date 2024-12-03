@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace DIME.Connectors.HttpServer;
 
-public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
+public class Sink: SinkConnector<ConnectorConfiguration, Configuration.ConnectorItem>
 {
     private HttpListener _listener;
     private bool _isRunning;
