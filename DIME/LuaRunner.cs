@@ -20,7 +20,7 @@ public class LuaRunner
         {
             _state = new NLua.Lua();
             _state.LoadCLRPackage();
-            _state.DoFile("package.path = package.path .. ';./Lua/?.lua'");
+            _state.DoString("package.path = package.path .. ';./Lua/?.lua'");
             _state["result"] = null;
             _state.RegisterFunction("cache", this, GetType().GetMethod("GetPrimaryCache", BindingFlags.NonPublic | BindingFlags.Instance));
             _state.RegisterFunction("get", this, GetType().GetMethod("GetUserCache", BindingFlags.NonPublic | BindingFlags.Instance));
