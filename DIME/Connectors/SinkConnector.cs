@@ -12,63 +12,71 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
     public SinkConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
     {
         Outbox = new ConcurrentBag<MessageBoxMessage>();
-    }
-    
-    public override bool BeforeUpdate()
-    {
-        return true;
+        
+        Logger.Trace($"[{Configuration.Name}] SinkConnector:.ctor");
     }
     
     protected abstract bool WriteImplementation();
     
     public virtual bool Write()
     {
+        Logger.Trace($"[{Configuration.Name}] SinkConnector:Write::ENTER");
+        
         FaultContext = FaultContextEnum.Write;
+
+        bool result = false;
         
         if (!IsInitialized)
         {
             MarkFaulted(new Exception("Device not initialized."));
-            return false;
+            result = false;
         }
-
-        if (!IsCreated)
+        else if (!IsCreated)
         {
             MarkFaulted(new Exception("Device not created."));
-            return false;
+            result = false;
         }
-
-        if (!IsConnected)
+        else if (!IsConnected)
         {
             MarkFaulted(new Exception("Device not connected."));
-            return false;
+            result = false;
         }
-
-        try
+        else
         {
-            var result = WriteImplementation();
-
-            if (result)
+            try
             {
-                ClearFault();
-            }
-            else
-            {
-                MarkFaulted(new Exception("Device implementation write failed."));
-            }
+                result = WriteImplementation();
 
-            return result;
+                if (result)
+                {
+                    ClearFault();
+                }
+                else
+                {
+                    MarkFaulted(new Exception("Device implementation write failed."));
+                }
+            }
+            catch (Exception e)
+            {
+                MarkFaulted(e);
+                Disconnect();
+                result = false;
+            }
         }
-        catch (Exception e)
-        {
-            MarkFaulted(e);
-            Disconnect();
-            return false;
-        }
+        
+        Logger.Trace($"[{Configuration.Name}] SinkConnector:Write::EXIT");
+
+        return result;
     }
 
     public override bool AfterUpdate()
     {
+        Logger.Trace($"[{Configuration.Name}] SinkConnector:AfterUpdate::ENTER");
+        
         Outbox.Clear();
+        
+        Logger.Trace($"[{Configuration.Name}] SinkConnector:AfterUpdate::EXIT");
+        
         return true;
     }
 }

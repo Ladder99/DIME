@@ -21,10 +21,13 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
     
     public QueuingSourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
+        Logger.Trace($"[{Configuration.Name}] PollingSourceConnector:.ctor");
     }
 
     protected override bool ReadImplementation()
     {
+        Logger.Trace($"[{Configuration.Name}] QueuingSourceConnector:ReadImplementation::ENTER");
+        
         if (!string.IsNullOrEmpty(Configuration.LoopEnterScript))
         {
             ExecuteScript(Configuration.LoopEnterScript);
@@ -154,6 +157,8 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
         {
             ExecuteScript(Configuration.LoopExitScript);
         }
+        
+        Logger.Trace($"[{Configuration.Name}] QueuingSourceConnector:ReadImplementation::ENTER");
         
         return true;
     }

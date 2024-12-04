@@ -9,12 +9,15 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
 {
     public PollingSourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
+        Logger.Trace($"[{Configuration.Name}] PollingSourceConnector:.ctor");
     }
 
     protected abstract object ReadFromDevice(TItem item);
     
     protected override bool ReadImplementation()
     {
+        Logger.Trace($"[{Configuration.Name}] PollingSourceConnector:ReadImplementation::ENTER");
+        
         /*
          * iterate through connector items
          *   execute read from device
@@ -64,6 +67,8 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
         {
             ExecuteScript(Configuration.LoopExitScript);
         }
+        
+        Logger.Trace($"[{Configuration.Name}] PollingSourceConnector:ReadImplementation::EXIT");
         
         return true;
     }

@@ -19,34 +19,56 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         Inbox = new ConcurrentBag<MessageBoxMessage>();
         Samples = new ConcurrentBag<MessageBoxMessage>();
         Current = new ConcurrentBag<MessageBoxMessage>();
+        
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:.ctor");
     }
 
     public override bool Initialize(ConnectorRunner runner)
     {
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:Initialize::ENTER");
+        
         var result = base.Initialize(runner) && ScriptRunner.Initialize(this);
         if (!string.IsNullOrEmpty(Configuration.InitScript))
         {
             ExecuteScript(Configuration.InitScript);
         }
+        
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:Initialize::EXIT");
+        
         return result;
     }
 
     protected object ExecuteScript(string script)
     {
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:ExecuteScript::ENTER");
+        
         var scriptResult = ScriptRunner.DoString(script);
+        
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:ExecuteScript::EXIT");
+        
         return scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
     }
     
     protected object ExecuteScript(object intermediateResult, ConnectorItem item)
     {
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:ExecuteScript::ENTER");
+        
         ScriptRunner["result"] = intermediateResult;
         var scriptResult = ScriptRunner.DoString(item);
+        
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:ExecuteScript::EXIT");
+        
         return scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
     }
     
     public override bool BeforeUpdate()
     {
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:BeforeUpdate::ENTER");
+        
         Samples.Clear();
+        
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:BeforeUpdate::EXIT");
+        
         return true;
     }
     
@@ -54,66 +76,83 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
 
     public virtual bool Read()
     {
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:Read::ENTER");
+        
         FaultContext = FaultContextEnum.Read;
+
+        bool result = false;
         
         if (!IsInitialized)
         {
             MarkFaulted(new Exception("Device not initialized."));
-            return false;
+            result = false;
         }
 
-        if (!IsCreated)
+        else if (!IsCreated)
         {
             MarkFaulted(new Exception("Device not created."));
-            return false;
+            result = false;
         }
 
-        if (!IsConnected)
+        else if (!IsConnected)
         {
             MarkFaulted(new Exception("Device not connected."));
-            return false;
+            result = false;
         }
-
-        try
+        else
         {
-            var result = ReadImplementation();
-
-            if (result)
+            try
             {
-                ClearFault();
-            }
-            else
-            {
-                MarkFaulted(new Exception("Device implementation read failed."));
-            }
+                result = ReadImplementation();
 
-            return result;
+                if (result)
+                {
+                    ClearFault();
+                }
+                else
+                {
+                    MarkFaulted(new Exception("Device implementation read failed."));
+                }
+            }
+            catch (Exception e)
+            {
+                MarkFaulted(e);
+                Disconnect();
+                result = false;
+            }
         }
-        catch (Exception e)
-        {
-            MarkFaulted(e);
-            Disconnect();
-            return false;
-        }
+        
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:Read::EXIT");
+        
+        return result;
     }
 
     public override bool AfterUpdate()
     {
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:AfterUpdate::ENTER");
+        
         AddSystemSamples();
         FillInbox();
         PublishInbox();
         Inbox.Clear();
+        
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:AfterUpdate::EXIT");
         
         return true;
     }
     
     public override bool Deinitialize()
     {
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:Deinitialize::ENTER");
+        
         var result = base.Deinitialize();
         if (!string.IsNullOrEmpty(Configuration.DeinitScript))
         {
             ExecuteScript(Configuration.DeinitScript);
         }
+        
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:Deinitialize::EXIT");
+        
         return result;
     }
 
