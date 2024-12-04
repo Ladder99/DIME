@@ -36,9 +36,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
         var options = clientOptions.Build();
         var result = _client.ConnectAsync(options).Result;
         
-        IsConnected = result.ResultCode == MqttClientConnectResultCode.Success;
-        
-        return true;
+        return result.ResultCode == MqttClientConnectResultCode.Success;
     }
 
     protected override bool WriteImplementation()

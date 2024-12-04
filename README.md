@@ -5,6 +5,33 @@ Move data from enterprise and industrial sources to message queues, databases, a
 Videos
 - [Quick Introduction](https://www.youtube.com/watch?v=P5Gc5bKdiy4)  
 
+## How to Run
+
+### Windows
+
+Download a [release](https://github.com/Ladder99/DIME/releases) and run `DIME.exe`.  Alternatively, `DIME.exe install` will install the DIME Windows Service.
+
+### Docker
+
+```sh
+cd ~
+mkdir -p volumes/dime/configs
+mkdir -p volumes/dime/lua
+mkdir -p volumes/dime/logs
+git clone https://github.com/ladder99/DIME
+cp DIME/DIME/nlog.config volumes/dime/nlog.config
+cp DIME/DIME/Configs/* volumes/dime/configs
+cp DIME/DIME/Lua/* volumes/dime/lua
+
+docker run \
+   -p 8080:8080 \
+   -v ~/volumes/dime/nlog.config:/app/nlog.config \
+   -v ~/volumes/dime/configs:/app/Configs \
+   -v ~/volumes/dime/lua:/app/Lua \
+   -v ~/volumes/dime/logs:/app/Logs \
+   ladder99/dime:latest
+```
+
 ## Configuration Example
 
 Below configuration moves data from a Rockwell PLC and an MQTT broker to an MQTT broker. 
