@@ -48,7 +48,7 @@ sources:
 
 ## Connectors
 
-<table><tr><td style="vertical-align: top;">
+<table><tr><td valign="top">
 
 | Source                      |
 |-----------------------------|
@@ -69,7 +69,7 @@ sources:
 | Postgres                    |
 | Siemens S7                  |
 
-</td><td style="vertical-align: top;">
+</td><td valign="top">
 
 | Sink                              |
 |-----------------------------------|
