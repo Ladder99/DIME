@@ -67,7 +67,10 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
         }
         catch (Exception e)
         {
-            BeginAcceptRequest();
+            if (IsConnected)
+            {
+                BeginAcceptRequest();
+            }
         }
     }
     
@@ -81,7 +84,10 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
         }
         catch (Exception e)
         {
-            BeginAcceptRequest();
+            if (IsConnected)
+            {
+                BeginAcceptRequest();
+            }
         }
     }
     
