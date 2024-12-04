@@ -48,23 +48,28 @@ sources:
 
 ## Connectors
 
-| Source                     |
-|----------------------------|
-| [ASC CPC](#asc-cpc)        |
-| Beckhoff ADS               |
-| [Ethernet/IP](#ethernetip) |
-| Fanuc Focas                |
-| Filesystem                 |
-| [Haas SHDR](#haas-shdr)    |
-| HTTP Client                |
-| [Modbus/TCP](#modbus-tcp)  |
-| [MQTT](#mqtt)              |
-| MS SQL Server              |
-| MTConnect Agent            |
-| OPC-DA                     |
-| OPC-UA                     |
-| Postgres                   |
-| Siemens S7                 |
+<table><tr><td style="vertical-align: top;">
+
+| Source                      |
+|-----------------------------|
+| [ASC CPC](#asc-cpc)         |
+| Beckhoff ADS                |
+| [Ethernet/IP](#ethernetip)  |
+| Fanuc Focas                 |
+| Filesystem                  |
+| [Haas SHDR](#haas-shdr)     |
+| HTTP Client                 |
+| [Modbus/TCP](#modbus-tcp)   |
+| [MQTT](#mqtt)               |
+| MS SQL Server               |
+| MTConnect Agent             |
+| OPC-DA                      |
+| OPC-UA                      |
+| OPC XML-DA                  |
+| Postgres                    |
+| Siemens S7                  |
+
+</td><td style="vertical-align: top;">
 
 | Sink                              |
 |-----------------------------------|
@@ -77,6 +82,7 @@ sources:
 | Redis                             |
 | Splunk HEC                        |
 
+</td></tr></table>
 
 
 ### ASC CPC
