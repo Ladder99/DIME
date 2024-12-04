@@ -9,7 +9,6 @@ namespace DIME.Connectors.HttpServer;
 public class Sink: SinkConnector<ConnectorConfiguration, Configuration.ConnectorItem>
 {
     private HttpListener _listener;
-    private bool _isRunning;
     private ConcurrentDictionary<string, MessageBoxMessage> _messages;
     
     public Sink(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)

@@ -28,11 +28,6 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
         return null;
     }
 
-    protected override bool ReadImplementation()
-    {
-        return base.ReadImplementation();
-    }
-
     protected override bool DisconnectImplementation()
     {
         return true;
