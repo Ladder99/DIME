@@ -30,4 +30,5 @@ public interface IConnector
     public bool Connect();
     public bool AfterUpdate();
     public bool Disconnect();
+    public bool Deinitialize();
 }

@@ -20,6 +20,11 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
          *   execute read from device
          *   execute script
          */
+        if (!string.IsNullOrEmpty(Configuration.LoopEnterScript))
+        {
+            ExecuteScript(Configuration.LoopEnterScript);
+        }
+        
         foreach (var item in Configuration.Items.Where(x => x.Enabled))
         {
             object response = null;
@@ -38,7 +43,7 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
                 scriptResult = response;
             }
             
-            if (response != null)
+            if (response is not null)
             {
                 Samples.Add(new MessageBoxMessage()
                 {
@@ -53,6 +58,11 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
                          $"Read={(readResult==null ? "<null>" : JsonConvert.SerializeObject(readResult))}, " +
                          $"Script={(scriptResult==null ? "<null>" : JsonConvert.SerializeObject(scriptResult))}, " +
                          $"Sample={(response == null ? "DROPPED" : "ADDED")}");
+        }
+        
+        if (!string.IsNullOrEmpty(Configuration.LoopExitScript))
+        {
+            ExecuteScript(Configuration.LoopExitScript);
         }
         
         return true;

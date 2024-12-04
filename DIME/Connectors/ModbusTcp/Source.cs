@@ -84,4 +84,9 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
     {
         return true;
     }
+    
+    protected override bool DeinitializeImplementation()
+    {
+        return true;
+    }
 }

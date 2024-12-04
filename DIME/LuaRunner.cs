@@ -25,7 +25,6 @@ public class LuaRunner
             _state.RegisterFunction("cache", this, GetType().GetMethod("GetPrimaryCache", BindingFlags.NonPublic | BindingFlags.Instance));
             _state.RegisterFunction("get", this, GetType().GetMethod("GetUserCache", BindingFlags.NonPublic | BindingFlags.Instance));
             _state.RegisterFunction("set", this, GetType().GetMethod("SetUserCache", BindingFlags.NonPublic | BindingFlags.Instance));
-            var initResult = _state.DoString(_connector.Configuration.InitScript ?? "");
             return true;
         }
         catch (Exception e)
@@ -40,6 +39,19 @@ public class LuaRunner
         set => _state[key] = value;
     }
 
+    public object[] DoString(string chunk)
+    {
+        try
+        {
+            return _state.DoString(chunk);
+        }
+        catch (Exception e)
+        {
+            Logger.Error($"[{_connector.Configuration.Name}] Chunk execution failed: {chunk}");
+            throw;
+        }
+    }
+    
     public object[] DoString(ConnectorItem item)
     {
         try

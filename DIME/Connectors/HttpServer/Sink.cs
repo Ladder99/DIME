@@ -56,6 +56,11 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
         return true;
     }
     
+    protected override bool DeinitializeImplementation()
+    {
+        return true;
+    }
+    
     private void BeginAcceptRequest()
     {
         if (!_isRunning) return;

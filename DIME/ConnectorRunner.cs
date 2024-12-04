@@ -62,6 +62,7 @@ public class ConnectorRunner
     {
         _timer.Stop();
         ConnectorDisconnect();
+        ConnectorDeinitialize();
     }
 
     private bool ExecuteEnter()
@@ -192,6 +193,20 @@ public class ConnectorRunner
         else
         {
             Logger.Error(Connector.FaultReason, $"[{Connector.Configuration.Name}] Connector disconnection failed.");
+            return false;
+        }
+    }
+    
+    private bool ConnectorDeinitialize()
+    {
+        if (Connector.Deinitialize())
+        {
+            Logger.Info($"[{Connector.Configuration.Name}] Connector deinitialized.");
+            return true;
+        }
+        else
+        {
+            Logger.Error(Connector.FaultReason, $"[{Connector.Configuration.Name}] Connector deinitialization failed.");
             return false;
         }
     }

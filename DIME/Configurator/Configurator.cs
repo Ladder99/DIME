@@ -9,7 +9,7 @@ namespace DIME.Configurator;
 public partial class Configurator
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-    
+
     public static Dictionary<object,object> Read(string[] configurationFilenames)
     {
         Logger.Debug("[Configurator.Read] Reading files {0}", configurationFilenames);
@@ -56,12 +56,12 @@ public partial class Configurator
         if (configuration.ContainsKey("sinks"))
         {
             var sinks = configuration["sinks"] as List<object>;
-            if (sinks != null)
+            if (sinks is not null)
             {
                 foreach (var section in sinks)
                 {
                     var sectionDictionary = section as Dictionary<object, object>;
-                    if (sectionDictionary != null)
+                    if (sectionDictionary is not null)
                     {
                         var connectorType = (sectionDictionary.ContainsKey("connector")
                             ? Convert.ToString(sectionDictionary["connector"])?.ToLower()
@@ -69,7 +69,7 @@ public partial class Configurator
 
                         var connector = SinkConnectorFactory.Create(connectorType, sectionDictionary, disruptor);
 
-                        if (connector == null)
+                        if (connector is null)
                         {
                             Logger.Error($"[Configurator.Sinks] Connector type is not supported: '{connectorType}'");
                         }
@@ -101,12 +101,12 @@ public partial class Configurator
         if (configuration.ContainsKey("sources"))
         {
             var sources = configuration["sources"] as List<object>;
-            if (sources != null)
+            if (sources is not null)
             {
                 foreach (var section in sources)
                 {
                     var sectionDictionary = section as Dictionary<object, object>;
-                    if (sectionDictionary != null)
+                    if (sectionDictionary is not null)
                     {
                         var connectorType = (sectionDictionary.ContainsKey("connector")
                             ? Convert.ToString(sectionDictionary["connector"])?.ToLower()
@@ -114,7 +114,7 @@ public partial class Configurator
 
                         var connector = SourceConnectorFactory.Create(connectorType, sectionDictionary, disruptor);
 
-                        if (connector == null)
+                        if (connector is null)
                         {
                             Logger.Error($"[Configurator.Sources] Connector type is not supported: '{connectorType}'");
                         }
@@ -145,5 +145,4 @@ public partial class Configurator
 
         return _connectors;
     }
-
 }

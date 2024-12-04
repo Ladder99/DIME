@@ -48,6 +48,116 @@ sources:
 
 ## Connectors
 
+| Source                     |
+|----------------------------|
+| [ASC CPC](#asc-cpc)        |
+| Beckhoff ADS               |
+| [Ethernet/IP](#ethernetip) |
+| Fanuc Focas                |
+| Filesystem                 |
+| [Haas SHDR](#haas-shdr)    |
+| HTTP Client                |
+| [Modbus/TCP](#modbus-tcp)  |
+| [MQTT](#mqtt)              |
+| MS SQL Server              |
+| MTConnect Agent            |
+| OPC-DA                     |
+| OPC-UA                     |
+| Postgres                   |
+| Siemens S7                 |
+
+| Sink                              |
+|-----------------------------------|
+| [HTTP Server](#http-server)       |
+| [MQTT](#mqtt)                     |
+| MS SQL Server                     |
+| MTConnect Agent                   |
+| [MTConnect SHDR](#mtconnect-shdr) |
+| Postgres                          |
+| Redis                             |
+| Splunk HEC                        |
+
+
+
+### ASC CPC
+
+| Name            | Type         | Description                        |
+|-----------------|--------------|------------------------------------|
+| name            | string       | unique connector name              |
+| enabled         | bool         | is connector enabled               |
+| scan_interval   | int          | scanning frequency in milliseconds |
+| rbe             | bool         | report by exception                |
+| init_script     | string       | startup lua script                 |
+| connector       | string       | connector type, `AscCPC`           |
+| address         | string       | computer hostname                  |
+| items           | object array | cpc items                          |
+| items[].name    | string       | unique item name                   |
+| items[].enabled | bool         | is item enabled                    |
+| items[].rbe     | bool         | report by exception override       |
+| items[].address | string       | cpc item address                   |
+| items[].script  | string       | lua script                         |
+
+#### Source Example
+
+```yaml
+  - name: ascCpcSource1
+    enabled: !!bool true
+    scan_interval: !!int 1000
+    connector: AscCPC
+    rbe: !!bool true
+    address: 192.168.111.12
+    port: !!int 9999
+    init_script: ~
+    items:
+      - name: Temperature
+        enabled: !!bool true
+        rbe: !!bool true
+        address: .Autoclave.Inputs.AIRTC\Value
+        script: ~
+      - name: Pressure
+        enabled: !!bool true
+        rbe: !!bool true
+        address: .Autoclave.Inputs.PRESS\Value
+        script: ~
+      - name: PumpHours
+        enabled: !!bool true
+        rbe: !!bool true
+        address: .Autoclave.Scripts.MotorHours.CoolPumpAOn\Value
+        script: ~
+      - name: UserOperator
+        enabled: !!bool true
+        rbe: !!bool true
+        address: .Autoclave.Variables.OperatorName\Value
+        script: ~
+      - name: Program
+        enabled: !!bool true
+        rbe: !!bool true
+        address: .Autoclave.RecipeProcessor.Recipe.RecipeData\Description
+        script: ~
+      - name: ControlPowerConditionTriggered
+        enabled: !!bool true
+        rbe: !!bool true
+        address: .Autoclave.Alarms.ControlPower\Condition
+        script: |
+          set('cptrig', result);
+          return nil;
+      - name: ControlPowerAlarmActive
+        enabled: !!bool true
+        rbe: !!bool true
+        address: .Autoclave.Alarms.ControlPower\AlarmActive
+        script: |
+          set('cpalm', result);
+          return nil;
+      - name: ControlPowerCondition
+        enabled: !!bool true
+        rbe: !!bool true
+        address: ~
+        script: |
+          local cptrig = get('cptrig', false);
+          local cpalm = get('cpalm', false);
+          return cpalm and 'Fault' or (cptrig and 'Warning' or 'Normal');
+```
+
 ### Ethernet/IP
 
 | Name            | Type         | Description                                                                 |
@@ -133,7 +243,7 @@ sources:
     retry_interval: !!int 10000
 ```
 
-### Http Server
+### HTTP Server
 
 | Name            | Type         | Description                          |
 |-----------------|--------------|--------------------------------------|
@@ -479,7 +589,7 @@ sources:
 
 ## Docker
 
-```
+```sh
 cd ~
 git clone https://github.com/ladder99/DIME
 cd DIME/DIME

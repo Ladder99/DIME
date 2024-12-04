@@ -97,6 +97,11 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         return true;
     }
     
+    protected override bool DeinitializeImplementation()
+    {
+        return true;
+    }
+    
     private bool ShdrOn()
     {
         try

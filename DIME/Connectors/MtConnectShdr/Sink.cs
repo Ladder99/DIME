@@ -78,8 +78,8 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
         {
             Console.WriteLine($"{response.Path} = {response.Data}");
 
-            if (response.ConnectorItemRef != null && 
-                response.ConnectorItemRef.Meta != null &&
+            if (response.ConnectorItemRef is not null && 
+                response.ConnectorItemRef.Meta is not null &&
                 response.ConnectorItemRef.Meta.ContainsKey("mtconnect"))
             {
                 string mtconnectPath = response.ConnectorItemRef.Meta["mtconnect"].ToString();
@@ -98,6 +98,11 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
     {
         _client.Stop();
         IsConnected = false;
+        return true;
+    }
+    
+    protected override bool DeinitializeImplementation()
+    {
         return true;
     }
 }

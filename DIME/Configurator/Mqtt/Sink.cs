@@ -15,6 +15,8 @@ public static class Sink
         config.Name = section.ContainsKey("name") ? Convert.ToString(section["name"]) : Guid.NewGuid().ToString();
         config.IpAddress = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 1883;
+        config.Username = section.ContainsKey("username") ? Convert.ToString(section["username"]) : null;
+        config.Password = section.ContainsKey("password") ? Convert.ToString(section["password"]) : null;
         config.BaseTopic = section.ContainsKey("base_topic") ? Convert.ToString(section["base_topic"]) : "ids";
 
         var connector = new Connectors.Mqtt.Sink(config, disruptor);

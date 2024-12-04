@@ -23,9 +23,20 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
 
     public override bool Initialize(ConnectorRunner runner)
     {
-        return base.Initialize(runner) && ScriptRunner.Initialize(this);
+        var result = base.Initialize(runner) && ScriptRunner.Initialize(this);
+        if (!string.IsNullOrEmpty(Configuration.InitScript))
+        {
+            ExecuteScript(Configuration.InitScript);
+        }
+        return result;
     }
 
+    protected object ExecuteScript(string script)
+    {
+        var scriptResult = ScriptRunner.DoString(script);
+        return scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
+    }
+    
     protected object ExecuteScript(object intermediateResult, ConnectorItem item)
     {
         ScriptRunner["result"] = intermediateResult;
@@ -94,6 +105,16 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         Inbox.Clear();
         
         return true;
+    }
+    
+    public override bool Deinitialize()
+    {
+        var result = base.Deinitialize();
+        if (!string.IsNullOrEmpty(Configuration.DeinitScript))
+        {
+            ExecuteScript(Configuration.DeinitScript);
+        }
+        return result;
     }
 
     private void AddSystemSamples()

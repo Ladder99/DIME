@@ -51,6 +51,11 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
         IsConnected = false;
         return true;
     }
+    
+    protected override bool DeinitializeImplementation()
+    {
+        return true;
+    }
 
     public override bool AfterUpdate()
     {

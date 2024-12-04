@@ -11,7 +11,8 @@ public enum FaultContextEnum
     Connect,
     Read,
     Write,
-    Disconnect
+    Disconnect,
+    Deinitialize
 }
 
 public abstract class Connector<TConfig, TItem>: IConnector
@@ -213,6 +214,46 @@ public abstract class Connector<TConfig, TItem>: IConnector
         catch (Exception e)
         {
             IsConnected = false;
+            MarkFaulted(e);
+            return false;
+        }
+    }
+
+    protected abstract bool DeinitializeImplementation();
+
+    public virtual bool Deinitialize()
+    {
+        FaultContext = FaultContextEnum.Deinitialize;
+        
+        if (!IsInitialized)
+        {
+            MarkFaulted(new Exception("Device not initialized."));
+            return false;
+        }
+
+        if (!IsCreated)
+        {
+            MarkFaulted(new Exception("Device not created."));
+            return false;
+        }
+        
+        try
+        { 
+            var isDeinitialized = DeinitializeImplementation();
+
+            if (isDeinitialized)
+            {
+                
+            }
+            else
+            {
+                MarkFaulted(new Exception("Device implementation deinitialization failed."));
+            }
+            
+            return isDeinitialized;
+        }
+        catch (Exception e)
+        {
             MarkFaulted(e);
             return false;
         }

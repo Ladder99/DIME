@@ -38,13 +38,13 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
         });
             
         LibPlcTag.DebugLevel = Properties.GetProperty<DebugLevel>("logLevel");
+        LibPlcTag.LogEvent += LibPlcTagOnLogEvent;
 
         return true;
     }
 
     protected override bool CreateImplementation()
     {
-        LibPlcTag.LogEvent += LibPlcTagOnLogEvent;
         return true;
     }
 
@@ -154,6 +154,11 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
     }
     
     protected override bool DisconnectImplementation()
+    {
+        return true;
+    }
+    
+    protected override bool DeinitializeImplementation()
     {
         LibPlcTag.LogEvent -= LibPlcTagOnLogEvent;
         return true;

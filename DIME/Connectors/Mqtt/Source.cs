@@ -39,7 +39,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         IsConnected = result.ResultCode == MqttClientConnectResultCode.Success;
         
         var mqttSubscribeOptions = new MqttClientFactory().CreateSubscribeOptionsBuilder();
-        foreach(var item in Configuration.Items.Where(x => x.Enabled && x.Address != null))
+        foreach(var item in Configuration.Items.Where(x => x.Enabled && x.Address is not null))
         {
             mqttSubscribeOptions.WithTopicFilter(f => { f.WithTopic(item.Address); });
         }
@@ -51,6 +51,11 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
     protected override bool DisconnectImplementation()
     {
         _client.DisconnectAsync().Wait();
+        return true;
+    }
+    
+    protected override bool DeinitializeImplementation()
+    {
         return true;
     }
     

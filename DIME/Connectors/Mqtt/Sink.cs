@@ -64,6 +64,11 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
         _client.DisconnectAsync().Wait();
         return true;
     }
+    
+    protected override bool DeinitializeImplementation()
+    {
+        return true;
+    }
 
     private Task ClientOnDisconnectedAsync(MqttClientDisconnectedEventArgs arg)
     {

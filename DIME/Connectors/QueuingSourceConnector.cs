@@ -25,6 +25,11 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
 
     protected override bool ReadImplementation()
     {
+        if (!string.IsNullOrEmpty(Configuration.LoopEnterScript))
+        {
+            ExecuteScript(Configuration.LoopEnterScript);
+        }
+        
         if (Configuration.ItemizedRead)
         {
             /*
@@ -38,7 +43,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                 {
                     IEnumerable<IncomingMessage> messages = null;
 
-                    if (item.Address != null)
+                    if (item.Address is not null)
                     {
                         messages = _incomingBuffer.Where(x => x.Key == item.Address);
 
@@ -48,13 +53,13 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                             object readResult = result;
                             object scriptResult = "n/a";
 
-                            if (item.Script != null)
+                            if (item.Script is not null)
                             {
                                 result = ExecuteScript(message.Value, item);
                                 scriptResult = result;
                             }
 
-                            if (result != null)
+                            if (result is not null)
                             {
                                 Samples.Add(new MessageBoxMessage()
                                 {
@@ -71,11 +76,11 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                                          $"Sample={(result == null ? "DROPPED" : "ADDED")}");
                         }
                     }
-                    else if (item.Script != null)
+                    else if (item.Script is not null)
                     {
                         var result = ExecuteScript(null, item);
 
-                        if (result != null)
+                        if (result is not null)
                         {
                             Samples.Add(new MessageBoxMessage()
                             {
@@ -111,11 +116,11 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                     try
                     {
                         var item = Configuration.Items
-                            .First(x => x.Enabled && x.Address == message.Key && x.Script != null);
+                            .First(x => x.Enabled && x.Address == message.Key && x.Script is not null);
                         
                         var result = ExecuteScript(message.Value, item);
 
-                        if (result != null)
+                        if (result is not null)
                         {
                             Samples.Add(new MessageBoxMessage()
                             {
@@ -145,6 +150,11 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
             }
         }
 
+        if (!string.IsNullOrEmpty(Configuration.LoopExitScript))
+        {
+            ExecuteScript(Configuration.LoopExitScript);
+        }
+        
         return true;
     }
 }
