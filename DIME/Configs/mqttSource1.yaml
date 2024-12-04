@@ -1,6 +1,6 @@
 mqttSource1: &mqttSource1
   name: mqttSource1
-  enabled: !!bool false
+  enabled: !!bool true
   scan_interval: !!int 1000
   connector: MQTT
   rbe: !!bool true

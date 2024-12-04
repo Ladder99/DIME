@@ -67,6 +67,7 @@ sources:
 | Sink                              |
 |-----------------------------------|
 | [HTTP Server](#http-server)       |
+| Influx LP                         |
 | [MQTT](#mqtt)                     |
 | MS SQL Server                     |
 | MTConnect Agent                   |
