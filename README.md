@@ -2,6 +2,9 @@
 
 Move data from enterprise and industrial sources to message queues, databases, and other sinks.  
 
+Videos
+- [Quick Introduction](https://www.youtube.com/watch?v=P5Gc5bKdiy4)  
+
 ## Configuration Example
 
 Below configuration moves data from a Rockwell PLC and an MQTT broker to an MQTT broker. 
@@ -9,34 +12,24 @@ Below configuration moves data from a Rockwell PLC and an MQTT broker to an MQTT
 ```yaml
 sinks:
   - name: mqttSink1
-    enabled: !!bool true
-    scan_interval: !!int 1000
     connector: MQTT
     address: wss.sharc.tech
     port: !!int 1883
     base_topic: ids
 sources:
   - name: plcSource1
-    enabled: !!bool true
-    scan_interval: !!int 1000
     connector: EthernetIP
     type: !!int 5
     address: 192.168.111.20
     path: 1,0
-    log: !!int 0
-    timeout: !!int 1000
     items:
       - name: boolTag1
-        enabled: !!bool true
         type: bool
         address: B3:0/2
       - name: boolTag2
-        enabled: !!bool true
         type: bool
         address: B3:0/3
   - name: mqttSource1
-    enabled: !!bool true
-    scan_interval: !!int 1000
     connector: MQTT
     address: wss.sharc.tech
     port: !!int 1883
@@ -107,61 +100,14 @@ sources:
 
 ```yaml
   - name: ascCpcSource1
-    enabled: !!bool true
-    scan_interval: !!int 1000
     connector: AscCPC
-    rbe: !!bool true
     address: 192.168.111.12
     port: !!int 9999
     init_script: ~
     items:
       - name: Temperature
-        enabled: !!bool true
-        rbe: !!bool true
         address: .Autoclave.Inputs.AIRTC\Value
         script: ~
-      - name: Pressure
-        enabled: !!bool true
-        rbe: !!bool true
-        address: .Autoclave.Inputs.PRESS\Value
-        script: ~
-      - name: PumpHours
-        enabled: !!bool true
-        rbe: !!bool true
-        address: .Autoclave.Scripts.MotorHours.CoolPumpAOn\Value
-        script: ~
-      - name: UserOperator
-        enabled: !!bool true
-        rbe: !!bool true
-        address: .Autoclave.Variables.OperatorName\Value
-        script: ~
-      - name: Program
-        enabled: !!bool true
-        rbe: !!bool true
-        address: .Autoclave.RecipeProcessor.Recipe.RecipeData\Description
-        script: ~
-      - name: ControlPowerConditionTriggered
-        enabled: !!bool true
-        rbe: !!bool true
-        address: .Autoclave.Alarms.ControlPower\Condition
-        script: |
-          set('cptrig', result);
-          return nil;
-      - name: ControlPowerAlarmActive
-        enabled: !!bool true
-        rbe: !!bool true
-        address: .Autoclave.Alarms.ControlPower\AlarmActive
-        script: |
-          set('cpalm', result);
-          return nil;
-      - name: ControlPowerCondition
-        enabled: !!bool true
-        rbe: !!bool true
-        address: ~
-        script: |
-          local cptrig = get('cptrig', false);
-          local cpalm = get('cpalm', false);
-          return cpalm and 'Fault' or (cptrig and 'Warning' or 'Normal');
 ```
 
 ### Ethernet/IP
@@ -191,9 +137,6 @@ sources:
 
 ```yaml
   - name: plcSource1
-    enabled: !!bool false
-    scan_interval: !!int 1000
-    rbe: !!bool true
     connector: EthernetIP
     type: !!int 5
     address: 192.168.111.20
@@ -202,11 +145,9 @@ sources:
     timeout: !!int 1000
     items:
       - name: boolTag1
-        enabled: !!bool true
         type: bool
         address: B3:0/2
       - name: boolTag2
-        enabled: !!bool true
         type: bool
         address: B3:0/3
 ```
@@ -238,10 +179,7 @@ sources:
 
 ```yaml
   - name: haasSource1
-    enabled: !!bool true
-    scan_interval: !!int 1000
     connector: HaasSHDR
-    rbe: !!bool true
     address: 192.168.111.221
     port: !!int 9998
     timeout: !!int 1000
@@ -264,8 +202,6 @@ sources:
 
 ```yaml
   - name: httpServerSink1
-    enabled: !!bool true
-    scan_interval: !!int 1000
     connector: HttpServer
     uri: http://localhost:8080/
 ```
@@ -294,17 +230,13 @@ sources:
 
 ```yaml
   - name: modbusSource1
-    enabled: !!bool false
-    scan_interval: !!int 1000
     connector: ModbusTCP
-    rbe: !!bool true
     address: 192.168.111.20
     port: !!int 502
     slave: !!int 1
     timeout: !!int 1000
     items:
       - name: coilTag1
-        enabled: !!bool true
         type: !!int 1
         address: !!int 1
         count: !!int 10
@@ -332,8 +264,6 @@ sources:
 
 ```yaml
   - name: mqttSink1
-    enabled: !!bool true
-    scan_interval: !!int 1000
     connector: MQTT
     address: wss.sharc.tech
     port: !!int 1883
@@ -344,9 +274,6 @@ sources:
 
 ```yaml
   - name: mqttSource1
-    enabled: !!bool false
-    scan_interval: !!int 1000
-    rbe: !!bool true
     connector: MQTT
     address: wss.sharc.tech
     port: !!int 1883
@@ -374,8 +301,6 @@ sources:
 
 ```yaml
   - name: shdrSink1
-    enabled: !!bool false
-    scan_interval: !!int 1000
     connector: MTConnectSHDR
     port: !!int 7878
     device_key: ~
@@ -418,18 +343,18 @@ solution
 ## Scripting
 
 Each connector configuration allows for Lua script execution.  The `init_script` property is executed on 
-startup and is used to import additional .NET or Lua libraries.  Within each item script, the primary cache can be 
-accessed using the `cache(path, defaultValue)` function call.  The `path` refers to the item's unique path which 
-is a combination of the connector's and item's name (e.g. `eipSource1/boolTag2`, `mqttSource1/ffe4Sensor`). 
-Within the connector's execution context, the connector name can be omitted and replaced with a period, `./boolTag2`. 
-A secondary cache can be accessed using the `get(key, defaultValue)` and `set(key, value)` function calls.  This 
-user-defined cache is scoped to the individual connector.
+startup and is used to import additional .NET or Lua libraries.  The `deinit_script` property is executed on shutdown. 
+The `enter_script` and `exit_script` properties are executed before and after reading all items, respectively. 
+Within each item script, the primary cache can be accessed using the `cache(path, defaultValue)` function call. 
+The `path` refers to the item's unique path which is a combination of the connector's and item's name 
+(e.g. `eipSource1/boolTag2`, `mqttSource1/ffe4Sensor`). Within the connector's execution context, 
+the connector name can be omitted and replaced with a period, `./boolTag2`. A secondary cache can be accessed 
+using the `get(key, defaultValue)` and `set(key, value)` function calls.  This user-defined cache is scoped to 
+the individual connector.
 
 ```yaml
 mqttSink1: &mqttSink1
    name: mqttSink1
-   enabled: !!bool true
-   scan_interval: !!int 1000
    connector: MQTT
    address: wss.sharc.tech
    port: !!int 1883
@@ -437,16 +362,16 @@ mqttSink1: &mqttSink1
 
 eipSource1: &eipSource1
    name: eipSource1
-   enabled: !!bool true
-   scan_interval: !!int 1000
    connector: EthernetIP
-   rbe: !!bool true
    type: !!int 5
    address: 192.168.111.20
    path: 1,0
    log: !!int 0
    timeout: !!int 1000
    init_script: ~
+   deinit_script: ~
+   enter_script: ~
+   exit_script: ~
    items:
       - name: boolSetUserCacheOnly
         enabled: !!bool true
@@ -469,10 +394,7 @@ eipSource1: &eipSource1
         
 mqttSource1: &mqttSource1
    name: mqttSource1
-   enabled: !!bool true
-   scan_interval: !!int 1000
    connector: MQTT
-   rbe: !!bool true
    itemized_read: !!bool true
    address: wss.sharc.tech
    port: !!int 1883
@@ -484,13 +406,11 @@ mqttSource1: &mqttSource1
         enabled: !!bool false
         address: sharc/+/evt/#
       - name: ffe4Sensor
-        enabled: !!bool true
         rbe: !!bool false
         address: sharc/08d1f953ffe4/evt/io/s1
         script: |
            return json.decode(result).v.s1.v;
       - name: ffe4SensorAndDelta
-        enabled: !!bool true
         rbe: !!bool false
         address: sharc/08d1f953ffe4/evt/io/s1
         script: |
@@ -498,10 +418,7 @@ mqttSource1: &mqttSource1
 
 scriptSource1: &scriptSource1
    name: scriptSource1
-   enabled: !!bool true
-   scan_interval: !!int 1000
    connector: Script
-   rbe: !!bool true
    init_script: |
       luanet.load_assembly("System")
       CLR = {
@@ -514,73 +431,52 @@ scriptSource1: &scriptSource1
       pcArray = {}
    items:
       - name: machineNameDiscrete
-        enabled: !!bool true
         rbe: !!bool false
         script: |
            return CLR.env.MachineName;
       - name: machineNameByRefRbe
-        enabled: !!bool true
-        rbe: !!bool true
         script: |
            return cache('./machineNameDiscrete', nil);
       - name: dateTime
-        enabled: !!bool true
-        rbe: !!bool true
         script: |
            return os.date("%Y-%m-%d %H:%M:%S");
       - name: randomUserCacheOnly
-        enabled: !!bool true
-        rbe: !!bool true
         script: |
            set('random', math.random(500));
            return nil;
       - name: randomFromUserCache
-        enabled: !!bool true
-        rbe: !!bool true
         script: |
            return get('random', -1);
       - name: mqttSensorReading
-        enabled: !!bool true
-        rbe: !!bool true
         script: |
            return cache('mqttSource1/ffe4Sensor', nil);
       - name: mqttSensorReadingMedian
-        enabled: !!bool true
-        rbe: !!bool true
         script: |
            table.insert(pcArray, cache('mqttSource1/ffe4Sensor', 0));
            pcArray = moses.last(pcArray, 100);
            return moses.median(pcArray);
       - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/PartCount
-        enabled: !!bool true
         rbe: !!bool false
         script: |
            return cache('mqttSource1/ffe4Sensor', nil)
       - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/ReportPeriod
-        enabled: !!bool true
         rbe: !!bool false
         script: |
            return cache('mqttSource1/ffe4SensorAndDelta', {0, 0})[1]
       - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/Execution
-        enabled: !!bool true
         rbe: !!bool true
         script: |
            return cache('eipSource1/Execution', nil)
       - name: OverallAvailabilityArrayNonRbe
-        enabled: !!bool true
         rbe: !!bool false
         script: |
            local n = cache('eipSource1/$SYSTEM/IsConnected', nil);
            return n, n==true;
       - name: OverallAvailabilityArrayRbe
-        enabled: !!bool true
-        rbe: !!bool true
         script: |
            local n = cache('eipSource1/$SYSTEM/IsConnected', nil);
            return n, n==true;
       - name: OverallAvailabilityRbe
-        enabled: !!bool true
-        rbe: !!bool true
         script: |
            local n = cache('eipSource1/$SYSTEM/IsConnected', nil);
            return n==true and 'Available' or 'Unavailable';
