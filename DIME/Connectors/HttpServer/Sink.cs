@@ -40,7 +40,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
         foreach (var message in Outbox)
         {
             //Console.WriteLine($"{message.Path} = {message.Data}");
-            _messages[message.Path] = message;
+            _messages.AddOrUpdate(message.Path, message, (key, oldValue) => message);
         }
         
         return true;
