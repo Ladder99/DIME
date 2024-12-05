@@ -89,15 +89,9 @@ public class LuaRunner
             }
             catch (InvalidOperationException e1)
             {
-                try
-                {
-                    var message = connector?.Current.Last(x => x.Path == path);
-                    value = message?.Data;
-                }
-                catch (InvalidOperationException e2)
-                {
-                
-                }
+                MessageBoxMessage message = null;
+                connector?.Current.TryGetValue(path, out message);
+                value = message?.Data;
             }
         }
         catch (InvalidOperationException e)

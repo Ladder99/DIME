@@ -11,14 +11,14 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     protected LuaRunner ScriptRunner { get; set; }
     public ConcurrentBag<MessageBoxMessage> Inbox { get; set; }
     public ConcurrentBag<MessageBoxMessage> Samples { get; set; }
-    public ConcurrentBag<MessageBoxMessage> Current { get; set; }
+    public ConcurrentDictionary<string, MessageBoxMessage> Current { get; set; }
     
     public SourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
     {
         ScriptRunner = new LuaRunner();
         Inbox = new ConcurrentBag<MessageBoxMessage>();
         Samples = new ConcurrentBag<MessageBoxMessage>();
-        Current = new ConcurrentBag<MessageBoxMessage>();
+        Current = new ConcurrentDictionary<string, MessageBoxMessage>();
         
         Logger.Trace($"[{Configuration.Name}] SourceConnector:.ctor");
     }
@@ -216,16 +216,8 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         foreach (var sampleResponse in Samples)
         {
             MessageBoxMessage matchingCurrent = null;
-
-            try
-            {
-                matchingCurrent = Current
-                    .First(x => x.Path == sampleResponse.Path);
-            }
-            catch (InvalidOperationException e)
-            {
-            }
-
+            Current.TryGetValue(sampleResponse.Path, out matchingCurrent);
+            
             // sample does not exist in current, it is a new sample
             if (matchingCurrent is null)
             {
@@ -233,7 +225,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                              $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
                 
                 Inbox.Add(sampleResponse);
-                Current.Add(sampleResponse);
+                Current.AddOrUpdate(sampleResponse.Path, sampleResponse, (key, oldValue) => sampleResponse);
             }
             // sample data is different, it is an updated sample
             else
@@ -315,8 +307,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                     Inbox.Add(sampleResponse);
                 }
 
-                matchingCurrent.Data = sampleResponse.Data;
-                matchingCurrent.Timestamp = sampleResponse.Timestamp;
+                Current.AddOrUpdate(sampleResponse.Path, sampleResponse, (key, oldValue) => sampleResponse);
             }
         }
     }

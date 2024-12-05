@@ -7,7 +7,7 @@ public interface ISourceConnector: IConnector
 {
     public ConcurrentBag<MessageBoxMessage> Inbox { get; }
     public ConcurrentBag<MessageBoxMessage> Samples { get; }
-    public ConcurrentBag<MessageBoxMessage> Current { get; }
+    public ConcurrentDictionary<string, MessageBoxMessage> Current { get; }
     public bool Read();
 }
 
