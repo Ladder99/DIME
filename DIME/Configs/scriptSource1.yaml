@@ -1,7 +1,7 @@
 scriptSource1: &scriptSource1
   name: scriptSource1
   enabled: !!bool true
-  scan_interval: !!int 1000
+  scan_interval: !!int 500
   connector: Script
   rbe: !!bool true
   init_script: |
@@ -50,7 +50,7 @@ scriptSource1: &scriptSource1
       enabled: !!bool true
       rbe: !!bool true
       script: |
-        return cache('mqttSource1/ffe4Sensor', nil);
+        return cache('mqttSource1/ffe4Sensor', 0);
     - name: mqttSensorReadingMedian
       enabled: !!bool true
       rbe: !!bool true
@@ -62,7 +62,7 @@ scriptSource1: &scriptSource1
       enabled: !!bool true
       rbe: !!bool false
       script: |
-        return cache('mqttSource1/ffe4Sensor', nil)
+        return cache('mqttSource1/ffe4Sensor', 'Unavailable')
     - name: AcmeCorp/ChicagoPlant/AssemblyArea/Line1/ReportPeriod
       enabled: !!bool true
       rbe: !!bool false
@@ -72,7 +72,7 @@ scriptSource1: &scriptSource1
       enabled: !!bool true
       rbe: !!bool true
       script: |
-        return cache('eipSource1/Execution', nil)
+        return cache('eipSource1/Execution', 'Unavailable')
     - name: OverallAvailabilityArrayNonRbe
       enabled: !!bool true
       rbe: !!bool false

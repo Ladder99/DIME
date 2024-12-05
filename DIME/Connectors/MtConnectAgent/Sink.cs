@@ -56,12 +56,6 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
     {
         return true;
     }
-
-    public override bool AfterUpdate()
-    {
-        // do not allow base to clear outbox
-        return true;
-    }
 }
 
 public class Module : MTConnectInputAgentModule
@@ -94,7 +88,7 @@ public class Module : MTConnectInputAgentModule
     protected override void OnRead()
     {
         
-        
+        // TODO: move this back into connector
         foreach (var message in _connector.Outbox)
         {
             //_device.AddComponent();

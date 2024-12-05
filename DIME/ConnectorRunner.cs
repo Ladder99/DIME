@@ -29,11 +29,6 @@ public class ConnectorRunner
     public void Start()
     {
         Logger.Trace($"[{Connector.Configuration.Name}] Start::ENTER");
-        if (Connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
-        {
-            _disruptor.HandleEventsWith(new SinkMessageHandler((ISinkConnector)Connector));
-        }
-
         ConnectorInitialize();
         ConnectorCreate();
         StartTimer();

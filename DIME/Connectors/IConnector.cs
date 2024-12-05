@@ -13,7 +13,9 @@ public interface ISourceConnector: IConnector
 
 public interface ISinkConnector: IConnector
 {
-    public ConcurrentBag<MessageBoxMessage> Outbox { get; }
+    //public ConcurrentBag<MessageBoxMessage> Outbox { get; }
+    public List<MessageBoxMessage> Outbox { get; }
+    public bool IsWriting { get; }
     public bool Write();
 }
 

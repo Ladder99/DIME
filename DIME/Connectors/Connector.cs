@@ -69,6 +69,10 @@ public abstract class Connector<TConfig, TItem>: IConnector
             try
             {
                 Runner = runner;
+                if (Configuration.Direction == ConnectorDirectionEnum.Sink)
+                {
+                    Disruptor.HandleEventsWith(new SinkMessageHandler((ISinkConnector)this));
+                }
                 IsInitialized = InitializeImplementation();
 
                 if (IsInitialized)

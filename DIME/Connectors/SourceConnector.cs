@@ -12,6 +12,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     public ConcurrentBag<MessageBoxMessage> Inbox { get; set; }
     public ConcurrentBag<MessageBoxMessage> Samples { get; set; }
     public ConcurrentDictionary<string, MessageBoxMessage> Current { get; set; }
+    protected bool PublishInboxInBatch { get; set; }
     
     public SourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
     {
@@ -19,6 +20,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         Inbox = new ConcurrentBag<MessageBoxMessage>();
         Samples = new ConcurrentBag<MessageBoxMessage>();
         Current = new ConcurrentDictionary<string, MessageBoxMessage>();
+        PublishInboxInBatch = true;
         
         Logger.Trace($"[{Configuration.Name}] SourceConnector:.ctor");
     }
@@ -221,7 +223,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
             // sample does not exist in current, it is a new sample
             if (matchingCurrent is null)
             {
-                Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. New sample added to inbox. " +
+                Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. New sample added to inbox. " +
                              $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
                 
                 Inbox.Add(sampleResponse);
@@ -241,7 +243,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                     {
                         if (matchingCurrent.Data != sampleResponse.Data)
                         {
-                            Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE (null check) sample object added to inbox. " +
+                            Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE (null check) sample object added to inbox. " +
                                          $"Current={(matchingCurrent.Data is null ? "<null>": matchingCurrent.Data)}, " +
                                          $"Sample={(sampleResponse.Data is null ? "<null>": sampleResponse.Data)}");
 
@@ -249,7 +251,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                         }
                         else
                         {
-                            Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE (null check) sample object dropped. " +
+                            Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE (null check) sample object dropped. " +
                                          $"Current={(matchingCurrent.Data is null ? "<null>": matchingCurrent.Data)}, " +
                                          $"Sample={(sampleResponse.Data is null ? "<null>": sampleResponse.Data)}");
                         }
@@ -265,7 +267,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                         {
                             if (!((object[])matchingCurrent.Data).SequenceEqual((object[])sampleResponse.Data))
                             {
-                                Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE sample array added to inbox. " +
+                                Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE sample array added to inbox. " +
                                              $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
                                              $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
 
@@ -273,7 +275,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                             }
                             else
                             {
-                                Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE sample array dropped. " +
+                                Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE sample array dropped. " +
                                              $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
                                              $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
                             }
@@ -283,7 +285,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                         {
                             if (!matchingCurrent.Data.Equals(sampleResponse.Data))
                             {
-                                Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE sample object added to inbox. " +
+                                Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE sample object added to inbox. " +
                                              $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
                                              $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
 
@@ -291,7 +293,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                             }
                             else
                             {
-                                Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. RBE sample object dropped. " +
+                                Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE sample object dropped. " +
                                              $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
                                              $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
                             }
@@ -301,7 +303,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                 // rbe is disabled
                 else
                 {
-                    Logger.Trace($"[{sampleResponse.Path}] Fill Inbox. Non-RBE sample added to inbox. " +
+                    Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. Non-RBE sample added to inbox. " +
                                  $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
                     
                     Inbox.Add(sampleResponse);
@@ -316,17 +318,34 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     {
         if (Inbox.Count > 0)
         {
-            using (var scope = Disruptor.RingBuffer.PublishEvents(Inbox.Count))
+            if (PublishInboxInBatch)
             {
-                int index = 0;
+                using (var scope = Disruptor.RingBuffer.PublishEvents(Inbox.Count))
+                {
+                    int index = 0;
+                    foreach (var response in Inbox)
+                    {
+                        var data = scope.Event(index);
+                        data.Data = response.Data;
+                        data.Path = response.Path;
+                        data.Timestamp = response.Timestamp;
+                        data.ConnectorItemRef = response.ConnectorItemRef;
+                        index++;
+                    }
+                }
+            }
+            else
+            {
                 foreach (var response in Inbox)
                 {
-                    var data = scope.Event(index);
-                    data.Data = response.Data;
-                    data.Path = response.Path;
-                    data.Timestamp = response.Timestamp;
-                    data.ConnectorItemRef = response.ConnectorItemRef;
-                    index++;
+                    using (var scope = Disruptor.RingBuffer.PublishEvent())
+                    {
+                        var data = scope.Event();
+                        data.Data = response.Data;
+                        data.Path = response.Path;
+                        data.Timestamp = response.Timestamp;
+                        data.ConnectorItemRef = response.ConnectorItemRef;
+                    }
                 }
             }
         }

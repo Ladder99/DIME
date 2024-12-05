@@ -26,7 +26,7 @@ public partial class Configurator
             }
             
         }
-        Logger.Trace("[Configurator.Read] YAML \r\n{0}", yaml);
+        Logger.Debug("[Configurator.Read] YAML \r\n{0}", yaml);
         var stringReader = new StringReader(yaml);
         var parser = new Parser(stringReader);
         var mergingParser = new MergingParser(parser);
@@ -45,7 +45,7 @@ public partial class Configurator
             Logger.Error(e, "[Configurator.Read] Error while parsing yaml.");
         }
         
-        Logger.Trace("[Configurator.Read] Dictionary \r\n{0}", JsonConvert.SerializeObject(dictionary));
+        Logger.Debug("[Configurator.Read] Dictionary \r\n{0}", JsonConvert.SerializeObject(dictionary));
         return dictionary;
     }
 
