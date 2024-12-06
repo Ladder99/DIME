@@ -71,25 +71,26 @@ sources:
 
 <table><tr><td valign="top">
 
-| Source                      |
-|-----------------------------|
-| [ASC CPC](#asc-cpc)         |
-| Beckhoff ADS                |
-| [Ethernet/IP](#ethernetip)  |
-| Fanuc Focas                 |
-| Filesystem                  |
-| [Haas SHDR](#haas-shdr)     |
-| HTTP Client                 |
-| [HTTP Server](#http-server) |
-| [Modbus/TCP](#modbus-tcp)   |
-| [MQTT](#mqtt)               |
-| MS SQL Server               |
-| MTConnect Agent             |
-| OPC-DA                      |
-| OPC-UA                      |
-| OPC XML-DA                  |
-| Postgres                    |
-| Siemens S7                  |
+| Source                              |
+|-------------------------------------|
+| [ASC CPC](#asc-cpc)                 |
+| Beckhoff ADS                        |
+| [Ethernet/IP](#ethernetip)          |
+| Fanuc Focas                         |
+| Filesystem                          |
+| [Haas SHDR](#haas-shdr)             |
+| HTTP Client                         |
+| [HTTP Server](#http-server)         |
+| [Modbus/TCP](#modbus-tcp)           |
+| [MQTT](#mqtt)                       |
+| MS SQL Server                       |
+| [MTConnect Agent](#mtconnect-agent) |
+| OPC-DA                              |
+| OPC-UA                              |
+| OPC XML-DA                          |
+| Postgres                            |
+| Siemens S7                          |
+| Timebase Websocket                  | 
 
 </td><td valign="top">
 
@@ -137,7 +138,6 @@ sources:
     items:
       - name: Temperature
         address: .Autoclave.Inputs.AIRTC\Value
-        script: ~
 ```
 
 ### Ethernet/IP
@@ -177,9 +177,9 @@ sources:
       - name: boolTag1
         type: bool
         address: B3:0/2
-      - name: boolTag2
-        type: bool
-        address: B3:0/3
+      - name: intTag2
+        type: int
+        address: N7:1
 ```
 
 ### Haas SHDR
@@ -333,6 +333,52 @@ sources:
       - name: subscribe1
         enabled: !!bool true
         address: sharc/+/evt/#
+```
+
+### MTConnect Agent
+
+| Name            | Type         | Description                        |
+|-----------------|--------------|------------------------------------|
+| name            | string       | unique connector name              |
+| enabled         | bool         | is connector enabled               |
+| scan_interval   | int          | scanning frequency in milliseconds |
+| rbe             | bool         | report by exception                |
+| connector       | string       | connector type, `MTConnectAgent`   |
+| address         | string       | agent address                      |
+| port            | int          | agent port                         |
+| items           | object array | data items                         |
+| items[].name    | string       | unique item name                   |
+| items[].enabled | bool         | is item enabled                    |
+| items[].rbe     | bool         | report by exception override       |
+| items[].address | string       | data item id                       |
+
+#### Sink Example
+
+```yaml
+  - name: mtConnectSink1
+    connector: MTConnectAgent
+    port: !!int 5000
+    device_uuid: 123
+    device_id: device1
+    device_name: device1
+    device_manufacturer: acme
+    device_model: 123
+    device_serial_number: 123
+```
+
+#### Source Example
+
+```yaml
+  - name: mtConnectSource1
+    connector: MTConnectAgent
+    address: mtconnect.mazakcorp.com
+    port: !!int 5719
+    interval: !!int 100
+    items:
+      - name: PathPositionSample
+        address: pathpos
+        script: |
+          return result[0].Value;
 ```
 
 ### MTConnect SHDR

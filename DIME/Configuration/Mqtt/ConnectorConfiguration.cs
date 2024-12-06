@@ -2,7 +2,7 @@ namespace DIME.Configuration.Mqtt;
 
 public sealed class ConnectorConfiguration : Configuration.ConnectorConfiguration<ConnectorItem>
 {
-    public string IpAddress { get; set; }
+    public string Address { get; set; }
     public int Port { get; set; }
     public bool CleanSession { get; set; }
     public string Username { get; set; }

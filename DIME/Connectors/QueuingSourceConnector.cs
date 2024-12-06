@@ -11,7 +11,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
     protected class IncomingMessage
     {
         public string Key { get; set; }
-        public string Value { get; set; }
+        public object Value { get; set; }
         public long Timestamp { get; set; }
     }
     

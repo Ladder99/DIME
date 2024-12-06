@@ -31,3 +31,7 @@ eipSource1: &eipSource1
         return m[result and 1 or 0];
       meta:
         mtconnect: Device[name=device1]/Controller/Path/Execution[category=Event]
+    - name: GoodPartCount
+      enabled: !!bool true
+      type: int
+      address: N7:1

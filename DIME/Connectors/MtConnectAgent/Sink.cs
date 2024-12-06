@@ -9,7 +9,7 @@ using MTConnect.Observations.Events;
 
 namespace DIME.Connectors.MtConnectAgent;
 
-public class Sink: SinkConnector<ConnectorConfiguration, Configuration.ConnectorItem>
+public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 {
     private MTConnectAgentApplication _client = null;
     private Module _module = null;

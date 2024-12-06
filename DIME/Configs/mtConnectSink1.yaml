@@ -1,5 +1,5 @@
-mtconnectSink1: &mtconnectSink1
-  name: mtconnectSink1
+mtConnectSink1: &mtConnectSink1
+  name: mtConnectSink1
   enabled: !!bool false
   scan_interval: !!int 1000
   connector: MTConnectAgent

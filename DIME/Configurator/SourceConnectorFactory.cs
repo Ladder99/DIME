@@ -28,6 +28,9 @@ public static class SourceConnectorFactory
             case "mqtt":
                 connector = Mqtt.Source.Create(section, disruptor);
                 break;
+            case "mtconnectagent":
+                connector = MtConnectAgent.Source.Create(section, disruptor);
+                break;
             case "script":
                 connector = Script.Source.Create(section, disruptor);
                 break;

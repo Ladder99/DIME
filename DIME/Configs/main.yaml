@@ -1,7 +1,7 @@
 sinks:
   - *mqttSink1
   - *shdrSink1
-  - *mtconnectSink1
+  - *mtConnectSink1
   - *httpServerSink1
 sources:
   - *ascCpcSource1
@@ -10,4 +10,5 @@ sources:
   - *httpServerSource1
   - *modbusSource1
   - *mqttSource1
+  - *mtConnectSource1
   - *scriptSource1

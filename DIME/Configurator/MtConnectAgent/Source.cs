@@ -1,7 +1,7 @@
 using DIME.Connectors;
-using DIME.Configuration.Mqtt;
+using DIME.Configuration.MtConnectAgent;
 
-namespace DIME.Configurator.Mqtt;
+namespace DIME.Configurator.MtConnectAgent;
 
 public static class Source
 {
@@ -19,11 +19,9 @@ public static class Source
         config.LoopExitScript = section.ContainsKey("exit_script") ? Convert.ToString(section["exit_script"]) : null;
         config.ItemizedRead = section.ContainsKey("itemized_read") ? Convert.ToBoolean(section["itemized_read"]) : false;
         // custom
-        config.ConnectorType = section.ContainsKey("connector") ? Convert.ToString(section["connector"]) : "MQTT";
-        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";
-        config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 1883;
-        config.Username = section.ContainsKey("username") ? Convert.ToString(section["username"]) : null;
-        config.Password = section.ContainsKey("password") ? Convert.ToString(section["password"]) : null;
+        config.ConnectorType = section.ContainsKey("connector") ? Convert.ToString(section["connector"]) : "MTConnectAgent";
+        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "mtconnect.mazakcorp.com";
+        config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 5000;
         config.Items = new List<ConnectorItem>();
 
         if (section.ContainsKey("items"))
@@ -52,7 +50,7 @@ public static class Source
             }
         }
 
-        var connector = new Connectors.Mqtt.Source(config, disruptor);
+        var connector = new Connectors.MtConnectAgent.Source(config, disruptor);
 
         return connector;
     }

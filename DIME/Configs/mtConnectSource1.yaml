@@ -1,0 +1,31 @@
+mtConnectSource1: &mtConnectSource1
+  name: mtConnectSource1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: MTConnectAgent
+  rbe: !!bool true
+  itemized_read: !!bool true
+  address: mtconnect.mazakcorp.com
+  port: !!int 5719
+  init_script: ~
+  items:
+    - name: PathPositionSample
+      enabled: !!bool true
+      address: pathpos
+      script: |
+        return result[0].Value;
+    - name: AxisZLoadSample
+      enabled: !!bool true
+      address: Zload
+      script: |
+        return result[0].Value;
+    - name: AxisZStateEvent
+      enabled: !!bool true
+      address: zaxisstate
+      script: |
+        return result[0].Value;
+    - name: AxisZTravelCondition
+      enabled: !!bool true
+      address: Ztravel
+      script: |
+        return result[0].Value;

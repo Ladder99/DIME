@@ -31,7 +31,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     {
         var clientOptions = new MqttClientOptionsBuilder()
             .WithClientId(Properties.GetProperty<string>("client_id"))
-            .WithTcpServer(Configuration.IpAddress, Configuration.Port)
+            .WithTcpServer(Configuration.Address, Configuration.Port)
             .WithCleanSession(Configuration.CleanSession);
         var options = clientOptions.Build();
         var result = _client.ConnectAsync(options).Result;

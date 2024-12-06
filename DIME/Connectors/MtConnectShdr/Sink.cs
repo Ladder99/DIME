@@ -68,7 +68,6 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
     protected override bool ConnectImplementation()
     {
         _client.Start();
-        IsConnected = true;
         return true;
     }
 
