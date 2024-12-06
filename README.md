@@ -79,6 +79,7 @@ sources:
 | Filesystem                  |
 | [Haas SHDR](#haas-shdr)     |
 | HTTP Client                 |
+| [HTTP Server](#http-server) |
 | [Modbus/TCP](#modbus-tcp)   |
 | [MQTT](#mqtt)               |
 | MS SQL Server               |
@@ -217,14 +218,20 @@ sources:
 
 ### HTTP Server
 
-| Name            | Type         | Description                          |
-|-----------------|--------------|--------------------------------------|
-| name            | string       | unique connector name                |
-| enabled         | bool         | is connector enabled                 |
-| scan_interval   | int          | scanning frequency in milliseconds   |
-| rbe             | bool         | report by exception                  |
-| connector       | string       | connector type, `HttpServer`         |
-| uri             | string       | base uri                             |
+| Name              | Type         | Description                        |
+|-------------------|--------------|------------------------------------|
+| name              | string       | unique connector name              |
+| enabled           | bool         | is connector enabled               |
+| scan_interval     | int          | scanning frequency in milliseconds |
+| rbe               | bool         | report by exception                |
+| connector         | string       | connector type, `HTTPServer`       |
+| uri               | string       | base uri                           |
+| items             | object array | post items                         |
+| items[].name      | string       | unique item name                   |
+| items[].enabled   | bool         | is item enabled                    |
+| items[].rbe       | bool         | report by exception override       |
+| items[].address   | string       | uri path                           |
+| items[].script    | string       | lua script                         |
 
 #### Sink Example
 
@@ -232,6 +239,22 @@ sources:
   - name: httpServerSink1
     connector: HttpServer
     uri: http://localhost:8080/
+```
+
+#### Source Example
+
+```yaml
+  - httpServerSource1: &httpServerSource1
+    name: httpServerSource1
+    connector: HTTPServer
+    uri: http://localhost:8081/
+    init_script: |
+      json = require('json');
+    items:
+      - name: postData
+        address: post/data
+        script: |
+          return json.decode(result).hello;
 ```
 
 ### Modbus TCP
