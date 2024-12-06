@@ -105,6 +105,7 @@ sources:
 | [MTConnect SHDR](#mtconnect-shdr) |
 | Postgres                          |
 | Redis                             |
+| Splunk EH SDK                     |
 | Splunk HEC                        |
 
 </td></tr></table>
