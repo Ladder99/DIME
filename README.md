@@ -90,6 +90,7 @@ sources:
 | OPC XML-DA                          |
 | Postgres                            |
 | Siemens S7                          |
+| [SNMP](#snmp)                       |
 | Timebase Websocket                  | 
 
 </td><td valign="top">
@@ -210,11 +211,22 @@ sources:
 ```yaml
   - name: haasSource1
     connector: HaasSHDR
+    itemized_read: !!bool false
     address: 192.168.111.221
     port: !!int 9998
     timeout: !!int 1000
     heartbeat_interval: !!int 4000
     retry_interval: !!int 10000
+    items:
+      - name: CPU
+        enabled: !!bool true
+        address: CPU
+        script: |
+          if tonumber(result) > 0.5 then
+            return 'HIGH';
+          else
+            return 'LOW';
+          end
 ```
 
 ### HTTP Server
@@ -287,11 +299,22 @@ sources:
     port: !!int 502
     slave: !!int 1
     timeout: !!int 1000
+    init_script: |
+      -- https://github.com/iryont/lua-struct
+       struct = require('struct')
     items:
-      - name: coilTag1
+      - name: coilTags
         type: !!int 1
         address: !!int 1
         count: !!int 10
+      - name: holdingTags
+        type: !!int 3
+        address: !!int 24
+        count: !!int 2
+        script: |
+           -- https://www.scadacore.com/tools/programming-calculators/online-hex-converter/
+           return struct.unpack('<I', struct.pack('<HH', result[0], result[1]));
+
 ```
 
 ### MQTT
@@ -404,6 +427,44 @@ sources:
     device_key: ~
     heartbeat_interval: !!int 10000
     filter_duplicates: !!bool true
+```
+
+### SNMP
+
+| Name            | Type         | Description                        |
+|-----------------|--------------|------------------------------------|
+| name            | string       | unique connector name              |
+| enabled         | bool         | is connector enabled               |
+| scan_interval   | int          | scanning frequency in milliseconds |
+| rbe             | bool         | report by exception                |
+| init_script     | string       | startup lua script                 |
+| connector       | string       | connector type, `SNMP`             |
+| address         | string       | device hostname                    |
+| community       | string       | community                          |
+| timeout         | int          | read timeout                       |
+| items           | object array | device items                       |
+| items[].name    | string       | unique item name                   |
+| items[].enabled | bool         | is item enabled                    |
+| items[].rbe     | bool         | report by exception override       |
+| items[].address | string       | oid address                        |
+| items[].script  | string       | lua script                         |
+
+#### Source Example
+
+```yaml
+  - name: snmpSource1
+    connector: SNMP
+    address: 192.168.150.143
+    port: !!int 161
+    community: public
+    timeout: !!int 1000
+    items:
+      - name: Temperature
+        address: 1.3.6.1.4.1.6574.1.2.0
+      - name: Model
+        address: 1.3.6.1.4.1.6574.1.5.1.0
+      - name: SerialNumber
+        address: 1.3.6.1.4.1.6574.1.5.2.0
 ```
 
 ## Creating a New Connector

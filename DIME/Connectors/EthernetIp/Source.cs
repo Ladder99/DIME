@@ -51,7 +51,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
     protected override bool ConnectImplementation()
     {
         var pingSender = new Ping();
-        string host = Configuration.IpAddress;
+        string host = Configuration.Address;
         int timeout = 1000;
 
         var reply = pingSender.Send(host, timeout);
@@ -68,7 +68,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
                 response = new Tag<BoolPlcMapper, bool>()
                 {
                     Name = item.Address,
-                    Gateway = Configuration.IpAddress,
+                    Gateway = Configuration.Address,
                     Path = Configuration.Path,
                     PlcType = Properties.GetProperty<PlcType>("typeEnum"),
                     Protocol = Protocol.ab_eip,
@@ -80,7 +80,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
                 response = new Tag<SintPlcMapper, sbyte>()
                 {
                     Name = item.Address,
-                    Gateway = Configuration.IpAddress,
+                    Gateway = Configuration.Address,
                     Path = Configuration.Path,
                     PlcType = Properties.GetProperty<PlcType>("typeEnum"),
                     Protocol = Protocol.ab_eip,
@@ -92,7 +92,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
                 response = new Tag<IntPlcMapper, short>()
                 {
                     Name = item.Address,
-                    Gateway = Configuration.IpAddress,
+                    Gateway = Configuration.Address,
                     Path = Configuration.Path,
                     PlcType = Properties.GetProperty<PlcType>("typeEnum"),
                     Protocol = Protocol.ab_eip,
@@ -104,7 +104,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
                 response = new Tag<DintPlcMapper, int>()
                 {
                     Name = item.Address,
-                    Gateway = Configuration.IpAddress,
+                    Gateway = Configuration.Address,
                     Path = Configuration.Path,
                     PlcType = Properties.GetProperty<PlcType>("typeEnum"),
                     Protocol = Protocol.ab_eip,
@@ -116,7 +116,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
                 response = new Tag<LintPlcMapper, long>()
                 {
                     Name = item.Address,
-                    Gateway = Configuration.IpAddress,
+                    Gateway = Configuration.Address,
                     Path = Configuration.Path,
                     PlcType = Properties.GetProperty<PlcType>("typeEnum"),
                     Protocol = Protocol.ab_eip,
@@ -128,7 +128,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
                 response = new Tag<RealPlcMapper, float>()
                 {
                     Name = item.Address,
-                    Gateway = Configuration.IpAddress,
+                    Gateway = Configuration.Address,
                     Path = Configuration.Path,
                     PlcType = Properties.GetProperty<PlcType>("typeEnum"),
                     Protocol = Protocol.ab_eip,
@@ -140,7 +140,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
                 response = new Tag<StringPlcMapper, string>()
                 {
                     Name = item.Address,
-                    Gateway = Configuration.IpAddress,
+                    Gateway = Configuration.Address,
                     Path = Configuration.Path,
                     PlcType = Properties.GetProperty<PlcType>("typeEnum"),
                     Protocol = Protocol.ab_eip,

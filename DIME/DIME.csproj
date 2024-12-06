@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <PackageReference Include="Disruptor" Version="6.0.0" />
+      <PackageReference Include="Lextm.SharpSnmpLib" Version="12.5.5" />
       <PackageReference Include="libplctag" Version="1.5.2" />
       <PackageReference Include="MQTTnet" Version="5.0.0.1214-RC" />
       <PackageReference Include="MTConnect.NET-Applications-Agents" Version="6.5.0" />
@@ -84,6 +85,9 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Configs\mtConnectSource1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Configs\snmpSource1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

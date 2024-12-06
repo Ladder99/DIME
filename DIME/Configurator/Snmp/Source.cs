@@ -1,7 +1,7 @@
 using DIME.Connectors;
-using DIME.Configuration.EthernetIp;
+using DIME.Configuration.Snmp;
 
-namespace DIME.Configurator.EthernetIp;
+namespace DIME.Configurator.Snmp;
 
 public static class Source
 {
@@ -20,10 +20,9 @@ public static class Source
         config.ItemizedRead = true;
         // custom
         config.ConnectorType = section.ContainsKey("connector") ? Convert.ToString(section["connector"]) : "EthernetIP";
-        config.PlcType = section.ContainsKey("type") ? Convert.ToInt32(section["type"]) : 0;
         config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "0.0.0.0";
-        config.Path = section.ContainsKey("path") ? Convert.ToString(section["path"]) : "1,0";
-        config.Log = section.ContainsKey("log") ? Convert.ToInt32(section["log"]) : 0;
+        config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 161;
+        config.Community = section.ContainsKey("community") ? Convert.ToString(section["community"]) : "public";
         config.TimeoutMs = section.ContainsKey("timeout") ? Convert.ToInt32(section["timeout"]) : 1000;
         
         config.Items = new List<ConnectorItem>();
@@ -46,17 +45,14 @@ public static class Source
                             ReportByException = itemDictionary.ContainsKey("rbe") ? Convert.ToBoolean(itemDictionary["rbe"]) : config.ReportByException,
                             Script = itemDictionary.ContainsKey("script") ? Convert.ToString(itemDictionary["script"]) : null,
                             Meta = itemDictionary.ContainsKey("meta") ? itemDictionary["meta"] as Dictionary<object, object> : null,
-                            // custom
-                            Type = itemDictionary.ContainsKey("type") ? Convert.ToString(itemDictionary["type"]) : null,
                             Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : null
-                            
                         });
                     }
                 }
             }
         }
         
-        var connector = new Connectors.EthernetIp.Source(config, disruptor);
+        var connector = new Connectors.Snmp.Source(config, disruptor);
 
         return connector;
     }

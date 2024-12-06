@@ -12,3 +12,4 @@ sources:
   - *mqttSource1
   - *mtConnectSource1
   - *scriptSource1
+  - *snmpSource1

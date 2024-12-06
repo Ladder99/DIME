@@ -28,3 +28,10 @@ modbusSource1: &modbusSource1
       enabled: !!bool true
       script: |
         return get('outputs', nil)[1];
+    - name: holdingTags
+      type: !!int 3
+      address: !!int 24
+      count: !!int 2
+      script: |
+        -- https://www.scadacore.com/tools/programming-calculators/online-hex-converter/
+        return struct.unpack('<I', struct.pack('<HH', result[0], result[1]));

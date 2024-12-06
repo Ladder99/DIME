@@ -1,10 +1,10 @@
 haasSource1: &haasSource1
   name: haasSource1
-  enabled: !!bool false
+  enabled: !!bool true
   scan_interval: !!int 1000
   connector: HaasSHDR
   rbe: !!bool true
-  itemized_read: !!bool true
+  itemized_read: !!bool false
   address: 192.168.111.221
   port: !!int 9998
   timeout: !!int 1000
@@ -16,13 +16,13 @@ haasSource1: &haasSource1
       env = luanet.import_type("System.Environment")
     };
   items:
-    - name: scriptTag1
+    - name: CPU
       enabled: !!bool true
       address: CPU
       script: |
         local cpu = tonumber(result);
         if cpu > 0.5 then
-          return 'HIGH'
+          return 'HIGH';
         else
-          return 'LOW'
+          return 'LOW';
         end
