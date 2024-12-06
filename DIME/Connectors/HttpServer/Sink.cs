@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace DIME.Connectors.HttpServer;
 
-public class Sink: SinkConnector<ConnectorConfiguration, Configuration.ConnectorItem>
+public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 {
     private HttpListener _listener;
     private ConcurrentDictionary<string, MessageBoxMessage> _messagesDictionary;
@@ -40,8 +40,9 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
 
     protected override bool WriteImplementation()
     { 
-        foreach (var message in Outbox.AsEnumerable())
+        foreach (var message in Outbox)
         {
+            // TODO: WHY!
             var tempMessage = new MessageBoxMessage()
             {
                 Path = message.Path,
@@ -52,7 +53,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
             
             _messagesDictionary.AddOrUpdate(tempMessage.Path, tempMessage, (key, oldValue) => tempMessage);
             
-            var foundMessage = _messagesList.Find(x => x.Path == message.Path);
+            var foundMessage = _messagesList.Find(x => x.Path == tempMessage.Path);
             if (foundMessage is null)
             {
                 _messagesList.Add(tempMessage);

@@ -19,6 +19,9 @@ public static class SourceConnectorFactory
             case "haasshdr":
                 connector = HaasShdr.Source.Create(section, disruptor);
                 break;
+            case "httpserver":
+                connector = HttpServer.Source.Create(section, disruptor);
+                break;
             case "modbustcp":
                 connector = ModbusTcp.Source.Create(section, disruptor);
                 break;

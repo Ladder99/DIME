@@ -1,0 +1,18 @@
+httpServerSource1: &httpServerSource1
+  name: httpServerSource1
+  enabled: !!bool true
+  scan_interval: !!int 2000
+  connector: HTTPServer
+  rbe: !!bool true
+  itemized_read: !!bool true
+  uri: http://localhost:8081/
+  init_script: |
+    -- https://github.com/rxi/json.lua
+    json = require('json');
+  items:
+    - name: postData
+      enabled: !!bool true
+      rbe: !!bool true
+      address: post/data
+      script: |
+        return json.decode(result).hello;

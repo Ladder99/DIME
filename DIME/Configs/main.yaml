@@ -7,6 +7,7 @@ sources:
   - *ascCpcSource1
   - *eipSource1
   - *haasSource1
+  - *httpServerSource1
   - *modbusSource1
   - *mqttSource1
   - *scriptSource1
