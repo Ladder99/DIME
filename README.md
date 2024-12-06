@@ -25,6 +25,7 @@ cp DIME/DIME/Lua/* volumes/dime/lua
 
 docker run \
    -p 8080:8080 \
+   -p 8081:8081 \
    -v ~/volumes/dime/nlog.config:/app/nlog.config \
    -v ~/volumes/dime/configs:/app/Configs \
    -v ~/volumes/dime/lua:/app/Lua \
@@ -563,6 +564,7 @@ cp DIME/DIME/Lua/* volumes/dime/lua
 
 docker run \
    -p 8080:8080 \
+   -p 8081:8081 \
    -v ~/volumes/dime/nlog.config:/app/nlog.config \
    -v ~/volumes/dime/configs:/app/Configs \
    -v ~/volumes/dime/lua:/app/Lua \
