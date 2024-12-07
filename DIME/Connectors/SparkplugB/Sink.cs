@@ -1,5 +1,6 @@
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
 using DIME.Configuration.SparkplugB;
 using IronPython.Modules;
 using Newtonsoft.Json;
@@ -15,7 +16,13 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     private SparkplugNode _client = null;
     private List<Metric> _nodeMetrics = null;
     private SparkplugNodeOptions _nodeOptions = null;
+    
+    private long _connectorStartTime = 0;
+    private long _birthStallTime = 10000;
     private bool _deviceHasBirthed = false;
+    private bool _deviceRebirthTrigger = false;
+
+    private Dictionary<string, MessageBoxMessage> _messages = null;
     
     public Sink(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
@@ -24,6 +31,8 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     protected override bool InitializeImplementation()
     {
         Properties.SetProperty("client_id", Guid.NewGuid().ToString());
+        _connectorStartTime = DateTime.Now.ToEpochMilliseconds();
+        _messages = new Dictionary<string, MessageBoxMessage>();
         return true;
     }
 
@@ -115,62 +124,93 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
         return true;
     }
 
+    private List<Metric> MakeMetricListFromMessages()
+    {
+        var metrics = new List<Metric>();
+
+        foreach (var message in _messages)
+        {
+            metrics.Add(MakeMetric(message.Key, message.Value.Data));
+        }
+
+        return metrics;
+    }
+    
     private Metric MakeMetric(string name, object value)
     {
+        if (value is null)
+        {
+            value = string.Empty;
+        }
+        
+        name = Regex.Replace(name, @"[^0-9a-zA-Z_./]+", "");
+        
         switch (Type.GetTypeCode(value.GetType()))
         {
             case TypeCode.Byte:
-                return new Metric(name, DataType.Int8, Convert.ToUInt16(value));
+                return new Metric(name, DataType.Int8, Convert.ToUInt16(value), DateTimeOffset.Now);
             case TypeCode.Int16:
             case TypeCode.Int32:
             case TypeCode.Int64:
             case TypeCode.Double:
-                return new Metric(name, DataType.Double, Convert.ToDouble(value));
+                return new Metric(name, DataType.Double, Convert.ToDouble(value), DateTimeOffset.Now);
             case TypeCode.Boolean:
-                return new Metric(name, DataType.Boolean, Convert.ToBoolean(value));
+                return new Metric(name, DataType.Boolean, Convert.ToBoolean(value), DateTimeOffset.Now);
             case TypeCode.String:
-                return new Metric(name, DataType.String, Convert.ToString(value) ?? string.Empty);
+                return new Metric(name, DataType.String, Convert.ToString(value) ?? string.Empty, DateTimeOffset.Now);
             default:
                 Logger.Debug($"[{Configuration.Name}] '{name}'({value.GetType().FullName}) converted to string metric.");
-                return new Metric(name, DataType.String, JsonConvert.SerializeObject(value));
+                return new Metric(name, DataType.String, JsonConvert.SerializeObject(value), DateTimeOffset.Now);
         }
     }
 
     protected override bool WriteImplementation()
     {
-        List<Metric> metrics = new List<Metric>();
+        var samples = new List<Metric>();
         
         foreach (var message in Outbox)
         {
-            if (message.Data is not null)
+            // TODO: DATA CORRUPTION
+            var tempMessage = new MessageBoxMessage()
             {
-                Metric metric = MakeMetric(message.Path, message.Data);
-                metrics.Add(metric);
+                Path = message.Path,
+                Data = message.Data,
+                Timestamp = message.Timestamp,
+                ConnectorItemRef = message.ConnectorItemRef
+            };
+            
+            if (!_messages.ContainsKey(tempMessage.Path))
+            {
+                _deviceRebirthTrigger = true;
             }
+            
+            _messages[tempMessage.Path] = tempMessage;
+
+            samples.Add(MakeMetric(tempMessage.Path, tempMessage.Data));
         }
 
-        _client.PublishDeviceBirthMessage(metrics, Configuration.DeviceId);
-        
-        /*
-        if (!_deviceHasBirthed)
+        if (_deviceHasBirthed)
         {
-            _client.PublishDeviceBirthMessage(metrics, Configuration.DeviceId);
-            _deviceHasBirthed = true;
+            if (_deviceRebirthTrigger)
+            {
+                //_client.PublishDeviceDeathMessage(Configuration.DeviceId);
+                _client.PublishDeviceBirthMessage(MakeMetricListFromMessages(), Configuration.DeviceId);
+                _deviceRebirthTrigger = false;
+            }
+            else
+            {
+                _client.PublishDeviceData(samples, Configuration.DeviceId);
+            }
         }
         else
         {
-            try
+            if (DateTime.Now.ToEpochMilliseconds() - _connectorStartTime > _birthStallTime)
             {
-                _client.PublishDeviceData(metrics, Configuration.DeviceId);
+                _client.PublishDeviceBirthMessage(MakeMetricListFromMessages(), Configuration.DeviceId);
+                _deviceHasBirthed = true;
             }
-            catch (Exception e)
-            {
-                
-            }
-            
         }
-        */
-
+        
         return true;
     }
 

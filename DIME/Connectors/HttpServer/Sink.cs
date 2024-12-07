@@ -42,7 +42,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     { 
         foreach (var message in Outbox)
         {
-            // TODO: WHY!
+            // TODO: DATA CORRUPTION
             var tempMessage = new MessageBoxMessage()
             {
                 Path = message.Path,
