@@ -9,29 +9,40 @@ mettlerToledoScale1: &mettlerToledoScale1
   init_script: |
     ip = '10.30.83.75';
     port = 1701;
-    read_trigger = false;
+    trigger_value = false;
+    trigger_ts = 0;
+    is_sim = true;
   deinit_script: ~
   enter_script: |
-    if not read_trigger then return end;
-    read_trigger = false;
-    local sock = socket.connect(ip, port);
-    sock:settimeout(1, 'b');
-    sock:send('user admin\r\n');
-    sock.receive('*l');
-    sock.send('pass admin\r\n');
-    sock.receive('*l');
-    sock.send('read wt0101\r\n');
-    local response = sock.receive('*l');
-    sock:close();
-    local status, sequence, value = response:match("(%d%d)R(%d%d%d)~%s*(.+)");
-    weight, units = value:match("([%d%.]+)~(.+)~");
+    if not trigger_value then return end;
+    trigger_value = false;
+    if is_sim then
+      weight = math.random(100);
+      units = 'lb';
+    else
+      local sock = socket.connect(ip, port);
+      sock:settimeout(1, 'b');
+      sock:send('user admin\r\n');
+      sock.receive('*l');
+      sock.send('pass admin\r\n');
+      sock.receive('*l');
+      sock.send('read wt0101\r\n');
+      local response = sock.receive('*l');
+      sock:close();
+      local status, sequence, value = response:match("(%d%d)R(%d%d%d)~%s*(.+)");
+      weight, units = value:match("([%d%.]+)~(.+)~");
+    end
   exit_script: ~
   items:
     - name: ReadTrigger
       enabled: !!bool true
       rbe: !!bool true
       script: |
-        read_trigger = cache('httpServerSource1/postData', false);
+        local value, ts = cache_ts('httpServerSource1/postData', false);
+        if ts > trigger_ts then
+          trigger_value = value;
+          trigger_ts = ts;
+        end
         return nil;
     - name: Weight
       enabled: !!bool true

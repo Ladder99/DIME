@@ -22,6 +22,7 @@ public class LuaRunner
             _state.LoadCLRPackage();
             _state.DoString("package.path = package.path .. ';./Lua/?.lua'");
             _state["result"] = null;
+            _state.RegisterFunction("cache_ts", this, GetType().GetMethod("GetPrimaryCacheWithTimestamp", BindingFlags.NonPublic | BindingFlags.Instance));
             _state.RegisterFunction("cache", this, GetType().GetMethod("GetPrimaryCache", BindingFlags.NonPublic | BindingFlags.Instance));
             _state.RegisterFunction("get", this, GetType().GetMethod("GetUserCache", BindingFlags.NonPublic | BindingFlags.Instance));
             _state.RegisterFunction("set", this, GetType().GetMethod("SetUserCache", BindingFlags.NonPublic | BindingFlags.Instance));
@@ -64,10 +65,10 @@ public class LuaRunner
             throw;
         }
     }
-    
-    private object? GetPrimaryCache(string path, object? defaultValue = null)
+
+    private MessageBoxMessage GetPrimaryCacheMessage(string path)
     {
-        object? value = null;
+        MessageBoxMessage value = null;
         
         var pathSlugs = path.Split('/');
         if (pathSlugs[0] == ".")
@@ -75,6 +76,7 @@ public class LuaRunner
             pathSlugs[0] = _connector.Configuration.Name;
             path = string.Join("/", pathSlugs);
         }
+        
         try
         {
             var runner = _connector.Runner.Runners
@@ -84,14 +86,11 @@ public class LuaRunner
             
             try
             {
-                var message = connector?.Samples.Last(x => x.Path == path);
-                value = message?.Data;
+                value = connector.Samples.Last(x => x.Path == path);
             }
             catch (InvalidOperationException e1)
             {
-                MessageBoxMessage message = null;
-                connector?.Current.TryGetValue(path, out message);
-                value = message?.Data;
+                connector.Current.TryGetValue(path, out value);
             }
         }
         catch (InvalidOperationException e)
@@ -99,7 +98,19 @@ public class LuaRunner
             
         }
         
-        return value ?? defaultValue;
+        return value;
+    }
+    
+    private (object?, object?) GetPrimaryCacheWithTimestamp(string path, object? defaultValue = null)
+    {
+        var message = GetPrimaryCacheMessage(path);
+        return message is null ? (defaultValue, 0) : (message.Data, message.Timestamp);
+    }
+
+    private object? GetPrimaryCache(string path, object? defaultValue = null)
+    {
+        var message = GetPrimaryCacheMessage(path);
+        return message is null ? defaultValue : message.Data;
     }
 
     private object? SetUserCache(string key, object? value = null)
