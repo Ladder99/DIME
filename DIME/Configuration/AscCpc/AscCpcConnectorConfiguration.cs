@@ -2,6 +2,6 @@ namespace DIME.Configuration.AscCpc;
 
 public sealed class ConnectorConfiguration : Configuration.ConnectorConfiguration<ConnectorItem>
 {
-    public string IpAddress { get; set; }
+    public string Address { get; set; }
     public int Port { get; set; }
 }

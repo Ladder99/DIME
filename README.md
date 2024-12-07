@@ -75,6 +75,7 @@ sources:
 |-------------------------------------|
 | [ASC CPC](#asc-cpc)                 |
 | Beckhoff ADS                        |
+| Brother CNC                         |
 | [Ethernet/IP](#ethernetip)          |
 | Fanuc Focas                         |
 | Filesystem                          |

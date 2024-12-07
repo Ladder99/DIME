@@ -25,12 +25,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
 
     protected override bool ConnectImplementation()
     {
-        var pingSender = new Ping();
-        string host = Configuration.Address;
-        int timeout = 1000;
-
-        var reply = pingSender.Send(host, timeout);
-        return reply.Status == IPStatus.Success;
+        return new Ping().Send(Configuration.Address, 1000).Status == IPStatus.Success;
     }
 
     protected override object ReadFromDevice(ConnectorItem item)

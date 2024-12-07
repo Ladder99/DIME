@@ -1,6 +1,6 @@
 eipSource1: &eipSource1
   name: eipSource1
-  enabled: !!bool true
+  enabled: !!bool false
   scan_interval: !!int 500
   connector: EthernetIP
   rbe: !!bool true

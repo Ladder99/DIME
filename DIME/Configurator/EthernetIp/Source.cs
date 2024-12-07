@@ -47,8 +47,9 @@ public static class Source
                             Script = itemDictionary.ContainsKey("script") ? Convert.ToString(itemDictionary["script"]) : null,
                             Meta = itemDictionary.ContainsKey("meta") ? itemDictionary["meta"] as Dictionary<object, object> : null,
                             // custom
-                            Type = itemDictionary.ContainsKey("type") ? Convert.ToString(itemDictionary["type"]) : null,
-                            Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : null
+                            Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : null,
+                            Type = itemDictionary.ContainsKey("type") ? Convert.ToString(itemDictionary["type"]) : null
+                            
                             
                         });
                     }

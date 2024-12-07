@@ -43,24 +43,44 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     protected object ExecuteScript(string script)
     {
         Logger.Trace($"[{Configuration.Name}] SourceConnector:ExecuteScript::ENTER");
-        
-        var scriptResult = ScriptRunner.DoString(script);
+
+        object response = null;
+
+        try
+        {
+            var scriptResult = ScriptRunner.DoString(script);
+            response = scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
+        }
+        catch (Exception e)
+        {
+            response = null;
+        }
         
         Logger.Trace($"[{Configuration.Name}] SourceConnector:ExecuteScript::EXIT");
         
-        return scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
+        return response;
     }
     
     protected object ExecuteScript(object intermediateResult, ConnectorItem item)
     {
         Logger.Trace($"[{Configuration.Name}] SourceConnector:ExecuteScript::ENTER");
+
+        object response = null;
         
-        ScriptRunner["result"] = intermediateResult;
-        var scriptResult = ScriptRunner.DoString(item);
+        try
+        {
+            ScriptRunner["result"] = intermediateResult;
+            var scriptResult = ScriptRunner.DoString(item);
+            response =  scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
+        }
+        catch (Exception e)
+        {
+            response = null;
+        }
         
         Logger.Trace($"[{Configuration.Name}] SourceConnector:ExecuteScript::EXIT");
         
-        return scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
+        return response;
     }
     
     public override bool BeforeUpdate()

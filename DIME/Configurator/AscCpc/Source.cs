@@ -20,7 +20,7 @@ public static class Source
         config.ItemizedRead = true;
         // custom
         config.ConnectorType = section.ContainsKey("connector") ? Convert.ToString(section["connector"]) : "AscCPC";
-        config.IpAddress = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "0.0.0.0";
+        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "0.0.0.0";
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 50000;
         
         config.Items = new List<ConnectorItem>();
@@ -43,8 +43,8 @@ public static class Source
                             ReportByException = itemDictionary.ContainsKey("rbe") ? Convert.ToBoolean(itemDictionary["rbe"]) : config.ReportByException,
                             Meta = itemDictionary.ContainsKey("meta") ? itemDictionary["meta"] as Dictionary<object, object> : null,
                             // custom
-                            Script = itemDictionary.ContainsKey("script") ? Convert.ToString(itemDictionary["script"]) : null,
-                            Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : null
+                            Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : null,
+                            Script = itemDictionary.ContainsKey("script") ? Convert.ToString(itemDictionary["script"]) : null
                         });
                     }
                 }

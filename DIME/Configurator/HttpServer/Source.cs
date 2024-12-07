@@ -41,6 +41,7 @@ public static class Source
                             ReportByException = itemDictionary.ContainsKey("rbe") ? Convert.ToBoolean(itemDictionary["rbe"]) : config.ReportByException,
                             Script = itemDictionary.ContainsKey("script") ? Convert.ToString(itemDictionary["script"]) : null,
                             Meta = itemDictionary.ContainsKey("meta") ? itemDictionary["meta"] as Dictionary<object, object> : null,
+                            // custom
                             Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : null
                         });
                     }

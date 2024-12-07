@@ -25,12 +25,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
 
     protected override bool ConnectImplementation()
     {
-        var pingSender = new Ping();
-        string host = Configuration.IpAddress;
-        int timeout = 1000;
-
-        var reply = pingSender.Send(host, timeout);
-        return reply.Status == IPStatus.Success;
+        return new Ping().Send(Configuration.Address, 1000).Status == IPStatus.Success;
     }
 
     protected override object ReadFromDevice(ConnectorItem item)
@@ -38,7 +33,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
         object response = null;
         string prefix = "PathListGet:ReadValues:";
         
-        using (TcpClient client = new TcpClient(Configuration.IpAddress, Configuration.Port))
+        using (TcpClient client = new TcpClient(Configuration.Address, Configuration.Port))
         using (NetworkStream stream = client.GetStream())
         {
             byte[] data = Encoding.ASCII.GetBytes($"{prefix}{item.Address}\r\n");

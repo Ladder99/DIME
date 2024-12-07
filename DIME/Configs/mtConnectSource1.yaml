@@ -1,6 +1,6 @@
 mtConnectSource1: &mtConnectSource1
   name: mtConnectSource1
-  enabled: !!bool true
+  enabled: !!bool false
   scan_interval: !!int 1000
   connector: MTConnectAgent
   rbe: !!bool true

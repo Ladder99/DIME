@@ -35,12 +35,12 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
     protected override bool DisconnectImplementation()
     {
         _listener.Stop();
-        _listener.Close();
         return true;
     }
     
     protected override bool DeinitializeImplementation()
     {
+        _listener.Close();
         return true;
     }
     

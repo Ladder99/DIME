@@ -27,7 +27,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
     {
         var tcpClient = new TcpClient();
         var task = tcpClient.ConnectAsync(
-            Configuration.IpAddress,
+            Configuration.Address,
             Configuration.Port
         );
         task.Wait(Configuration.TimeoutMs);

@@ -20,7 +20,7 @@ public static class Source
         config.ItemizedRead = true;
         // custom
         config.ConnectorType = section.ContainsKey("connector") ? Convert.ToString(section["connector"]) : "ModbusTCP";
-        config.IpAddress = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "0.0.0.0";
+        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "0.0.0.0";
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 502;
         config.Slave = section.ContainsKey("slave") ? Convert.ToByte(section["slave"]) : (byte)1;
         config.TimeoutMs = section.ContainsKey("timeout") ? Convert.ToInt32(section["timeout"]) : 1000;
