@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using DIME.Configuration.Mqtt;
 using MQTTnet;
+using MQTTnet.Client;
 
 namespace DIME.Connectors.Mqtt;
 
@@ -20,7 +21,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
 
     protected override bool CreateImplementation()
     {
-        _client = new MqttClientFactory().CreateMqttClient();
+        _client = new MqttFactory().CreateMqttClient();
         _client.DisconnectedAsync += ClientOnDisconnectedAsync;
         _client.ApplicationMessageReceivedAsync += ClientOnApplicationMessageReceivedAsync;
         
@@ -38,7 +39,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         
         IsConnected = result.ResultCode == MqttClientConnectResultCode.Success;
         
-        var mqttSubscribeOptions = new MqttClientFactory().CreateSubscribeOptionsBuilder();
+        var mqttSubscribeOptions = new MqttFactory().CreateSubscribeOptionsBuilder();
         foreach(var item in Configuration.Items.Where(x => x.Enabled && x.Address is not null))
         {
             mqttSubscribeOptions.WithTopicFilter(f => { f.WithTopic(item.Address); });

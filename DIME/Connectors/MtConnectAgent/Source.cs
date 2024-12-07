@@ -23,18 +23,6 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         
         _client.ObservationReceived += (s, observation) =>
         {
-            // Console.WriteLine(observation.Uuid);
-            /*
-            if (observation.DataItemId == "pathpos")
-            {
-                var l = new NLua.Lua();
-                l.LoadCLRPackage();
-                l.DoString("package.path = package.path .. ';./Lua/?.lua'");
-                l["result"] = observation.Values.ToList();
-                var r = l.DoString("return result;");
-            }
-            */
-            
             _incomingBuffer.Add(new IncomingMessage()
             {
                 Key = observation.DataItemId,
@@ -54,6 +42,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
     
     protected override bool DisconnectImplementation()
     {
+        _client.Stop();
         return true;
     }
     

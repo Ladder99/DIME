@@ -14,13 +14,14 @@
       <PackageReference Include="Disruptor" Version="6.0.0" />
       <PackageReference Include="Lextm.SharpSnmpLib" Version="12.5.5" />
       <PackageReference Include="libplctag" Version="1.5.2" />
-      <PackageReference Include="MQTTnet" Version="5.0.0.1214-RC" />
+      <PackageReference Include="MQTTnet" Version="4.3.7.1207" />
       <PackageReference Include="MTConnect.NET-Applications-Agents" Version="6.5.0" />
       <PackageReference Include="MTConnect.NET-SHDR" Version="6.5.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="NLog" Version="5.3.4" />
       <PackageReference Include="NLua" Version="1.7.3" />
       <PackageReference Include="NModbus" Version="3.0.81" />
+      <PackageReference Include="SparkplugNet" Version="1.3.10" />
       <PackageReference Include="Topshelf" Version="4.3.0" />
       <PackageReference Include="Topshelf.NLog" Version="4.3.0" />
       <PackageReference Include="YamlDotNet" Version="16.2.0" />
@@ -91,6 +92,9 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Configs\mettlerToledoScale1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Configs\sparkplugBSink1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

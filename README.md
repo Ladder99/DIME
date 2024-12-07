@@ -90,6 +90,7 @@ sources:
 | OPC-UA                              |
 | OPC XML-DA                          |
 | Postgres                            |
+| [Script](#script)                   |
 | Siemens S7                          |
 | [SNMP](#snmp)                       |
 | Timebase Websocket                  | 
@@ -108,9 +109,9 @@ sources:
 | Redis                             |
 | Splunk EH SDK                     |
 | Splunk HEC                        |
+| [SparkplugB](#sparkplugb)         |
 
 </td></tr></table>
-
 
 ### ASC CPC
 
@@ -121,6 +122,9 @@ sources:
 | scan_interval   | int          | scanning frequency in milliseconds |
 | rbe             | bool         | report by exception                |
 | init_script     | string       | startup lua script                 |
+| deinit_script   | string       | shutdown lua script                |
+| enter_script    | string       | before loop script                 |
+| exit_script     | string       | after loop script                  |
 | connector       | string       | connector type, `AscCPC`           |
 | address         | string       | computer hostname                  |
 | items           | object array | cpc items                          |
@@ -152,6 +156,9 @@ sources:
 | scan_interval   | int          | scanning frequency in milliseconds                                          |
 | rbe             | bool         | report by exception                                                         |
 | init_script     | string       | startup lua script                                                          |
+| deinit_script   | string       | shutdown lua script                                                         |
+| enter_script    | string       | before loop script                                                          |
+| exit_script     | string       | after loop script                                                           |
 | connector       | string       | connector type, `EthernetIP`                                                |
 | type            | int          | plc type (see: https://github.com/libplctag/libplctag)                      |
 | address         | string       | plc hostname                                                                |
@@ -187,26 +194,29 @@ sources:
 
 ### Haas SHDR
 
-| Name               | Type         | Description                                                 |
-|--------------------|--------------|-------------------------------------------------------------|
-| name               | string       | unique connector name                                       |
-| enabled            | bool         | is connector enabled                                        |
-| scan_interval      | int          | scanning frequency in milliseconds                          |
-| rbe                | bool         | report by exception                                         |
-| init_script        | string       | startup lua script                                          |
-| itemized_read      | string       | iterate connector items                                     |
-| connector          | string       | connector type, `HaasSHDR`                                  |
-| address            | string       | machine hostname                                            |
-| port               | int          | machine port                                                |
-| timeout            | int          | connection timeout in milliseconds                          |
-| heartbeat_interval | int          | heartbeat frequency in milliseconds                         |
-| retry_interval     | int          | retry frequency in milliseconds                             |
-| items              | object array | device items                                                |
-| items[].name       | string       | unique item name                                            |
-| items[].enabled    | bool         | is item enabled                                             |
-| items[].rbe        | bool         | report by exception override                                |
-| items[].address    | string       | device item address                                         |
-| items[].script     | string       | lua script                                                  |
+| Name               | Type         | Description                          |
+|--------------------|--------------|--------------------------------------|
+| name               | string       | unique connector name                |
+| enabled            | bool         | is connector enabled                 |
+| scan_interval      | int          | scanning frequency in milliseconds   |
+| rbe                | bool         | report by exception                  |
+| init_script        | string       | startup lua script                   |
+| deinit_script      | string       | shutdown lua script                  |
+| enter_script       | string       | before loop script                   |
+| exit_script        | string       | after loop script                    |
+| itemized_read      | string       | iterate connector items              |
+| connector          | string       | connector type, `HaasSHDR`           |
+| address            | string       | machine hostname                     |
+| port               | int          | machine port                         |
+| timeout            | int          | connection timeout in milliseconds   |
+| heartbeat_interval | int          | heartbeat frequency in milliseconds  |
+| retry_interval     | int          | retry frequency in milliseconds      |
+| items              | object array | device items                         |
+| items[].name       | string       | unique item name                     |
+| items[].enabled    | bool         | is item enabled                      |
+| items[].rbe        | bool         | report by exception override         |
+| items[].address    | string       | device item address                  |
+| items[].script     | string       | lua script                           |
 
 #### Source Example
 
@@ -239,6 +249,10 @@ sources:
 | enabled           | bool         | is connector enabled               |
 | scan_interval     | int          | scanning frequency in milliseconds |
 | rbe               | bool         | report by exception                |
+| init_script       | string       | startup lua script                 |
+| deinit_script     | string       | shutdown lua script                |
+| enter_script      | string       | before loop script                 |
+| exit_script       | string       | after loop script                  |
 | connector         | string       | connector type, `HTTPServer`       |
 | uri               | string       | base uri                           |
 | items             | object array | post items                         |
@@ -280,6 +294,10 @@ sources:
 | enabled         | bool         | is connector enabled                                                                     |
 | scan_interval   | int          | scanning frequency in milliseconds                                                       |
 | rbe             | bool         | report by exception                                                                      |
+| init_script     | string       | startup lua script                                                                       |
+| deinit_script   | string       | shutdown lua script                                                                      |
+| enter_script    | string       | before loop script                                                                       |
+| exit_script     | string       | after loop script                                                                        |
 | connector       | string       | connector type, `ModbusTCP`                                                              |
 | address         | string       | device hostname                                                                          |
 | port            | int          | device port                                                                              |
@@ -327,6 +345,10 @@ sources:
 | enabled         | bool         | is connector enabled                   |
 | scan_interval   | int          | scanning frequency in milliseconds     |
 | rbe             | bool         | report by exception                    |
+| init_script     | string       | startup lua script                 |
+| deinit_script   | string       | shutdown lua script                |
+| enter_script    | string       | before loop script                 |
+| exit_script     | string       | after loop script                  |
 | connector       | string       | connector type, `MQTT`                 |
 | address         | string       | broker hostname                        |
 | port            | int          | broker port                            |
@@ -362,20 +384,25 @@ sources:
 
 ### MTConnect Agent
 
-| Name            | Type         | Description                        |
-|-----------------|--------------|------------------------------------|
-| name            | string       | unique connector name              |
-| enabled         | bool         | is connector enabled               |
-| scan_interval   | int          | scanning frequency in milliseconds |
-| rbe             | bool         | report by exception                |
-| connector       | string       | connector type, `MTConnectAgent`   |
-| address         | string       | agent address                      |
-| port            | int          | agent port                         |
-| items           | object array | data items                         |
-| items[].name    | string       | unique item name                   |
-| items[].enabled | bool         | is item enabled                    |
-| items[].rbe     | bool         | report by exception override       |
-| items[].address | string       | data item id                       |
+| Name             | Type         | Description                        |
+|------------------|--------------|------------------------------------|
+| name             | string       | unique connector name              |
+| enabled          | bool         | is connector enabled               |
+| scan_interval    | int          | scanning frequency in milliseconds |
+| rbe              | bool         | report by exception                |
+| init_script      | string       | startup lua script                 |
+| deinit_script    | string       | shutdown lua script                |
+| enter_script     | string       | before loop script                 |
+| exit_script      | string       | after loop script                  |
+| itemized_read    | string       | iterate connector items            |
+| connector        | string       | connector type, `MTConnectAgent`   |
+| address          | string       | agent address                      |
+| port             | int          | agent port                         |
+| items            | object array | data items                         |
+| items[].name     | string       | unique item name                   |
+| items[].enabled  | bool         | is item enabled                    |
+| items[].rbe      | bool         | report by exception override       |
+| items[].address  | string       | data item id                       |
 
 #### Sink Example
 
@@ -431,6 +458,40 @@ sources:
     filter_duplicates: !!bool true
 ```
 
+### Script
+
+| Name            | Type         | Description                        |
+|-----------------|--------------|------------------------------------|
+| name            | string       | unique connector name              |
+| enabled         | bool         | is connector enabled               |
+| scan_interval   | int          | scanning frequency in milliseconds |
+| rbe             | bool         | report by exception                |
+| init_script     | string       | startup lua script                 |
+| deinit_script   | string       | shutdown lua script                |
+| enter_script    | string       | before loop script                 |
+| exit_script     | string       | after loop script                  |
+| connector       | string       | connector type, `Script`           |
+| items           | object array | read items                         |
+| items[].name    | string       | unique item name                   |
+| items[].enabled | bool         | is item enabled                    |
+| items[].rbe     | bool         | report by exception override       |
+| items[].script  | string       | lua script                         |
+
+#### Source Example
+
+```yaml
+  - name: scriptSource1
+    connector: Script
+    init_script: ~
+    deinit_script: ~
+    enter_script: ~
+    exit_script: ~
+    items:
+      - name: Temperature
+        script: |
+          return math.random(100);
+```
+
 ### SNMP
 
 | Name            | Type         | Description                        |
@@ -440,6 +501,9 @@ sources:
 | scan_interval   | int          | scanning frequency in milliseconds |
 | rbe             | bool         | report by exception                |
 | init_script     | string       | startup lua script                 |
+| deinit_script   | string       | shutdown lua script                |
+| enter_script    | string       | before loop script                 |
+| exit_script     | string       | after loop script                  |
 | connector       | string       | connector type, `SNMP`             |
 | address         | string       | device hostname                    |
 | community       | string       | community                          |
@@ -467,6 +531,47 @@ sources:
         address: 1.3.6.1.4.1.6574.1.5.1.0
       - name: SerialNumber
         address: 1.3.6.1.4.1.6574.1.5.2.0
+```
+
+### SparkplugB
+
+| Name               | Type     | Description                        |
+|--------------------|----------|------------------------------------|
+| name               | string   | unique connector name              |
+| enabled            | bool     | is connector enabled               |
+| scan_interval      | int      | scanning frequency in milliseconds |
+| rbe                | bool     | report by exception                |
+| init_script        | string   | startup lua script                 |
+| deinit_script      | string   | shutdown lua script                |
+| enter_script       | string   | before loop script                 |
+| exit_script        | string   | after loop script                  |
+| connector          | string   | connector type, `SparkplugB`       |
+| address            | string   | broker hostname                    |
+| port               | int      | broker port                        |
+| username           | string   | broker username                    |
+| password           | string   | broker password                    |
+| host_id            | string   | host id                            |
+| group_id           | string   | group id                           |
+| node_id            | string   | node id                            |
+| device_id          | string   | device_id                          |
+| reconnect_interval | int      | reconnect interval                 |
+
+#### Sink Example
+
+```yaml
+  - name: sparkplugBSink1
+    enabled: !!bool true
+    scan_interval: !!int 1000
+    connector: SparkplugB
+    address: localhost
+    port: !!int 1883
+    username: admin
+    password: admin
+    host_id: dime
+    group_id: dime
+    node_id: dime
+    device_id: dime
+    reconnect_interval: !!int 30000
 ```
 
 ## Creating a New Connector
@@ -506,9 +611,9 @@ solution
 Each connector configuration allows for Lua script execution.  The `init_script` property is executed on 
 startup and is used to import additional .NET or Lua libraries.  The `deinit_script` property is executed on shutdown. 
 The `enter_script` and `exit_script` properties are executed before and after reading all items, respectively. 
-Within each item script, the primary cache can be accessed using the `cache(path, defaultValue)` function call. 
-The `path` refers to the item's unique path which is a combination of the connector's and item's name 
-(e.g. `eipSource1/boolTag2`, `mqttSource1/ffe4Sensor`). Within the connector's execution context, 
+Within each item script, the primary cache can be accessed using the `cache(path, defaultValue)`, 
+`cache_ts(path, defaultValue)` function calls. The `path` refers to the item's unique path which is a combination of 
+the connector's and item's name (e.g. `eipSource1/boolTag2`, `mqttSource1/ffe4Sensor`). Within the connector's execution context, 
 the connector name can be omitted and replaced with a period, `./boolTag2`. A secondary cache can be accessed 
 using the `get(key, defaultValue)` and `set(key, value)` function calls.  This user-defined cache is scoped to 
 the individual connector.

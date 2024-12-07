@@ -1,8 +1,9 @@
 sinks:
-  - *mqttSink1
-  - *shdrSink1
-  - *mtConnectSink1
   - *httpServerSink1
+  - *mqttSink1
+  - *mtConnectSink1
+  - *shdrSink1
+  - *sparkplugBSink1
 sources:
   - *ascCpcSource1
   - *eipSource1

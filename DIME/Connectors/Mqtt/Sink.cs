@@ -1,5 +1,6 @@
 using DIME.Configuration.Mqtt;
 using MQTTnet;
+using MQTTnet.Client;
 using MQTTnet.Protocol;
 using Newtonsoft.Json;
 
@@ -21,7 +22,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool CreateImplementation()
     {
-        _client = new MqttClientFactory().CreateMqttClient();
+        _client = new MqttFactory().CreateMqttClient();
         _client.DisconnectedAsync += ClientOnDisconnectedAsync;
         
         return true;
