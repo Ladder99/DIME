@@ -8,6 +8,7 @@ sources:
   - *eipSource1
   - *haasSource1
   - *httpServerSource1
+  - *mettlerToledoScale1
   - *modbusSource1
   - *mqttSource1
   - *mtConnectSource1

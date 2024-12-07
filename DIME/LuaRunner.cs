@@ -47,7 +47,7 @@ public class LuaRunner
         }
         catch (Exception e)
         {
-            Logger.Error($"[{_connector.Configuration.Name}] Chunk execution failed: {chunk}");
+            Logger.Error(e, $"[{_connector.Configuration.Name}] Chunk execution failed: {chunk}");
             throw;
         }
     }
@@ -60,7 +60,7 @@ public class LuaRunner
         }
         catch (Exception e)
         {
-            Logger.Error($"[{_connector.Configuration.Name}/{item.Name}] Chunk execution failed: {item.Script}");
+            Logger.Error(e, $"[{_connector.Configuration.Name}/{item.Name}] Chunk execution failed: {item.Script}");
             throw;
         }
     }
