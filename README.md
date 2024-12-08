@@ -106,7 +106,7 @@ sources:
 | MTConnect Agent                   |
 | [MTConnect SHDR](#mtconnect-shdr) |
 | Postgres                          |
-| Redis                             |
+| [Redis](#redis)                   |
 | Splunk EH SDK                     |
 | Splunk HEC                        |
 | [SparkplugB](#sparkplugb)         |
@@ -339,25 +339,25 @@ sources:
 
 ### MQTT
 
-| Name            | Type         | Description                            |
-|-----------------|--------------|----------------------------------------|
-| name            | string       | unique connector name                  |
-| enabled         | bool         | is connector enabled                   |
-| scan_interval   | int          | scanning frequency in milliseconds     |
-| rbe             | bool         | report by exception                    |
-| init_script     | string       | startup lua script                 |
-| deinit_script   | string       | shutdown lua script                |
-| enter_script    | string       | before loop script                 |
-| exit_script     | string       | after loop script                  |
-| connector       | string       | connector type, `MQTT`                 |
-| address         | string       | broker hostname                        |
-| port            | int          | broker port                            |
-| base_topic      | string       | base topic where to publish messages   |
-| items           | object array | subscription topics                    |
-| items[].name    | string       | unique item name                       |
-| items[].enabled | bool         | is item enabled                        |
-| items[].rbe     | bool         | report by exception override           |
-| items[].address | string       | topic                                  |
+| Name            | Type         | Description                          |
+|-----------------|--------------|--------------------------------------|
+| name            | string       | unique connector name                |
+| enabled         | bool         | is connector enabled                 |
+| scan_interval   | int          | scanning frequency in milliseconds   |
+| rbe             | bool         | report by exception                  |
+| init_script     | string       | startup lua script                   |
+| deinit_script   | string       | shutdown lua script                  |
+| enter_script    | string       | before loop script                   |
+| exit_script     | string       | after loop script                    |
+| connector       | string       | connector type, `MQTT`               |
+| address         | string       | broker hostname                      |
+| port            | int          | broker port                          |
+| base_topic      | string       | base topic where to publish messages |
+| items           | object array | subscription topics                  |
+| items[].name    | string       | unique item name                     |
+| items[].enabled | bool         | is item enabled                      |
+| items[].rbe     | bool         | report by exception override         |
+| items[].address | string       | topic                                |
 
 #### Sink Example
 
@@ -378,7 +378,6 @@ sources:
     port: !!int 1883
     items:
       - name: subscribe1
-        enabled: !!bool true
         address: sharc/+/evt/#
 ```
 
@@ -456,6 +455,51 @@ sources:
     device_key: ~
     heartbeat_interval: !!int 10000
     filter_duplicates: !!bool true
+```
+
+### Redis
+
+| Name            | Type         | Description                        |
+|-----------------|--------------|------------------------------------|
+| name            | string       | unique connector name              |
+| enabled         | bool         | is connector enabled               |
+| scan_interval   | int          | scanning frequency in milliseconds |
+| rbe             | bool         | report by exception                |
+| init_script     | string       | startup lua script                 |
+| deinit_script   | string       | shutdown lua script                |
+| enter_script    | string       | before loop script                 |
+| exit_script     | string       | after loop script                  |
+| connector       | string       | connector type, `Redis`            |
+| address         | string       | hostname                           |
+| port            | int          | port                               |
+| database        | int          | database id                        |
+| items           | object array | items                              |
+| items[].name    | string       | unique item name                   |
+| items[].enabled | bool         | is item enabled                    |
+| items[].rbe     | bool         | report by exception override       |
+| items[].address | string       | cache path                         |
+
+#### Sink Example
+
+```yaml
+  - name: redisSink1
+    connector: Redis
+    address: 172.24.56.104
+    port: !!int 6379
+    database: !!int 0
+```
+
+#### Source Example
+
+```yaml
+  - name: redisSink1
+    connector: Redis
+    address: 172.24.56.104
+    port: !!int 6379
+    database: !!int 0
+    items:
+      - name: plcGoodPartCount
+        address: eipSource1/GoodPartCount
 ```
 
 ### Script
