@@ -156,6 +156,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
     protected override bool DeinitializeImplementation()
     {
         LibPlcTag.LogEvent -= LibPlcTagOnLogEvent;
+        LibPlcTag.Shutdown();
         return true;
     }
     
@@ -171,7 +172,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
             DebugLevel.Spew     => LogLevel.Trace,
             _                   => LogLevel.Warn,
         };
-        Console.WriteLine(e.Message);
+        
         Logger.Log(logLevel, $"[libplctag] {e.Message}");
     }
 }

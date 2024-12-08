@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using DIME.Configuration.SparkplugB;
 using IronPython.Modules;
 using Newtonsoft.Json;
+using SparkplugNet.Core;
 using SparkplugNet.Core.Enumerations;
 using SparkplugNet.Core.Node;
 using SparkplugNet.VersionB;
@@ -17,8 +18,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     private List<Metric> _nodeMetrics = null;
     private SparkplugNodeOptions _nodeOptions = null;
     
-    private long _connectorStartTime = 0;
-    private long _birthStallTime = 10000;
+    private long _nodeConnectedTime = 0;
     private bool _deviceHasBirthed = false;
     private bool _deviceRebirthTrigger = false;
 
@@ -31,13 +31,14 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     protected override bool InitializeImplementation()
     {
         Properties.SetProperty("client_id", Guid.NewGuid().ToString());
-        _connectorStartTime = DateTime.Now.ToEpochMilliseconds();
         _messages = new Dictionary<string, MessageBoxMessage>();
         return true;
     }
 
     protected override bool CreateImplementation()
     {
+        SparkplugGlobals.UseStrictIdentifierChecking = false;
+        
         _nodeMetrics = new List<Metric>
         {
             new("IpAddress", DataType.String, string.Join(';', 
@@ -49,7 +50,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
                     .ToList()))
         };
         
-        _client = new SparkplugNode(_nodeMetrics, SparkplugSpecificationVersion.Version30);
+        _client = new SparkplugNode(_nodeMetrics, SparkplugSpecificationVersion.Version22);
         
         _nodeOptions = new SparkplugNodeOptions(
             brokerAddress: Configuration.Address,
@@ -66,12 +67,15 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
         _client.Connected += async args =>
         {
             Logger.Debug($"[{Configuration.Name}] Connected.");
+            _deviceHasBirthed = false;
+            _nodeConnectedTime = DateTime.Now.ToEpochMilliseconds();
             await Task.FromResult(0);
         };
         
         _client.Disconnected += async args =>
         {
             Logger.Debug($"[{Configuration.Name}] Disconnected.");
+            IsConnected = false;
             await Task.FromResult(0);
         };
         
@@ -104,26 +108,97 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
             Logger.Debug($"[{Configuration.Name}] Device death publishing.");
             await Task.FromResult(0);
         };
-        
+
+        try
+        {
+            _client.Start(_nodeOptions).GetAwaiter().GetResult();
+        }
+        catch (Exception e)
+        {
+            Logger.Warn(e, $"[{Configuration.Name}] Immediate node start failed.");
+        }
         
         return true;
     }
 
     protected override bool ConnectImplementation()
     {
-        try
+        if (_client.IsConnected)
         {
-            _client.Start(_nodeOptions);
             _client.PublishMetrics(_nodeMetrics);
         }
-        catch (Exception e)
+        
+        return _client.IsConnected;
+    }
+    
+    protected override bool WriteImplementation()
+    {
+        var samples = new List<Metric>();
+        
+        foreach (var message in Outbox)
         {
-            return false;
+            // TODO: DATA CORRUPTION
+            var tempMessage = new MessageBoxMessage()
+            {
+                Path = message.Path,
+                Data = message.Data,
+                Timestamp = message.Timestamp,
+                ConnectorItemRef = message.ConnectorItemRef
+            };
+            
+            if (!_messages.ContainsKey(tempMessage.Path))
+            {
+                //Console.WriteLine(tempMessage.Path);
+                // must rebirth due to new observation
+                _deviceRebirthTrigger = true;
+            }
+            
+            _messages[tempMessage.Path] = tempMessage;
+
+            samples.Add(MakeMetric(tempMessage.Path, tempMessage.Data));
+        }
+
+        if (_deviceHasBirthed)
+        {
+            // new observation was found, need to rebirth
+            if (_deviceRebirthTrigger)
+            {
+                //Console.WriteLine("REBIRTH triggered.");
+                _client.PublishDeviceBirthMessage(MakeMetricListFromMessages(), Configuration.DeviceId);
+                _deviceRebirthTrigger = false;
+            }
+            // continue publishing data for known metrics
+            else
+            {
+                _client.PublishDeviceData(samples, Configuration.DeviceId);
+            }
+        }
+        else
+        {
+            // device has connected or reconnected, stall birth to collect as many known metrics
+            if (DateTime.Now.ToEpochMilliseconds() - _nodeConnectedTime > Configuration.BirthDelayMs)
+            {
+                //Console.WriteLine("BIRTH triggered.");
+                _client.PublishDeviceBirthMessage(MakeMetricListFromMessages(), Configuration.DeviceId);
+                _deviceHasBirthed = true;
+                _deviceRebirthTrigger = false;
+            }
         }
         
         return true;
     }
 
+    protected override bool DisconnectImplementation()
+    {
+        return true;
+    }
+    
+    protected override bool DeinitializeImplementation()
+    {
+        _client.Stop();
+        return true;
+    }
+    
     private List<Metric> MakeMetricListFromMessages()
     {
         var metrics = new List<Metric>();
@@ -132,7 +207,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
         {
             metrics.Add(MakeMetric(message.Key, message.Value.Data));
         }
-
+        
         return metrics;
     }
     
@@ -162,66 +237,5 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
                 Logger.Debug($"[{Configuration.Name}] '{name}'({value.GetType().FullName}) converted to string metric.");
                 return new Metric(name, DataType.String, JsonConvert.SerializeObject(value), DateTimeOffset.Now);
         }
-    }
-
-    protected override bool WriteImplementation()
-    {
-        var samples = new List<Metric>();
-        
-        foreach (var message in Outbox)
-        {
-            // TODO: DATA CORRUPTION
-            var tempMessage = new MessageBoxMessage()
-            {
-                Path = message.Path,
-                Data = message.Data,
-                Timestamp = message.Timestamp,
-                ConnectorItemRef = message.ConnectorItemRef
-            };
-            
-            if (!_messages.ContainsKey(tempMessage.Path))
-            {
-                _deviceRebirthTrigger = true;
-            }
-            
-            _messages[tempMessage.Path] = tempMessage;
-
-            samples.Add(MakeMetric(tempMessage.Path, tempMessage.Data));
-        }
-
-        if (_deviceHasBirthed)
-        {
-            if (_deviceRebirthTrigger)
-            {
-                //_client.PublishDeviceDeathMessage(Configuration.DeviceId);
-                _client.PublishDeviceBirthMessage(MakeMetricListFromMessages(), Configuration.DeviceId);
-                _deviceRebirthTrigger = false;
-            }
-            else
-            {
-                _client.PublishDeviceData(samples, Configuration.DeviceId);
-            }
-        }
-        else
-        {
-            if (DateTime.Now.ToEpochMilliseconds() - _connectorStartTime > _birthStallTime)
-            {
-                _client.PublishDeviceBirthMessage(MakeMetricListFromMessages(), Configuration.DeviceId);
-                _deviceHasBirthed = true;
-            }
-        }
-        
-        return true;
-    }
-
-    protected override bool DisconnectImplementation()
-    {
-        _client.Stop();
-        return true;
-    }
-    
-    protected override bool DeinitializeImplementation()
-    {
-        return true;
     }
 }

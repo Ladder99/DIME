@@ -75,7 +75,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
     {
         foreach (var response in Outbox)
         {
-            Console.WriteLine($"{response.Path} = {response.Data}");
+            //Console.WriteLine($"{response.Path} = {response.Data}");
 
             if (response.ConnectorItemRef is not null && 
                 response.ConnectorItemRef.Meta is not null &&

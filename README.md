@@ -1,6 +1,6 @@
 # Data In Motion Enterprise
 
-Move data from enterprise and industrial sources to message queues, databases, and other sinks.  
+Data integration made easy! Move data from enterprise and industrial sources to message queues, databases, and other sinks.  
 
 Videos
 - [Quick Introduction](https://www.youtube.com/watch?v=P5Gc5bKdiy4)  
@@ -535,26 +535,27 @@ sources:
 
 ### SparkplugB
 
-| Name               | Type     | Description                        |
-|--------------------|----------|------------------------------------|
-| name               | string   | unique connector name              |
-| enabled            | bool     | is connector enabled               |
-| scan_interval      | int      | scanning frequency in milliseconds |
-| rbe                | bool     | report by exception                |
-| init_script        | string   | startup lua script                 |
-| deinit_script      | string   | shutdown lua script                |
-| enter_script       | string   | before loop script                 |
-| exit_script        | string   | after loop script                  |
-| connector          | string   | connector type, `SparkplugB`       |
-| address            | string   | broker hostname                    |
-| port               | int      | broker port                        |
-| username           | string   | broker username                    |
-| password           | string   | broker password                    |
-| host_id            | string   | host id                            |
-| group_id           | string   | group id                           |
-| node_id            | string   | node id                            |
-| device_id          | string   | device_id                          |
-| reconnect_interval | int      | reconnect interval                 |
+| Name               | Type   | Description                          |
+|--------------------|--------|--------------------------------------|
+| name               | string | unique connector name                |
+| enabled            | bool   | is connector enabled                 |
+| scan_interval      | int    | scanning frequency in milliseconds   |
+| rbe                | bool   | report by exception                  |
+| init_script        | string | startup lua script                   |
+| deinit_script      | string | shutdown lua script                  |
+| enter_script       | string | before loop script                   |
+| exit_script        | string | after loop script                    |
+| connector          | string | connector type, `SparkplugB`         |
+| address            | string | broker hostname                      |
+| port               | int    | broker port                          |
+| username           | string | broker username                      |
+| password           | string | broker password                      |
+| host_id            | string | host id                              |
+| group_id           | string | group id                             |
+| node_id            | string | node id                              |
+| device_id          | string | device_id                            |
+| reconnect_interval | int    | reconnect interval                   |
+| birth_delay        | int    | wait after connection to send birth  |
 
 #### Sink Example
 
@@ -571,7 +572,8 @@ sources:
     group_id: dime
     node_id: dime
     device_id: dime
-    reconnect_interval: !!int 30000
+    reconnect_interval: !!int 15000
+    birth_delay: !!int 10000
 ```
 
 ## Creating a New Connector

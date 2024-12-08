@@ -1,14 +1,15 @@
 sparkplugBSink1: &sparkplugBSink1
   name: sparkplugBSink1
-  enabled: !!bool true
+  enabled: !!bool false
   scan_interval: !!int 1000
   connector: SparkplugB
   address: localhost
   port: !!int 1883
-  username: admin
-  password: admin
+  username: user
+  password: password
   host_id: dime
   group_id: dime
   node_id: dime
   device_id: dime
-  reconnect_interval: !!int 30000
+  reconnect_interval: !!int 15000
+  birth_delay: !!int 10000

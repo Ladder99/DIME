@@ -11,4 +11,5 @@ public sealed class ConnectorConfiguration : Configuration.ConnectorConfiguratio
     public string NodeId { get; set; }
     public string DeviceId { get; set; }
     public int ReconnectIntervalMs { get; set; }
+    public int BirthDelayMs { get; set; }
 }
