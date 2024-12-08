@@ -22,6 +22,9 @@ public static class SinkConnectorFactory
             case "mtconnectagent":
                 connector = MtConnectAgent.Sink.Create(section, disruptor);
                 break;
+            case "redis":
+                connector = Redis.Sink.Create(section, disruptor);
+                break;
             case "sparkplugb":
                 connector = SparkplugB.Sink.Create(section, disruptor);
                 break;

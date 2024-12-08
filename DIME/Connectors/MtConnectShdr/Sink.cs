@@ -73,19 +73,19 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
 
     protected override bool WriteImplementation()
     {
-        foreach (var response in Outbox)
+        foreach (var message in Outbox)
         {
             //Console.WriteLine($"{response.Path} = {response.Data}");
 
-            if (response.ConnectorItemRef is not null && 
-                response.ConnectorItemRef.Meta is not null &&
-                response.ConnectorItemRef.Meta.ContainsKey("mtconnect"))
+            if (message.ConnectorItemRef is not null && 
+                message.ConnectorItemRef.Meta is not null &&
+                message.ConnectorItemRef.Meta.ContainsKey("mtconnect"))
             {
-                string mtconnectPath = response.ConnectorItemRef.Meta["mtconnect"].ToString();
-                string mtconnectSource = response.Path;
+                string mtconnectPath = message.ConnectorItemRef.Meta["mtconnect"].ToString();
+                string mtconnectSource = message.Path;
             }
             
-            _client.AddDataItem(new ShdrDataItem(response.Path, response.Data, response.Timestamp));
+            _client.AddDataItem(new ShdrDataItem(message.Path, message.Data, message.Timestamp));
         }
 
         _client.SendBuffer();
@@ -96,7 +96,6 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
     protected override bool DisconnectImplementation()
     {
         _client.Stop();
-        IsConnected = false;
         return true;
     }
     

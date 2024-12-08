@@ -2,6 +2,7 @@ sinks:
   - *httpServerSink1
   - *mqttSink1
   - *mtConnectSink1
+  - *redisSink1
   - *shdrSink1
   - *sparkplugBSink1
 sources:
