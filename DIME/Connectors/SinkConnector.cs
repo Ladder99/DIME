@@ -7,14 +7,12 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
     where TConfig : ConnectorConfiguration<TItem>
     where TItem : ConnectorItem
 {
-    // public ConcurrentBag<MessageBoxMessage> Outbox { get; set; }
-    public List<MessageBoxMessage> Outbox { get; set; }
+    public ConcurrentBag<MessageBoxMessage> Outbox { get; set; }
     public bool IsWriting { get; protected set; }
     
     public SinkConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
     {
-        //Outbox = new ConcurrentBag<MessageBoxMessage>();
-        Outbox = new List<MessageBoxMessage>();
+        Outbox = new ConcurrentBag<MessageBoxMessage>();
         IsWriting = false;
         
         Logger.Trace($"[{Configuration.Name}] SinkConnector:.ctor");

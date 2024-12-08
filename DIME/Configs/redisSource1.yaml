@@ -1,6 +1,6 @@
 redisSource1: &redisSource1
   name: redisSource1
-  enabled: !!bool true
+  enabled: !!bool false
   scan_interval: !!int 1000
   connector: Redis
   rbe: !!bool true

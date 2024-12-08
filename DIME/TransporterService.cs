@@ -56,6 +56,8 @@ public class TransporterService
             Connector
               .Disconnect
               .DisconnectImplementation
+              .Deinitialize
+              .DeinitializeImplementation
          */
         
         foreach (var connector in connectors)
@@ -83,5 +85,9 @@ public class TransporterService
         {
             runner.Stop();
         }
+        
+        Logger.Info("Stopping queue.");
+        
+        _disruptor.Shutdown();
     }
 }

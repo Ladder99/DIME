@@ -57,6 +57,8 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
     {
         object response = null;
         
+        Tag tag = null;
+        
         switch (item.Type.ToLower())
         {
             case "bool":

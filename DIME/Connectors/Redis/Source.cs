@@ -51,11 +51,6 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         switch (type)
         {
             case "set":
-                if (key.ToString() == "eipSource1/Execution")
-                {
-                    int i = 0;
-                }
-
                 var value = _database.StringGet(key.ToString());
                 AddToIncomingBuffer(key, value);
                 break;

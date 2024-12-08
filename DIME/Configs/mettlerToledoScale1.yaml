@@ -2,7 +2,7 @@ mettlerToledoScale1: &mettlerToledoScale1
   # start reading: curl -d "{\"hello\":true}" http://localhost:8081/post/data
   # stop reading: curl -d "{\"hello\":false}" http://localhost:8081/post/data
   name: mettlerToledoScale1
-  enabled: !!bool false
+  enabled: !!bool true
   scan_interval: !!int 1000
   connector: Script
   rbe: !!bool true

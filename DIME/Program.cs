@@ -1,4 +1,6 @@
 ﻿using Topshelf;
+using Topshelf.Logging;
+using Topshelf.Runtime;
 
 namespace DIME;
 
@@ -19,6 +21,8 @@ public static class Program
             x.SetServiceName("DIME");
             x.SetDisplayName("DIME");
             x.SetDescription("Data in Motion Enterprise");
+            x.OnException(ex => HostLogger.Get<TransporterService>().Fatal(ex));
+            x.UnhandledExceptionPolicy = UnhandledExceptionPolicyCode.LogErrorAndStopService;
             x.UseNLog();
         });
     }
