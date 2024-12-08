@@ -9,7 +9,7 @@ Videos
 
 ### Windows
 
-Download a [release](https://github.com/Ladder99/DIME/releases) and run `DIME.exe`.  Alternatively, `DIME.exe install` will install the DIME Windows Service.
+Download the latest [release](https://github.com/Ladder99/DIME/releases) and run `DIME.exe`.  Alternatively, `DIME.exe install` will install the DIME Windows Service.
 
 ### Docker
 
@@ -576,38 +576,6 @@ sources:
     birth_delay: !!int 10000
 ```
 
-## Creating a New Connector
-
-1. Add configuration mapper classes in `Configuration.{new_connector}` folder.  
-   a. `ConnectorConfiguration.cs` - inherits from `IDS.Transporter.Configuration.ConnectorConfiguration`.  
-   b. `ConnectorItem.cs` - inherits from `IDS.Transporter.Configuration.ConnectorItem`.
-2. Add a configurator factory for the new connector in `Configurator.{new_connector}` folder.  
-   a. `Source.cs` - static class in `IDS.Transporter.Configurator.{new_connector}` folder.  
-   b. `Sink.cs` - static class in `IDS.Transporter.Configurator.{new_connector}` folder.  
-   c. Update `SourceConnectorFactory.cs` or `SourceConnectorFactory.cs`.
-3. Add connector implementation in `Connectors.{new_connector}` folder.  
-   a. `Source.cs` - inherits from `IDS.Connectors.SourceConnector<IDS.Transporter.Configuration.{new_connector}.ConnectorConfiguration, IDS.Transporter.Configuration.{new_connector}.ConnectorItem>`.  
-   b. `Source.cs` - inherits from `IDS.Connectors.SourceConnector<IDS.Transporter.Configuration.{new_connector}.ConnectorConfiguration, IDS.Transporter.Configuration.{new_connector}.ConnectorItem>`.
-
-```
-solution
- |
- |- Configuration (1)
- |    |- NewConnector
- |         |- ConnectorConfiguration.cs
- |         |- ConnectorItem.cs
- |- Configurator (2)
- |    |- NewConnector
- |    |    |- Source.cs
- |    |    |- Sink.cs
- |    |- SourceConnectorFactory.cs
- |    |- SinkConnectorFactory.cs   
- |- Connectors (3)
-      |- NewConnector
-           |- Source.cs
-           |- Sink.cs
-```
-
 ## Scripting
 
 Each connector configuration allows for Lua script execution.  The `init_script` property is executed on 
@@ -786,4 +754,36 @@ docker run \
    -v ~/volumes/dime/lua:/app/Lua \
    -v ~/volumes/dime/logs:/app/Logs \
    ladder99/dime:latest
+```
+
+## Creating a New Connector
+
+1. Add configuration mapper classes in `Configuration.{new_connector}` folder.  
+   a. `ConnectorConfiguration.cs` - inherits from `IDS.Transporter.Configuration.ConnectorConfiguration`.  
+   b. `ConnectorItem.cs` - inherits from `IDS.Transporter.Configuration.ConnectorItem`.
+2. Add a configurator factory for the new connector in `Configurator.{new_connector}` folder.  
+   a. `Source.cs` - static class in `IDS.Transporter.Configurator.{new_connector}` folder.  
+   b. `Sink.cs` - static class in `IDS.Transporter.Configurator.{new_connector}` folder.  
+   c. Update `SourceConnectorFactory.cs` or `SourceConnectorFactory.cs`.
+3. Add connector implementation in `Connectors.{new_connector}` folder.  
+   a. `Source.cs` - inherits from `IDS.Connectors.SourceConnector<IDS.Transporter.Configuration.{new_connector}.ConnectorConfiguration, IDS.Transporter.Configuration.{new_connector}.ConnectorItem>`.  
+   b. `Source.cs` - inherits from `IDS.Connectors.SourceConnector<IDS.Transporter.Configuration.{new_connector}.ConnectorConfiguration, IDS.Transporter.Configuration.{new_connector}.ConnectorItem>`.
+
+```
+solution
+ |
+ |- Configuration (1)
+ |    |- NewConnector
+ |         |- ConnectorConfiguration.cs
+ |         |- ConnectorItem.cs
+ |- Configurator (2)
+ |    |- NewConnector
+ |    |    |- Source.cs
+ |    |    |- Sink.cs
+ |    |- SourceConnectorFactory.cs
+ |    |- SinkConnectorFactory.cs   
+ |- Connectors (3)
+      |- NewConnector
+           |- Source.cs
+           |- Sink.cs
 ```
