@@ -1,6 +1,6 @@
 # Data In Motion Enterprise
 
-Data integration made easy! Move data from enterprise and industrial sources to message queues, databases, and other sinks.  
+<i>Data integration made easy!</i>™ Move data from enterprise and industrial sources to message queues, databases, and other sinks.  
 
 Videos
 - [Quick Introduction](https://www.youtube.com/watch?v=P5Gc5bKdiy4)  
