@@ -37,8 +37,6 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         var options = clientOptions.Build();
         var result = _client.ConnectAsync(options).Result;
         
-        IsConnected = result.ResultCode == MqttClientConnectResultCode.Success;
-        
         var mqttSubscribeOptions = new MqttFactory().CreateSubscribeOptionsBuilder();
         foreach(var item in Configuration.Items.Where(x => x.Enabled && x.Address is not null))
         {
@@ -46,7 +44,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         }
         var subscribeResult = _client.SubscribeAsync(mqttSubscribeOptions.Build()).Result;
         
-        return true;
+        return result.ResultCode == MqttClientConnectResultCode.Success;;
     }
     
     protected override bool DisconnectImplementation()
@@ -62,15 +60,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
     
     private Task ClientOnApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
     {
-        lock (_incomingBufferLock)
-        {
-            _incomingBuffer.Add(new IncomingMessage()
-            {
-                Key = arg.ApplicationMessage.Topic,
-                Value = arg.ApplicationMessage.ConvertPayloadToString(),
-                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
-            });
-        }
+        AddToIncomingBuffer(arg.ApplicationMessage.Topic, arg.ApplicationMessage.ConvertPayloadToString());
         
         return Task.FromResult(0);
     }

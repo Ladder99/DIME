@@ -90,6 +90,7 @@ sources:
 | OPC-UA                              |
 | OPC XML-DA                          |
 | Postgres                            |
+| [Redis](#redis)                     |
 | [Script](#script)                   |
 | Siemens S7                          |
 | [SNMP](#snmp)                       |

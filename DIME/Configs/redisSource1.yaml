@@ -1,0 +1,17 @@
+redisSource1: &redisSource1
+  name: redisSource1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: Redis
+  rbe: !!bool true
+  itemized_read: !!bool false
+  address: 172.24.56.104
+  port: !!int 6379
+  database: !!int 0
+  init_script: |
+    -- https://github.com/rxi/json.lua
+    json = require('json');
+  items:
+    - name: plcExecution
+      enabled: !!bool true
+      address: eipSource1/Execution

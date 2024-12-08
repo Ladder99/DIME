@@ -325,16 +325,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
 
             //Logger.Info($"[{Configuration.Name}] i: {i}");
 
-            lock (_incomingBufferLock)
-            {
-                _incomingBuffer.Add(new IncomingMessage()
-                {
-                    Key = shdrTokens[i],
-                    Value = shdrTokens[i + 1],
-                    Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
-                });
-            }
-            
+            AddToIncomingBuffer(shdrTokens[i], shdrTokens[i + 1]);
         }
     }
 }

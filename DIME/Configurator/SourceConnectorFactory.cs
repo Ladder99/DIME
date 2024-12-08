@@ -31,6 +31,9 @@ public static class SourceConnectorFactory
             case "mtconnectagent":
                 connector = MtConnectAgent.Source.Create(section, disruptor);
                 break;
+            case "redis":
+                connector = Redis.Source.Create(section, disruptor);
+                break;
             case "script":
                 connector = Script.Source.Create(section, disruptor);
                 break;

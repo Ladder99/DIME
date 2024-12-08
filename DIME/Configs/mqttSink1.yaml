@@ -1,6 +1,6 @@
 mqttSink1: &mqttSink1
   name: mqttSink1
-  enabled: !!bool false
+  enabled: !!bool true
   scan_interval: !!int 1000
   connector: MQTT
   address: wss.sharc.tech

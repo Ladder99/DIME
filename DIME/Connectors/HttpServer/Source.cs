@@ -94,13 +94,8 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
                     postData = reader.ReadToEnd();
                 }
             }
-            
-            _incomingBuffer.Add(new IncomingMessage()
-            {
-                Key = request.RawUrl.Substring(1),
-                Value = postData,
-                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
-            });
+
+            AddToIncomingBuffer(request.RawUrl.Substring(1), postData);
             
             response.StatusCode = 201;
         }

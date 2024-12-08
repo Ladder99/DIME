@@ -23,12 +23,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         
         _client.ObservationReceived += (s, observation) =>
         {
-            _incomingBuffer.Add(new IncomingMessage()
-            {
-                Key = observation.DataItemId,
-                Value = observation.Values.ToList(),
-                Timestamp = DateTime.UtcNow.ToEpochMilliseconds()
-            });
+            AddToIncomingBuffer(observation.DataItemId, observation.Values.ToList());
         };
             
         return true;

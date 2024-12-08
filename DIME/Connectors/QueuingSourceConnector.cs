@@ -16,14 +16,31 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
     }
     
     // message hold
-    protected readonly ConcurrentBag<IncomingMessage> _incomingBuffer = new();
-    protected readonly object _incomingBufferLock = new();
+    protected readonly ConcurrentBag<IncomingMessage> IncomingBuffer = new();
+    protected readonly object IncomingBufferLock = new();
     
     public QueuingSourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
         Logger.Trace($"[{Configuration.Name}] PollingSourceConnector:.ctor");
     }
 
+    protected IncomingMessage AddToIncomingBuffer(string key, object value)
+    {
+        lock (IncomingBufferLock)
+        {
+            var message = new IncomingMessage()
+            {
+                Key = key,
+                Value = value,
+                Timestamp = DateTime.Now.ToEpochMilliseconds()
+            };
+            
+            IncomingBuffer.Add(message);
+            
+            return message;
+        }
+    }
+    
     protected override bool ReadImplementation()
     {
         Logger.Trace($"[{Configuration.Name}] QueuingSourceConnector:ReadImplementation::ENTER");
@@ -40,7 +57,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
              * find incoming buffer messages that matches connector item or execute connector item script
              */
             
-            lock (_incomingBufferLock)
+            lock (IncomingBufferLock)
             {
                 foreach (var item in Configuration.Items.Where(x => x.Enabled))
                 {
@@ -48,7 +65,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
 
                     if (item.Address is not null)
                     {
-                        messages = _incomingBuffer.Where(x => x.Key == item.Address);
+                        messages = IncomingBuffer.Where(x => x.Key == item.Address);
 
                         foreach (var message in messages)
                         {
@@ -101,7 +118,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                     }
                 }
 
-                _incomingBuffer.Clear();
+                IncomingBuffer.Clear();
             }
         }
         else
@@ -112,9 +129,10 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
              * evaluate script against connector item or
              * use the incoming buffer message value
              */
-            lock (_incomingBufferLock)
+            lock (IncomingBufferLock)
             {
-                foreach (var message in _incomingBuffer.ToArray())
+                //TODO: why ToArray?
+                foreach (var message in IncomingBuffer.ToArray())
                 {
                     try
                     {
@@ -149,7 +167,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                     }
                 }
 
-                _incomingBuffer.Clear();
+                IncomingBuffer.Clear();
             }
         }
 
