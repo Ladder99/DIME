@@ -17,3 +17,4 @@ sources:
   - *redisSource1
   - *scriptSource1
   - *snmpSource1
+  - *timebaseWsSource1

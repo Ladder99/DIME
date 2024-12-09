@@ -1,6 +1,6 @@
 redisSink1: &redisSink1
   name: redisSink1
-  enabled: !!bool true
+  enabled: !!bool false
   scan_interval: !!int 1000
   connector: Redis
   address: 172.24.56.104

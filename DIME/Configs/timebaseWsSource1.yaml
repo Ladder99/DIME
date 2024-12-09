@@ -1,0 +1,14 @@
+timebaseWsSource1: &timebaseWsSource1
+  name: timebaseWsSource1
+  enabled: !!bool true
+  scan_interval: !!int 500
+  connector: TimebaseWS
+  rbe: !!bool true
+  address: localhost
+  port: 4511
+  init_script: ~
+  items:
+    - name: plcExecution
+      enabled: !!bool true
+      group: MQTT Data
+      address: dime/eipSource1/Execution/Data

@@ -24,7 +24,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
         Logger.Trace($"[{Configuration.Name}] PollingSourceConnector:.ctor");
     }
 
-    protected IncomingMessage AddToIncomingBuffer(string key, object value)
+    protected IncomingMessage AddToIncomingBuffer(string key, object value, long timestamp = 0)
     {
         lock (IncomingBufferLock)
         {
@@ -32,7 +32,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
             {
                 Key = key,
                 Value = value,
-                Timestamp = DateTime.Now.ToEpochMilliseconds()
+                Timestamp = timestamp == 0 ? DateTime.Now.ToEpochMilliseconds() : timestamp
             };
             
             IncomingBuffer.Add(message);
