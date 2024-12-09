@@ -1,6 +1,8 @@
 # Data In Motion Enterprise
 
-<i>Data integration made easy!</i>™ Move data from enterprise and industrial sources to message queues, databases, and other sinks.  
+<i>Data integration made easy!</i>™ Reshape and move data from enterprise and industrial sources to message queues, databases, and other sinks.  
+
+![DIME DataOps](dime_dataops.png)
 
 Videos
 - [Quick Introduction](https://www.youtube.com/watch?v=P5Gc5bKdiy4)  
