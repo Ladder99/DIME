@@ -619,7 +619,7 @@ sources:
     birth_delay: !!int 10000
 ```
 
-### MQTT
+### Timebase Websocket
 
 | Name            | Type         | Description                        |
 |-----------------|--------------|------------------------------------|
