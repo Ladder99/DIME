@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <PackageReference Include="Disruptor" Version="6.0.0" />
+      <PackageReference Include="InfluxDB.Client" Version="4.19.0-dev.15190" />
       <PackageReference Include="Lextm.SharpSnmpLib" Version="12.5.5" />
       <PackageReference Include="libplctag" Version="1.5.2" />
       <PackageReference Include="MQTTnet" Version="4.3.7.1207" />
@@ -105,6 +106,9 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Configs\timebaseWsSource1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Configs\influxLpSink1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

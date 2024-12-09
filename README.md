@@ -101,7 +101,7 @@ sources:
 | Sink                              |
 |-----------------------------------|
 | [HTTP Server](#http-server)       |
-| Influx LP                         |
+| [Influx LP](#influx-lp)           |
 | [MQTT](#mqtt)                     |
 | MS SQL Server                     |
 | MTConnect Agent                   |
@@ -285,6 +285,37 @@ sources:
         address: post/data
         script: |
           return json.decode(result).hello;
+```
+
+### Influx LP
+
+| Name          | Type   | Description                        |
+|---------------|--------|------------------------------------|
+| name          | string | unique connector name              |
+| enabled       | bool   | is connector enabled               |
+| scan_interval | int    | scanning frequency in milliseconds |
+| rbe           | bool   | report by exception                |
+| init_script   | string | startup lua script                 |
+| deinit_script | string | shutdown lua script                |
+| enter_script  | string | before loop script                 |
+| exit_script   | string | after loop script                  |
+| connector     | string | connector type, `InfluxLP`         |
+| address       | string | hostname                           |
+| port          | int    | port                               |
+| token         | string | api token                          |
+| bucket_name   | string | bucket name                        |
+| org_id        | string | organization id                    |
+
+#### Sink Example
+
+```yaml
+  - name: influxLpSink1
+    connector: InfluxLP
+    address: 172.24.56.104
+    port: !!int 8086
+    token: abc123
+    bucket_name: bucket1
+    org_id: org1
 ```
 
 ### Modbus TCP

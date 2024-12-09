@@ -1,0 +1,10 @@
+influxLpSink1: &influxLpSink1
+  name: influxLpSink1
+  enabled: !!bool false
+  scan_interval: !!int 1000
+  connector: InfluxLP
+  address: 172.24.56.104
+  port: !!int 8086
+  token: abc123
+  bucket_name: bucket1
+  org_id: org1

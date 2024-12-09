@@ -1,5 +1,6 @@
 sinks:
   - *httpServerSink1
+  - *influxLpSink1
   - *mqttSink1
   - *mtConnectSink1
   - *redisSink1

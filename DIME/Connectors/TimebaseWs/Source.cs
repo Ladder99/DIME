@@ -27,7 +27,6 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
 
     protected override bool CreateImplementation()
     {
-        _client = new ClientWebSocket();
         _receiveTimer = new Timer();
         _receiveTimer.Elapsed += (_, _) => { SocketReceive(); };
         _receiveTimer.Interval = Configuration.ScanIntervalMs / 4;
@@ -39,6 +38,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
     {
         try
         {
+            _client = new ClientWebSocket();
             _client.ConnectAsync(Properties.GetProperty<Uri>("uri"), CancellationToken.None).Wait();
             var request = Properties.GetProperty<string>("format_message");
             var response = SendAndReceiveMessage(request);
@@ -98,14 +98,16 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         var buffer = new byte[1024 * 4];
         if (_client.State == WebSocketState.Open)
         {
-            var result = _client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None).GetAwaiter().GetResult();
-            string message = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
-            Console.WriteLine($"RECEIVED {message}");
-            
-            var payload = JsonConvert.DeserializeObject<SubscriptionResultPayload>(Regex.Replace(message, @"\p{C}", ""));
+            SubscriptionResultPayload payload = null;
 
             try
             {
+                var result = _client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None).GetAwaiter()
+                    .GetResult();
+                var message = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
+                Console.WriteLine($"RECEIVED {message}");
+
+                payload = JsonConvert.DeserializeObject<SubscriptionResultPayload>(Regex.Replace(message, @"\p{C}", ""));
                 var tagDataset = payload.Arguments[0].Dataset;
                 var tagName = payload.Arguments[0].TagName;
                 var tagValue = payload.Arguments[0].Tvq.Value;
@@ -120,6 +122,10 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
                 {
                     Console.WriteLine($"ITEM NF {tagDataset}/{tagName}");
                 }
+            }
+            catch (WebSocketException we)
+            {
+                IsConnected = false;
             }
             catch (Exception e)
             {

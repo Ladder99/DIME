@@ -13,6 +13,9 @@ public static class SinkConnectorFactory
             case "httpserver":
                 connector = HttpServer.Sink.Create(section, disruptor);
                 break;
+            case "influxlp":
+                connector = InfluxLp.Sink.Create(section, disruptor);
+                break;
             case "mqtt":
                 connector = Mqtt.Sink.Create(section, disruptor);
                 break;
