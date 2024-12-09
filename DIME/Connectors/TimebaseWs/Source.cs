@@ -34,16 +34,6 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         _receiveTimer.Enabled = false;
         return true;
     }
-
-    private string SendAndReceiveMessage(string message)
-    {
-        var sendBuffer = Encoding.UTF8.GetBytes($"{message}\u001e");
-        var receiveBuffer = new byte[1024];
-        _client.SendAsync(new ArraySegment<byte>(sendBuffer), WebSocketMessageType.Text, true, CancellationToken.None ).Wait();
-        var receiveResult = _client.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None).GetAwaiter().GetResult();
-        var receivedMessage = Encoding.UTF8.GetString(receiveBuffer, 0, receiveResult.Count);
-        return receivedMessage;
-    }
     
     protected override bool ConnectImplementation()
     {
@@ -83,6 +73,16 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         return true;
     }
 
+    private string SendAndReceiveMessage(string message)
+    {
+        var sendBuffer = Encoding.UTF8.GetBytes($"{message}\u001e");
+        var receiveBuffer = new byte[1024];
+        _client.SendAsync(new ArraySegment<byte>(sendBuffer), WebSocketMessageType.Text, true, CancellationToken.None ).Wait();
+        var receiveResult = _client.ReceiveAsync(new ArraySegment<byte>(receiveBuffer), CancellationToken.None).GetAwaiter().GetResult();
+        var receivedMessage = Encoding.UTF8.GetString(receiveBuffer, 0, receiveResult.Count);
+        return receivedMessage;
+    }
+    
     private void SocketReceive()
     {
         if (_receiveTimerExecuting)

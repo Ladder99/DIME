@@ -71,30 +71,30 @@ sources:
 
 <table><tr><td valign="top">
 
-| Source                              |
-|-------------------------------------|
-| [ASC CPC](#asc-cpc)                 |
-| Beckhoff ADS                        |
-| Brother CNC                         |
-| [Ethernet/IP](#ethernetip)          |
-| Fanuc Focas                         |
-| Filesystem                          |
-| [Haas SHDR](#haas-shdr)             |
-| HTTP Client                         |
-| [HTTP Server](#http-server)         |
-| [Modbus/TCP](#modbus-tcp)           |
-| [MQTT](#mqtt)                       |
-| MS SQL Server                       |
-| [MTConnect Agent](#mtconnect-agent) |
-| OPC-DA                              |
-| OPC-UA                              |
-| OPC XML-DA                          |
-| Postgres                            |
-| [Redis](#redis)                     |
-| [Script](#script)                   |
-| Siemens S7                          |
-| [SNMP](#snmp)                       |
-| Timebase Websocket                  | 
+| Source                                    |
+|-------------------------------------------|
+| [ASC CPC](#asc-cpc)                       |
+| Beckhoff ADS                              |
+| Brother CNC                               |
+| [Ethernet/IP](#ethernetip)                |
+| Fanuc Focas                               |
+| Filesystem                                |
+| [Haas SHDR](#haas-shdr)                   |
+| HTTP Client                               |
+| [HTTP Server](#http-server)               |
+| [Modbus/TCP](#modbus-tcp)                 |
+| [MQTT](#mqtt)                             |
+| MS SQL Server                             |
+| [MTConnect Agent](#mtconnect-agent)       |
+| OPC-DA                                    |
+| OPC-UA                                    |
+| OPC XML-DA                                |
+| Postgres                                  |
+| [Redis](#redis)                           |
+| [Script](#script)                         |
+| Siemens S7                                |
+| [SNMP](#snmp)                             |
+| [Timebase Websocket](#timebase-websocket) | 
 
 </td><td valign="top">
 
@@ -606,8 +606,6 @@ sources:
 
 ```yaml
   - name: sparkplugBSink1
-    enabled: !!bool true
-    scan_interval: !!int 1000
     connector: SparkplugB
     address: localhost
     port: !!int 1883
@@ -619,6 +617,41 @@ sources:
     device_id: dime
     reconnect_interval: !!int 15000
     birth_delay: !!int 10000
+```
+
+### MQTT
+
+| Name            | Type         | Description                        |
+|-----------------|--------------|------------------------------------|
+| name            | string       | unique connector name              |
+| enabled         | bool         | is connector enabled               |
+| scan_interval   | int          | scanning frequency in milliseconds |
+| rbe             | bool         | report by exception                |
+| init_script     | string       | startup lua script                 |
+| deinit_script   | string       | shutdown lua script                |
+| enter_script    | string       | before loop script                 |
+| exit_script     | string       | after loop script                  |
+| connector       | string       | connector type, `TimebaseWS`       |
+| address         | string       | broker hostname                    |
+| port            | int          | broker port                        |
+| items           | object array | subscription topics                |
+| items[].name    | string       | unique item name                   |
+| items[].enabled | bool         | is item enabled                    |
+| items[].rbe     | bool         | report by exception override       |
+| items[].address | string       | historian address                  |
+| items[].group   | string       | historian dataset group            |
+
+#### Source Example
+
+```yaml
+   - name: timebaseWsSource1
+     connector: TimebaseWS
+     address: localhost
+     port: 4511
+     items:
+       - name: plcExecution
+         group: MQTT Data
+         address: dime/eipSource1/Execution/Data
 ```
 
 ## Scripting
