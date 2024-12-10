@@ -1,0 +1,44 @@
+smartPacSource1: &smartPacSource1
+  name: smartPacSource1
+  enabled: !!bool false
+  scan_interval: !!int 1000
+  connector: SmartPac
+  address: 172.16.200.18
+  port: !!int 1007
+  items:
+    - name: PressType
+      enabled: !!bool true
+      script: return result[0];
+    - name: PressName
+      enabled: !!bool true
+      script: return result[1];
+    - name: IsRunning
+      enabled: !!bool true
+      script: return result[2] == "1";
+    - name: ToolNumber
+      enabled: !!bool true
+      script: return result[3];
+    - name: ToolName
+      enabled: !!bool true
+      script: return result[4];
+    - name: ShaftAngleOrSpeed
+      enabled: !!bool true
+      script: return tonumber(result[5]);
+    - name: Error
+      enabled: !!bool true
+      script: return result[6];
+    - name: DieProtectionSensorsEnabled
+      enabled: !!bool true
+      script: return result[7] == "1";
+    - name: GoodPartCount
+      enabled: !!bool true
+      script: return tonumber(result[8]);
+    - name: GoodPartPreset
+      enabled: !!bool true
+      script: return tonumber(result[9]);
+    - name: LastJobChangeTime
+      enabled: !!bool true
+      script: return result[10];
+    - name: CurrentTime
+      enabled: !!bool true
+      script: return result[11];

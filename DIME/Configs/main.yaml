@@ -17,5 +17,6 @@ sources:
   - *mtConnectSource1
   - *redisSource1
   - *scriptSource1
+  - *smartPacSource1
   - *snmpSource1
   - *timebaseWsSource1

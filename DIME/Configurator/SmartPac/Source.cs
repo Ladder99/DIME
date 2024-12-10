@@ -1,7 +1,7 @@
 using DIME.Connectors;
-using DIME.Configuration.Snmp;
+using DIME.Configuration.SmartPac;
 
-namespace DIME.Configurator.Snmp;
+namespace DIME.Configurator.SmartPac;
 
 public static class Source
 {
@@ -19,11 +19,9 @@ public static class Source
         config.LoopExitScript = section.ContainsKey("exit_script") ? Convert.ToString(section["exit_script"]) : null;
         config.ItemizedRead = true;
         // custom
-        config.ConnectorType = section.ContainsKey("connector") ? Convert.ToString(section["connector"]) : "SNMP";
+        config.ConnectorType = section.ContainsKey("connector") ? Convert.ToString(section["connector"]) : "SmartPac";
         config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "0.0.0.0";
-        config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 161;
-        config.Community = section.ContainsKey("community") ? Convert.ToString(section["community"]) : "public";
-        config.TimeoutMs = section.ContainsKey("timeout") ? Convert.ToInt32(section["timeout"]) : 1000;
+        config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 1007;
         
         config.Items = new List<ConnectorItem>();
 
@@ -52,8 +50,8 @@ public static class Source
                 }
             }
         }
-        
-        var connector = new Connectors.Snmp.Source(config, disruptor);
+
+        var connector = new Connectors.SmartPac.Source(config, disruptor);
 
         return connector;
     }

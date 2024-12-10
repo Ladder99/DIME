@@ -37,6 +37,9 @@ public static class SourceConnectorFactory
             case "script":
                 connector = Script.Source.Create(section, disruptor);
                 break;
+            case "smartpac":
+                connector = SmartPac.Source.Create(section, disruptor);
+                break;
             case "snmp":
                 connector = Snmp.Source.Create(section, disruptor);
                 break;

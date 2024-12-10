@@ -7,7 +7,7 @@ public class TransporterService
 {
     private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     private List<ConnectorRunner> _runners = new();
-    public  Disruptor<MessageBoxMessage> Disruptor { get; private set; } = new(() => new MessageBoxMessage(), 1024);
+    public  Disruptor<MessageBoxMessage> Disruptor { get; private set; } = new(() => new MessageBoxMessage(), 4096);
 
     public TransporterService(IConfigurationProvider configurationProvider)
     {

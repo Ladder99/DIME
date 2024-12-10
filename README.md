@@ -98,6 +98,7 @@ sources:
 | Siemens S7                                |
 | [SNMP](#snmp)                             |
 | [Timebase Websocket](#timebase-websocket) | 
+| [Wintriss SmartPac](#wintriss-smartpac)   |
 
 </td><td valign="top">
 
@@ -687,6 +688,36 @@ sources:
        - name: plcExecution
          group: MQTT Data
          address: dime/eipSource1/Execution/Data
+```
+
+### Wintriss Smartpac
+
+| Name            | Type         | Description                        |
+|-----------------|--------------|------------------------------------|
+| name            | string       | unique connector name              |
+| enabled         | bool         | is connector enabled               |
+| scan_interval   | int          | scanning frequency in milliseconds |
+| rbe             | bool         | report by exception                |
+| init_script     | string       | startup lua script                 |
+| deinit_script   | string       | shutdown lua script                |
+| enter_script    | string       | before loop script                 |
+| exit_script     | string       | after loop script                  |
+| connector       | string       | connector type, `SmartPac`         |
+| address         | string       | device hostname                    |
+| port            | int          | port                               |
+| items           | object array | subscription topics                |
+| items[].name    | string       | unique item name                   |
+| items[].enabled | bool         | is item enabled                    |
+| items[].rbe     | bool         | report by exception override       |
+| items[].script  | string       | item script                        |
+
+#### Source Example
+
+```yaml
+  - name: smartpacSource1
+    connector: SmartPac
+    address: 172.16.200.18
+    port: !!int 1007
 ```
 
 ## Scripting
