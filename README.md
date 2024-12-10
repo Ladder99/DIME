@@ -718,6 +718,13 @@ sources:
     connector: SmartPac
     address: 172.16.200.18
     port: !!int 1007
+    items:
+      - name: PressType
+        enabled: !!bool true
+        script: return result[0];
+      - name: PressName
+        enabled: !!bool true
+        script: return result[1];
 ```
 
 ## Scripting
