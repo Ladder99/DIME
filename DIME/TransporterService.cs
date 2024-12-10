@@ -7,33 +7,34 @@ public class TransporterService
 {
     private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     private List<ConnectorRunner> _runners = new();
-    private Disruptor<MessageBoxMessage> _disruptor = new(() => new MessageBoxMessage(), 1024);
-    private IConfigurationProvider _configurationProvider = null;
-    
-    public void Start(IConfigurationProvider configurationProvider)
+    public  Disruptor<MessageBoxMessage> Disruptor { get; private set; } = new(() => new MessageBoxMessage(), 1024);
+
+    public TransporterService(IConfigurationProvider configurationProvider)
     {
-        Logger.Info("Starting DIME");
-        
-        _configurationProvider = configurationProvider;
-        
-        // intercept ctrl-c for clean shutdown
-        Console.CancelKeyPress += (sender, eventArgs) =>
-        {
-            Logger.Info("Cancel key sequence intercepted.");
-            eventArgs.Cancel = true;
-        };
-        
         Logger.Info("Creating connectors.");
 
         var configuration = configurationProvider.GetConfiguration();
-        var connectors = Configurator.Configurator.CreateConnectors(configuration, _disruptor);
+        var connectors = Configurator.Configurator.CreateConnectors(configuration, Disruptor);
         
         Logger.Info("Creating runners.");
-
+        
         foreach (var connector in connectors)
         {
-            _runners.Add(new ConnectorRunner(_runners, connector, _disruptor));
+            _runners.Add(new ConnectorRunner(_runners, connector, Disruptor));
         }
+    }
+    
+    public void AddConnector(IConnector connector)
+    {
+        _runners.Add(new ConnectorRunner(_runners, connector, Disruptor));
+    }
+    
+    public void Start()
+    {
+        Logger.Info("Starting DIME");
+        
+        // intercept ctrl-c for clean shutdown
+        Console.CancelKeyPress += ConsoleOnCancelKeyPress;
         
         Logger.Info("Starting runners.");
         
@@ -44,11 +45,21 @@ public class TransporterService
         
         Logger.Info("Starting queue.");
         
-        _disruptor.Start();
+        Disruptor.Start();
+    }
+
+    private void ConsoleOnCancelKeyPress(object? sender, ConsoleCancelEventArgs e)
+    {
+        Logger.Info("Cancel key sequence intercepted.");
+        e.Cancel = true;
     }
 
     public void Stop()
     {
+        Logger.Info("Stopping DIME");
+        
+        Console.CancelKeyPress -= ConsoleOnCancelKeyPress;
+        
         Logger.Info("Stopping runners.");
         
         foreach (var runner in _runners)
@@ -58,7 +69,7 @@ public class TransporterService
         
         Logger.Info("Stopping queue.");
         
-        _disruptor.Shutdown();
+        Disruptor.Shutdown();
     }
 }
 

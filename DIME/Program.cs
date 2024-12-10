@@ -12,8 +12,8 @@ public static class Program
         {
             x.Service<TransporterService>(s =>
             {
-                s.ConstructUsing(name => new TransporterService());
-                s.WhenStarted(tc => tc.Start(new FilesystemYamlConfigurationProvider()));
+                s.ConstructUsing(name => new TransporterService(new FilesystemYamlConfigurationProvider()));
+                s.WhenStarted(tc => tc.Start());
                 s.WhenStopped(tc => tc.Stop());
             });
             x.RunAsLocalSystem();

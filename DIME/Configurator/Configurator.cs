@@ -10,10 +10,74 @@ public partial class Configurator
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-    public static List<IConnector> CreateConnectors(Dictionary<object, object> configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
+    private static IConnector CreateSink(object section, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
     {
-        var _connectors = new List<IConnector>();
+        var sectionDictionary = section as Dictionary<object, object>;
+        if (sectionDictionary is not null)
+        {
+            var connectorType = (sectionDictionary.ContainsKey("connector")
+                ? Convert.ToString(sectionDictionary["connector"])?.ToLower()
+                : "undefined");
 
+            var connector = SinkConnectorFactory.Create(connectorType, sectionDictionary, disruptor);
+
+            if (connector is null)
+            {
+                Logger.Error($"[Configurator.Sinks] Connector type is not supported: '{connectorType}'");
+            }
+            else if (connector.Configuration.Enabled)
+            {
+                return connector;
+            }
+            else
+            {
+                Logger.Info($"[Configuration.Sinks] [{connector.Configuration.Name}] Connector is disabled.");
+            }
+        }
+        else
+        {
+            Logger.Warn($"[Configurator.Sinks] Configuration is invalid: '{section}'");
+        }
+
+        return null;
+    }
+    
+    private static IConnector CreateSource(object section, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
+    {
+        var sectionDictionary = section as Dictionary<object, object>;
+        if (sectionDictionary is not null)
+        {
+            var connectorType = (sectionDictionary.ContainsKey("connector")
+                ? Convert.ToString(sectionDictionary["connector"])?.ToLower()
+                : "undefined");
+
+            var connector = SourceConnectorFactory.Create(connectorType, sectionDictionary, disruptor);
+
+            if (connector is null)
+            {
+                Logger.Error($"[Configurator.Sources] Connector type is not supported: '{connectorType}'");
+            }
+            if (connector.Configuration.Enabled)
+            {
+                return connector;
+            }
+            else
+            {
+                Logger.Info($"[Configurator.Sources] [{connector.Configuration.Name}] Connector is disabled.");
+            }
+        }
+        else
+        {
+            Logger.Warn($"[Configurator.Sinks] Configuration is invalid: '{section}'");
+        }
+
+        return null;
+    }
+    
+    private static List<IConnector> CreateSinks(Dictionary<object, object> configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
+    {
+        var connectors = new List<IConnector>();
+        
         if (configuration.ContainsKey("sinks"))
         {
             var sinks = configuration["sinks"] as List<object>;
@@ -21,31 +85,10 @@ public partial class Configurator
             {
                 foreach (var section in sinks)
                 {
-                    var sectionDictionary = section as Dictionary<object, object>;
-                    if (sectionDictionary is not null)
+                    var connector = CreateSink(section, disruptor);
+                    if (connector is not null)
                     {
-                        var connectorType = (sectionDictionary.ContainsKey("connector")
-                            ? Convert.ToString(sectionDictionary["connector"])?.ToLower()
-                            : "undefined");
-
-                        var connector = SinkConnectorFactory.Create(connectorType, sectionDictionary, disruptor);
-
-                        if (connector is null)
-                        {
-                            Logger.Error($"[Configurator.Sinks] Connector type is not supported: '{connectorType}'");
-                        }
-                        else if (connector.Configuration.Enabled)
-                        {
-                            _connectors.Add(connector);
-                        }
-                        else
-                        {
-                            Logger.Info($"[Configuration.Sinks] [{connector.Configuration.Name}] Connector is disabled.");
-                        }
-                    }
-                    else
-                    {
-                        Logger.Warn($"[Configurator.Sinks] Configuration is invalid: '{section}'");
+                        connectors.Add(connector);
                     }
                 }
             }
@@ -58,7 +101,14 @@ public partial class Configurator
         {
             Logger.Warn($"[Configurator.Sinks] Configuration key does not exist.");
         }
-
+        
+        return connectors;
+    }
+    
+    private static List<IConnector> CreateSources(Dictionary<object, object> configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
+    {
+        var connectors = new List<IConnector>();
+        
         if (configuration.ContainsKey("sources"))
         {
             var sources = configuration["sources"] as List<object>;
@@ -66,31 +116,10 @@ public partial class Configurator
             {
                 foreach (var section in sources)
                 {
-                    var sectionDictionary = section as Dictionary<object, object>;
-                    if (sectionDictionary is not null)
+                    var connector = CreateSource(section, disruptor);
+                    if (connector is not null)
                     {
-                        var connectorType = (sectionDictionary.ContainsKey("connector")
-                            ? Convert.ToString(sectionDictionary["connector"])?.ToLower()
-                            : "undefined");
-
-                        var connector = SourceConnectorFactory.Create(connectorType, sectionDictionary, disruptor);
-
-                        if (connector is null)
-                        {
-                            Logger.Error($"[Configurator.Sources] Connector type is not supported: '{connectorType}'");
-                        }
-                        if (connector.Configuration.Enabled)
-                        {
-                            _connectors.Add(connector);
-                        }
-                        else
-                        {
-                            Logger.Info($"[Configurator.Sources] [{connector.Configuration.Name}] Connector is disabled.");
-                        }
-                    }
-                    else
-                    {
-                        Logger.Warn($"[Configurator.Sinks] Configuration is invalid: '{section}'");
+                        connectors.Add(connector);
                     }
                 }
             }
@@ -103,7 +132,16 @@ public partial class Configurator
         {
             Logger.Warn($"[Configurator.Sources] Configuration key does not exist.");
         }
-
-        return _connectors;
+        
+        return connectors;
+    }
+    
+    public static List<IConnector> CreateConnectors(Dictionary<object, object> configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
+    {
+        return new[]
+        {
+            CreateSinks(configuration, disruptor), 
+            CreateSources(configuration, disruptor)
+        }.SelectMany(x => x).ToList();
     }
 }
