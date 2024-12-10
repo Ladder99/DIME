@@ -114,6 +114,7 @@ sources:
 | Splunk EH SDK                     |
 | Splunk HEC                        |
 | [SparkplugB](#sparkplugb)         |
+| TrakHound                         |
 
 </td></tr></table>
 

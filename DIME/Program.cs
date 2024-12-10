@@ -13,7 +13,7 @@ public static class Program
             x.Service<TransporterService>(s =>
             {
                 s.ConstructUsing(name => new TransporterService());
-                s.WhenStarted(tc => tc.Start());
+                s.WhenStarted(tc => tc.Start(new FilesystemYamlConfigurationProvider()));
                 s.WhenStopped(tc => tc.Stop());
             });
             x.RunAsLocalSystem();

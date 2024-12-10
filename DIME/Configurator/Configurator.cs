@@ -10,45 +10,6 @@ public partial class Configurator
 {
     private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-    public static Dictionary<object,object> Read(string[] configurationFilenames)
-    {
-        Logger.Debug("[Configurator.Read] Reading files {0}", configurationFilenames);
-        var yaml = "";
-        foreach (var configFile in configurationFilenames)
-        {
-            try
-            {
-                yaml += File.ReadAllText(configFile);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, $"[Configurator.Read] Problem with {configFile}");
-            }
-            
-        }
-        Logger.Debug("[Configurator.Read] YAML \r\n{0}", yaml);
-        var stringReader = new StringReader(yaml);
-        var parser = new Parser(stringReader);
-        var mergingParser = new MergingParser(parser);
-
-        var deserializer = new DeserializerBuilder()
-            .WithNamingConvention(CamelCaseNamingConvention.Instance)
-            .Build();
-
-        Dictionary<object, object> dictionary = new();
-        try
-        {
-            dictionary = deserializer.Deserialize<Dictionary<object, object>>(mergingParser);
-        }
-        catch (SemanticErrorException e)
-        {
-            Logger.Error(e, "[Configurator.Read] Error while parsing yaml.");
-        }
-        
-        Logger.Debug("[Configurator.Read] Dictionary \r\n{0}", JsonConvert.SerializeObject(dictionary));
-        return dictionary;
-    }
-
     public static List<IConnector> CreateConnectors(Dictionary<object, object> configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
     {
         var _connectors = new List<IConnector>();

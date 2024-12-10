@@ -1,6 +1,6 @@
 timebaseWsSource1: &timebaseWsSource1
   name: timebaseWsSource1
-  enabled: !!bool true
+  enabled: !!bool false
   scan_interval: !!int 500
   connector: TimebaseWS
   rbe: !!bool true
