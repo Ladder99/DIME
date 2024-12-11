@@ -8,13 +8,15 @@ smartPacSource1: &smartPacSource1
   items:
     - name: PressType
       enabled: !!bool true
-      script: return result[0];
+      script: |
+        local m = { ['09010']='Straight Side', ['09011']='Gap Frame' };
+        return (m[result[0]])
     - name: PressName
       enabled: !!bool true
       script: return result[1];
     - name: IsRunning
       enabled: !!bool true
-      script: return result[2] == "1";
+      script: return tonumber(result[2]) == 1;
     - name: ToolNumber
       enabled: !!bool true
       script: return result[3];
@@ -32,7 +34,7 @@ smartPacSource1: &smartPacSource1
       script: return result[7];
     - name: DieProtectionSensorsEnabled
       enabled: !!bool true
-      script: return result[8] == "1";
+      script: return tonumber(result[8]) == 1;
     - name: GoodPartCount
       enabled: !!bool true
       script: return tonumber(result[9]);
@@ -45,3 +47,30 @@ smartPacSource1: &smartPacSource1
     - name: CurrentTime
       enabled: !!bool true
       script: return result[12];
+    - name: TonnageChannel
+      enabled: !!bool true
+      script: return tonumber(result[13]);
+    - name: TonnageMonitorCapacity
+      enabled: !!bool true
+      script: return tonumber(result[14]);
+    - name: Input1Tonnage
+      enabled: !!bool true
+      script: return tonumber(result[15]);
+    - name: Input2Tonnage
+      enabled: !!bool true
+      script: return tonumber(result[16]);
+    - name: Input3Tonnage
+      enabled: !!bool true
+      script: return tonumber(result[17]);
+    - name: Input4Tonnage
+      enabled: !!bool true
+      script: return tonumber(result[18]);
+    - name: PartNumber
+      enabled: !!bool true
+      script: return result[19];
+    - name: OperatingMode
+      enabled: !!bool true
+      script: return tonumber(result[20]);
+    - name: BrakeWarning
+      enabled: !!bool true
+      script: return tonumber(result[22]) == 1;

@@ -6,6 +6,7 @@ httpServerSource1: &httpServerSource1
   rbe: !!bool true
   itemized_read: !!bool true
   uri: http://localhost:8081/
+  #uri: http://*:8080/
   init_script: |
     -- https://github.com/rxi/json.lua
     json = require('json');

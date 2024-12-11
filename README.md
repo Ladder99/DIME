@@ -927,7 +927,7 @@ docker run \
    c. Update `SourceConnectorFactory.cs` or `SourceConnectorFactory.cs`.
 3. Add connector implementation in `Connectors.{new_connector}` folder.  
    a. `Source.cs` - inherits from `IDS.Connectors.SourceConnector<IDS.Transporter.Configuration.{new_connector}.ConnectorConfiguration, IDS.Transporter.Configuration.{new_connector}.ConnectorItem>`.  
-   b. `Source.cs` - inherits from `IDS.Connectors.SourceConnector<IDS.Transporter.Configuration.{new_connector}.ConnectorConfiguration, IDS.Transporter.Configuration.{new_connector}.ConnectorItem>`.
+   b. `Sink.cs` - inherits from `IDS.Connectors.SinkConnector<IDS.Transporter.Configuration.{new_connector}.ConnectorConfiguration, IDS.Transporter.Configuration.{new_connector}.ConnectorItem>`.
 
 ```
 solution
