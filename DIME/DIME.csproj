@@ -8,6 +8,13 @@
         <AssemblyName>DIME</AssemblyName>
         <RootNamespace>DIME</RootNamespace>
         <LangVersion>13</LangVersion>
+        <Version>1.2.0</Version>
+        <Title>DIME</Title>
+        <Authors>MRIIOT</Authors>
+        <Description>Data In Motion Enterprise</Description>
+        <PackageProjectUrl>https://github.com/Ladder99/DIME</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Ladder99/DIME</RepositoryUrl>
+        <PackageId>MRIIOT.DIME</PackageId>
     </PropertyGroup>
 
     <ItemGroup>
