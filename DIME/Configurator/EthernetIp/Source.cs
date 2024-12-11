@@ -25,6 +25,7 @@ public static class Source
         config.Path = section.ContainsKey("path") ? Convert.ToString(section["path"]) : "1,0";
         config.Log = section.ContainsKey("log") ? Convert.ToInt32(section["log"]) : 0;
         config.TimeoutMs = section.ContainsKey("timeout") ? Convert.ToInt32(section["timeout"]) : 1000;
+        config.BypassPing = section.ContainsKey("bypass_ping") ? Convert.ToBoolean(section["bypass_ping"]) : false;
         
         config.Items = new List<ConnectorItem>();
 

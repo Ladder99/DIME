@@ -44,11 +44,17 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     {
         foreach (var message in Outbox)
         {
-            var msg = new MqttApplicationMessageBuilder()
+            var msgBuilder = new MqttApplicationMessageBuilder()
                 .WithTopic($"{Configuration.BaseTopic}/{message.Path}")
                 .WithPayload(JsonConvert.SerializeObject(message))
-                .WithQualityOfServiceLevel(MqttQualityOfServiceLevel.AtMostOnce)
-                .Build();
+                .WithQualityOfServiceLevel((MqttQualityOfServiceLevel)Configuration.QoS);
+
+            if (Configuration.RetainPublish)
+            {
+                msgBuilder.WithRetainFlag();
+            }
+            
+            var msg = msgBuilder.Build();
 
             _client.PublishAsync(msg);
         }

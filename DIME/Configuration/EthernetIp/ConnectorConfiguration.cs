@@ -7,4 +7,5 @@ public sealed class ConnectorConfiguration : Configuration.ConnectorConfiguratio
     public string Path { get; set; }
     public int Log { get; set; }
     public int TimeoutMs { get; set; }
+    public bool BypassPing { get; set; }
 }

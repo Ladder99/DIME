@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using DIME.Configuration.Mqtt;
 using MQTTnet;
 using MQTTnet.Client;
+using MQTTnet.Protocol;
 
 namespace DIME.Connectors.Mqtt;
 
@@ -40,7 +41,11 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         var mqttSubscribeOptions = new MqttFactory().CreateSubscribeOptionsBuilder();
         foreach(var item in Configuration.Items.Where(x => x.Enabled && x.Address is not null))
         {
-            mqttSubscribeOptions.WithTopicFilter(f => { f.WithTopic(item.Address); });
+            mqttSubscribeOptions.WithTopicFilter(f =>
+            {
+                f.WithTopic(item.Address);
+                f.WithQualityOfServiceLevel((MqttQualityOfServiceLevel)Configuration.QoS);
+            });
         }
         var subscribeResult = _client.SubscribeAsync(mqttSubscribeOptions.Build()).Result;
         

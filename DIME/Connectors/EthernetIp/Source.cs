@@ -49,8 +49,10 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
     }
 
     protected override bool ConnectImplementation()
-    { 
-        return new Ping().Send(Configuration.Address, 1000).Status == IPStatus.Success;
+    {
+        return Configuration.BypassPing 
+            ? true 
+            : new Ping().Send(Configuration.Address, 1000).Status == IPStatus.Success;
     }
 
     protected override object ReadFromDevice(ConnectorItem item)

@@ -133,6 +133,8 @@ sources:
 | exit_script     | string       | after loop script                  |
 | connector       | string       | connector type, `AscCPC`           |
 | address         | string       | computer hostname                  |
+| port            | int          | port                               |
+| bypass_ping     | bool         | bypass ping on connect             |
 | items           | object array | cpc items                          |
 | items[].name    | string       | unique item name                   |
 | items[].enabled | bool         | is item enabled                    |
@@ -147,6 +149,7 @@ sources:
     connector: AscCPC
     address: 192.168.111.12
     port: !!int 9999
+    bypass_ping: !!bool true
     init_script: ~
     items:
       - name: Temperature
@@ -171,6 +174,7 @@ sources:
 | path            | string       | plc path (see: https://github.com/libplctag/libplctag)                      |
 | log             | int          | plc library log level (see: https://github.com/libplctag/libplctag)         |
 | timeout         | int          | connection timeout in milliseconds                                          |
+| bypass_ping     | bool         | bypass ping on connect                                                      |
 | items           | object array | plc items                                                                   |
 | items[].name    | string       | unique item name                                                            |
 | items[].enabled | bool         | is item enabled                                                             |
@@ -189,6 +193,7 @@ sources:
     path: 1,0
     log: !!int 0
     timeout: !!int 1000
+    bypass_ping: !!bool true
     items:
       - name: boolTag1
         type: bool
@@ -390,6 +395,8 @@ sources:
 | address         | string       | broker hostname                      |
 | port            | int          | broker port                          |
 | base_topic      | string       | base topic where to publish messages |
+| qos             | int          | quality of service                   |
+| retain          | bool         | published retained                   |
 | items           | object array | subscription topics                  |
 | items[].name    | string       | unique item name                     |
 | items[].enabled | bool         | is item enabled                      |
@@ -404,6 +411,8 @@ sources:
     address: wss.sharc.tech
     port: !!int 1883
     base_topic: ids
+    qos: !!int 0
+    retain: !!bool true
 ```
 
 #### Source Example
@@ -690,7 +699,7 @@ sources:
          address: dime/eipSource1/Execution/Data
 ```
 
-### Wintriss Smartpac
+### Wintriss SmartPac
 
 | Name            | Type         | Description                        |
 |-----------------|--------------|------------------------------------|

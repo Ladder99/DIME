@@ -1,12 +1,13 @@
 mqttSource1: &mqttSource1
   name: mqttSource1
-  enabled: !!bool false
+  enabled: !!bool true
   scan_interval: !!int 500
   connector: MQTT
   rbe: !!bool true
   itemized_read: !!bool true
   address: wss.sharc.tech
   port: !!int 1883
+  qos: !!int 0
   init_script: |
     -- https://github.com/rxi/json.lua
     json = require('json');

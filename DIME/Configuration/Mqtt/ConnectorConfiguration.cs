@@ -8,4 +8,6 @@ public sealed class ConnectorConfiguration : Configuration.ConnectorConfiguratio
     public string Username { get; set; }
     public string Password { get; set; }
     public string BaseTopic { get; set; }
+    public int QoS { get; set; }
+    public bool RetainPublish { get; set; }
 }

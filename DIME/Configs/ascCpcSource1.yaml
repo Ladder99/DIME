@@ -6,6 +6,7 @@ ascCpcSource1: &ascCpcSource1
   rbe: !!bool true
   address: 192.168.111.12
   port: !!int 9999
+  bypass_ping: !!bool true
   init_script: ~
   items:
     - name: Temperature

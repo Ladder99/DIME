@@ -22,6 +22,7 @@ public static class Source
         config.ConnectorType = section.ContainsKey("connector") ? Convert.ToString(section["connector"]) : "AscCPC";
         config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "0.0.0.0";
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 50000;
+        config.BypassPing = section.ContainsKey("bypass_ping") ? Convert.ToBoolean(section["bypass_ping"]) : false;
         
         config.Items = new List<ConnectorItem>();
 

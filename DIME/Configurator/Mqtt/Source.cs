@@ -18,6 +18,7 @@ public static class Source
         config.LoopEnterScript = section.ContainsKey("enter_script") ? Convert.ToString(section["enter_script"]) : null;
         config.LoopExitScript = section.ContainsKey("exit_script") ? Convert.ToString(section["exit_script"]) : null;
         config.ItemizedRead = section.ContainsKey("itemized_read") ? Convert.ToBoolean(section["itemized_read"]) : false;
+        config.QoS = section.ContainsKey("qos") ? Convert.ToInt32(section["qos"]) : 0;
         // custom
         config.ConnectorType = section.ContainsKey("connector") ? Convert.ToString(section["connector"]) : "MQTT";
         config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";

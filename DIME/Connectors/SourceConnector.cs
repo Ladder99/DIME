@@ -338,7 +338,12 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     {
         if (Inbox.Count > 0)
         {
-            if (PublishInboxInBatch)
+            if (Inbox.Count > Disruptor.RingBuffer.BufferSize)
+            {
+                Logger.Warn("Inbox is larger than ring buffer!");
+            }
+
+            if (PublishInboxInBatch && Inbox.Count < Disruptor.RingBuffer.BufferSize)
             {
                 using (var scope = Disruptor.RingBuffer.PublishEvents(Inbox.Count))
                 {

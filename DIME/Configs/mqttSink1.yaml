@@ -6,3 +6,5 @@ mqttSink1: &mqttSink1
   address: wss.sharc.tech
   port: !!int 1883
   base_topic: dime
+  qos: !!int 0
+  retain: !!bool true

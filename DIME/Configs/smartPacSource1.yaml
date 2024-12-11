@@ -21,24 +21,27 @@ smartPacSource1: &smartPacSource1
     - name: ToolName
       enabled: !!bool true
       script: return result[4];
+    - name: JobName
+      enabled: !!bool true
+      script: return result[5];
     - name: ShaftAngleOrSpeed
       enabled: !!bool true
-      script: return tonumber(result[5]);
+      script: return tonumber(result[6]);
     - name: Error
       enabled: !!bool true
-      script: return result[6];
+      script: return result[7];
     - name: DieProtectionSensorsEnabled
       enabled: !!bool true
-      script: return result[7] == "1";
+      script: return result[8] == "1";
     - name: GoodPartCount
       enabled: !!bool true
-      script: return tonumber(result[8]);
+      script: return tonumber(result[9]);
     - name: GoodPartPreset
       enabled: !!bool true
-      script: return tonumber(result[9]);
+      script: return tonumber(result[10]);
     - name: LastJobChangeTime
       enabled: !!bool true
-      script: return result[10];
+      script: return result[11];
     - name: CurrentTime
       enabled: !!bool true
-      script: return result[11];
+      script: return result[12];

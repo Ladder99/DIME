@@ -38,6 +38,7 @@ public class FilesystemYamlConfigurationProvider: IConfigurationProvider
             
         }
         Logger.Debug("[ConfigProvider.Read] YAML \r\n{0}", yaml);
+        File.WriteAllText("./running_configuration.yaml", yaml);
         var stringReader = new StringReader(yaml);
         var parser = new Parser(stringReader);
         var mergingParser = new MergingParser(parser);

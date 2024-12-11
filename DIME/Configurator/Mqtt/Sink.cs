@@ -18,6 +18,8 @@ public static class Sink
         config.Username = section.ContainsKey("username") ? Convert.ToString(section["username"]) : null;
         config.Password = section.ContainsKey("password") ? Convert.ToString(section["password"]) : null;
         config.BaseTopic = section.ContainsKey("base_topic") ? Convert.ToString(section["base_topic"]) : "ids";
+        config.QoS = section.ContainsKey("qos") ? Convert.ToInt32(section["qos"]) : 0;
+        config.RetainPublish = section.ContainsKey("retain") ? Convert.ToBoolean(section["retain"]) : true;
 
         var connector = new Connectors.Mqtt.Sink(config, disruptor);
 
