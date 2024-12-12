@@ -5,6 +5,7 @@ scriptSource1: &scriptSource1
   connector: Script
   rbe: !!bool true
   init_script: |
+    print('hello world from scriptSource1.init_script');
     luanet.load_assembly("System")
     CLR = {
       env = luanet.import_type("System.Environment")
