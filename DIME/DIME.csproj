@@ -130,6 +130,9 @@
       <None Update="Configs\splunkHecSink1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="liblua54.so">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 	<!--
