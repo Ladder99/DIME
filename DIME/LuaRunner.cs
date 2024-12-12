@@ -26,6 +26,8 @@ public class LuaRunner
             _state.RegisterFunction("cache", this, GetType().GetMethod("GetPrimaryCache", BindingFlags.NonPublic | BindingFlags.Instance));
             _state.RegisterFunction("get", this, GetType().GetMethod("GetUserCache", BindingFlags.NonPublic | BindingFlags.Instance));
             _state.RegisterFunction("set", this, GetType().GetMethod("SetUserCache", BindingFlags.NonPublic | BindingFlags.Instance));
+            _state.RegisterFunction("configuration", this, GetType().GetMethod("GetConnectorConfiguration", BindingFlags.NonPublic | BindingFlags.Instance));
+            _state.RegisterFunction("connector", this, GetType().GetMethod("GetConnector", BindingFlags.NonPublic | BindingFlags.Instance));
             return true;
         }
         catch (Exception e)
@@ -122,5 +124,15 @@ public class LuaRunner
     private object? GetUserCache(string key, object? defaultValue = null)
     {
         return _userCache.TryGetValue(key, out var value) ? value : defaultValue;
+    }
+
+    private object? GetConnectorConfiguration()
+    {
+        return _connector.Configuration;
+    }
+    
+    private object? GetConnector()
+    {
+        return _connector;
     }
 }

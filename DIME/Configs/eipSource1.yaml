@@ -12,6 +12,9 @@ eipSource1: &eipSource1
   timeout: !!int 1000
   bypass_ping: !!bool true
   init_script: ~
+  enter_script: ~
+  exit_script: ~
+  deinit_script: ~
   items:
     - name: boolSetUserCacheOnly
       enabled: !!bool true

@@ -35,10 +35,10 @@ smartPacSource1: &smartPacSource1
     - name: DieProtectionSensorsEnabled
       enabled: !!bool true
       script: return tonumber(result[8]) == 1;
-    - name: GoodPartCount
+    - name: PartCount
       enabled: !!bool true
       script: return tonumber(result[9]);
-    - name: GoodPartPreset
+    - name: PartPreset
       enabled: !!bool true
       script: return tonumber(result[10]);
     - name: LastJobChangeTime
@@ -47,7 +47,7 @@ smartPacSource1: &smartPacSource1
     - name: CurrentTime
       enabled: !!bool true
       script: return result[12];
-    - name: TonnageChannel
+    - name: TonnageChannels
       enabled: !!bool true
       script: return tonumber(result[13]);
     - name: TonnageMonitorCapacity
@@ -74,3 +74,25 @@ smartPacSource1: &smartPacSource1
     - name: BrakeWarning
       enabled: !!bool true
       script: return tonumber(result[22]) == 1;
+    - name: RtsFirmware
+      enabled: !!bool true
+      script: return result[22];
+    - name: SerialNumber
+      enabled: !!bool true
+      script: return result[23];
+    - name: LastPowerOnTime
+      enabled: !!bool true
+      script: return result[41];
+    - name: JobPartsRemaining
+      enabled: !!bool true
+      script: return cache('./PartPreset') - cache('./PartCount');
+    - name: JobPercentComplete
+      enabled: !!bool true
+      script: return cache('./PartCount') / cache('./PartPreset');
+    - name: JobRunningHours
+      enabled: !!bool true
+      script: |
+        local year, month, day, hour, min, sec = cache('./LastJobChangeTime'):match("(%d+)-(%d+)-(%d+) (%d+):(%d+):(%d+)");
+        local lastJobChangeTimeMs = os.time({year=year, month=month, day=day, hour=hour, min=min, sec=sec})
+        local runningDurationMs = os.time() - lastJobChangeTimeMs;
+        local runningDurationHours = (os.time() - timestamp)/60/60;

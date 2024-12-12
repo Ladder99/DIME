@@ -38,23 +38,39 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
             ExecuteScript(Configuration.LoopEnterScript);
         }
         
-        object networkResponse = null;
-        string networkRequest = $"\u000201\u0003";
+        object networkResponse01 = null;
+        string networkRequest01 = $"\u000201\u0003";
+        
+        object networkResponse03 = null;
+        string networkRequest03 = $"\u000203\u0003";
         
         using (TcpClient client = new TcpClient(Configuration.Address, Configuration.Port))
         using (NetworkStream stream = client.GetStream())
         {
-            byte[] data = Encoding.ASCII.GetBytes($"{networkRequest}");
-            stream.Write(data, 0, data.Length);
-            byte[] buffer = new byte[1024];
-            int bytesRead = stream.Read(buffer, 0, buffer.Length);
-            networkResponse = Encoding.ASCII.GetString(buffer, 0, bytesRead);
-            //Console.WriteLine(networkResponse.ToString());
-            networkResponse = Regex.Replace(networkResponse.ToString(), @"\p{C}+", string.Empty);
-            //Console.WriteLine(networkResponse.ToString());
-            networkResponse = networkResponse.ToString().Split(",");
-            //Console.WriteLine(networkResponse.ToString());
+            byte[] data01 = Encoding.ASCII.GetBytes($"{networkRequest01}");
+            stream.Write(data01, 0, data01.Length);
+            byte[] buffer01 = new byte[1024];
+            int bytesRead01 = stream.Read(buffer01, 0, buffer01.Length);
+            networkResponse01 = Encoding.ASCII.GetString(buffer01, 0, bytesRead01);
+            networkResponse01 = Regex.Replace(networkResponse01.ToString(), @"\p{C}+", string.Empty);
+            networkResponse01 = networkResponse01.ToString().Split(",");
+            
+            byte[] data03 = Encoding.ASCII.GetBytes($"{networkRequest03}");
+            stream.Write(data03, 0, data03.Length);
+            byte[] buffer03 = new byte[1024];
+            int bytesRead03 = stream.Read(buffer03, 0, buffer03.Length);
+            networkResponse03 = Encoding.ASCII.GetString(buffer03, 0, bytesRead03);
+            networkResponse03 = Regex.Replace(networkResponse03.ToString(), @"\p{C}+", string.Empty);
+            networkResponse03 = networkResponse03.ToString().Split(",");
         }
+        
+        List<string> networkResponse = new[]
+        {
+            (string[])networkResponse01, 
+            (string[])networkResponse03
+        }.SelectMany(x => x).ToList();
+
+        Console.WriteLine(networkResponse);
         
         foreach (var item in Configuration.Items.Where(x => x.Enabled))
         {
