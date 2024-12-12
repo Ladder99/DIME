@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <AssemblyName>DIME</AssemblyName>
         <RootNamespace>DIME</RootNamespace>
-        <LangVersion>13</LangVersion>
+        <LangVersion>12</LangVersion>
         <Version>1.2.1</Version>
         <Title>DIME</Title>
         <Authors>MRIIOT</Authors>
