@@ -40,13 +40,14 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
                 readResult = response;
             }
 
-            Console.WriteLine($"SCRIPT: {item.Script}");
+            //Console.WriteLine($"SCRIPT: {item.Script}");
             if (!string.IsNullOrEmpty(item.Script))
             {
                 response = ExecuteScript(response, item);
                 scriptResult = response;
             }
 
+            /*
             try
             {
                 Console.WriteLine($"RESULT: {scriptResult}");
@@ -56,6 +57,7 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
                 Console.WriteLine(e);
                 throw;
             }
+            */
             
             if (response is not null)
             {
