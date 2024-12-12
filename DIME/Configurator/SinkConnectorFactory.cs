@@ -31,6 +31,9 @@ public static class SinkConnectorFactory
             case "sparkplugb":
                 connector = SparkplugB.Sink.Create(section, disruptor);
                 break;
+            case "trakhoundhttp":
+                connector = TrakHoundHttp.Sink.Create(section, disruptor);
+                break;
             default:
                 break;
         }
