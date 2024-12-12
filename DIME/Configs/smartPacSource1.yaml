@@ -76,13 +76,13 @@ smartPacSource1: &smartPacSource1
       script: return tonumber(result[22]) == 1;
     - name: RtsFirmware
       enabled: !!bool true
-      script: return result[22];
+      script: return result[25];
     - name: SerialNumber
       enabled: !!bool true
-      script: return result[23];
+      script: return result[26];
     - name: LastPowerOnTime
       enabled: !!bool true
-      script: return result[41];
+      script: return result[44];
     - name: JobPartsRemaining
       enabled: !!bool true
       script: return cache('./PartPreset') - cache('./PartCount');

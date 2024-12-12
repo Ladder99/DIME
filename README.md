@@ -113,7 +113,7 @@ sources:
 | Postgres                          |
 | [Redis](#redis)                   |
 | Splunk EH SDK                     |
-| Splunk HEC                        |
+| [Splunk HEC](#splunk-hec)         |
 | [SparkplugB](#sparkplugb)         |
 | [TrakHound HTTP](#trakhound-http) |
 
@@ -664,6 +664,41 @@ sources:
     birth_delay: !!int 10000
 ```
 
+### Splunk HEC
+
+| Name            | Type   | Description                        |
+|-----------------|--------|------------------------------------|
+| name            | string | unique connector name              |
+| enabled         | bool   | is connector enabled               |
+| scan_interval   | int    | scanning frequency in milliseconds |
+| rbe             | bool   | report by exception                |
+| init_script     | string | startup lua script                 |
+| deinit_script   | string | shutdown lua script                |
+| enter_script    | string | before loop script                 |
+| exit_script     | string | after loop script                  |
+| connector       | string | connector type, `SplunkHEC`        |
+| address         | string | hostname                           |
+| port            | int    | port                               |
+| use_ssl         | bool   | use ssl                            |
+| token           | string | token                              |
+| event_or_metric | string | `event`, `metric`                  | 
+| source          | string | source                             |
+| source_type     | string | source_type                        |
+
+#### Sink Example
+
+```yaml
+  - name: splunkHecSink1
+    connector: SplunkHEC
+    address: localhost
+    port: 8088
+    use_ssl: false
+    token: abc123
+    event_or_metric: event
+    source: source1
+    source_type: _json
+```
+
 ### Timebase Websocket
 
 | Name            | Type         | Description                        |
@@ -712,8 +747,8 @@ sources:
 | enter_script  | string | before loop script                 |
 | exit_script   | string | after loop script                  |
 | connector     | string | connector type, `TrakhoundHTTP`    |
-| address       | string | broker hostname                    |
-| port          | int    | broker port                        |
+| address       | string | hostname                           |
+| port          | int    | port                               |
 | use_ssl       | bool   | use ssl                            |
 | router        | string | router                             |
 | base_path     | string | base path                          |

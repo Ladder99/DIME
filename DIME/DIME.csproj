@@ -127,6 +127,9 @@
       <None Update="Configs\trakhoundHttpSink1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Configs\splunkHecSink1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>
