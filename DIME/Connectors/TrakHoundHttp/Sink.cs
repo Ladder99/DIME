@@ -26,7 +26,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     protected override bool CreateImplementation()
     {
         var clientConfiguration = new TrakHoundHttpClientConfiguration();
-        clientConfiguration.Hostname = Configuration.Hostname;
+        clientConfiguration.Hostname = Configuration.Address;
         clientConfiguration.Port = Configuration.Port;
         clientConfiguration.UseSSL = Configuration.UseSsl;
         clientConfiguration.Path = Configuration.HostPath;

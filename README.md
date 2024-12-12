@@ -115,7 +115,7 @@ sources:
 | Splunk EH SDK                     |
 | Splunk HEC                        |
 | [SparkplugB](#sparkplugb)         |
-| TrakHound                         |
+| [TrakHound HTTP](#trakhound-http) |
 
 </td></tr></table>
 
@@ -697,6 +697,39 @@ sources:
        - name: plcExecution
          group: MQTT Data
          address: dime/eipSource1/Execution/Data
+```
+
+### Trakhound HTTP
+
+| Name          | Type   | Description                        |
+|---------------|--------|------------------------------------|
+| name          | string | unique connector name              |
+| enabled       | bool   | is connector enabled               |
+| scan_interval | int    | scanning frequency in milliseconds |
+| rbe           | bool   | report by exception                |
+| init_script   | string | startup lua script                 |
+| deinit_script | string | shutdown lua script                |
+| enter_script  | string | before loop script                 |
+| exit_script   | string | after loop script                  |
+| connector     | string | connector type, `TrakhoundHTTP`    |
+| address       | string | broker hostname                    |
+| port          | int    | broker port                        |
+| use_ssl       | bool   | use ssl                            |
+| router        | string | router                             |
+| base_path     | string | base path                          |
+
+#### Sink Example
+
+```yaml
+  - name: trakhoundHttpSink1
+    enabled: !!bool false
+    scan_interval: !!int 1000
+    connector: TrakHoundHTTP
+    address: localhost
+    port: 8472
+    use_ssl: false
+    router: default
+    base_path: Ladder99:/DIME/HttpSink
 ```
 
 ### Wintriss SmartPac

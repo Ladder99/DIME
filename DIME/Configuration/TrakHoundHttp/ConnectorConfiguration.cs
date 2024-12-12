@@ -2,7 +2,7 @@ namespace DIME.Configuration.TrakHoundHttp;
 
 public sealed class ConnectorConfiguration : Configuration.ConnectorConfiguration<ConnectorItem>
 {
-    public string Hostname { get; set; }
+    public string Address { get; set; }
     public int Port { get; set; }
     public bool UseSsl { get; set; }
     public string HostPath { get; set; }
