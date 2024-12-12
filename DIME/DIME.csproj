@@ -132,10 +132,12 @@
       </None>
     </ItemGroup>
 
+	<!--
     <ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
       <Content Include="liblua54.so">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
+	-->
 
 </Project>
