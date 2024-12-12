@@ -1,0 +1,10 @@
+trakhoundHttpSink1: &trakhoundHttpSink1
+  name: trakhoundHttpSink1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: TrakHoundHttp
+  hostname: localhost
+  port: 8472
+  useSsl: false
+  router: default
+  basePath: Ladder99:/DIME/HttpSink

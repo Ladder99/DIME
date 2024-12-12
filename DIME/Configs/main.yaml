@@ -6,6 +6,7 @@ sinks:
   - *redisSink1
   - *shdrSink1
   - *sparkplugBSink1
+  - *trakhoundHttpSink1
 sources:
   - *ascCpcSource1
   - *eipSource1
