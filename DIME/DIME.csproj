@@ -130,9 +130,12 @@
       <None Update="Configs\splunkHecSink1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="liblua54.so">
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
+      <Content Include="liblua54.so">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+      </Content>
     </ItemGroup>
 
 </Project>
