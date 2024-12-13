@@ -164,6 +164,9 @@
       <None Update="Connectors\SplunkEhSdk\Config\eipSource1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Connectors\SplunkEhSdk\Config\httpServerSink1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 	<!--

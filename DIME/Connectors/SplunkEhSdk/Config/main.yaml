@@ -1,5 +1,6 @@
 sinks:
   - *consoleSink1
+  - *httpServerSink1
   - *splunkEhSdkSink1
 sources:
   - *eipSource1

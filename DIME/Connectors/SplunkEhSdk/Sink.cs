@@ -54,15 +54,9 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
                 };
                 var reply = client.SendEventData(@event);
 
-                try
+                if (reply.Error is not null)
                 {
-                    System.Console.WriteLine(reply.Error is null);
-                    System.Console.WriteLine(reply.Error.Message);
-                }
-                catch (Exception e)
-                {
-                    System.Console.WriteLine(e);
-                    throw;
+                    throw new Exception(reply.Error.Message);
                 }
             }
         }
