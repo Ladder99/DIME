@@ -40,23 +40,56 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
             
             foreach (var message in Outbox)
             {
-                var @event = new SendEventDataRequest()
-                {
-                    Id = new Guid(md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)))).ToString(),
-                    CreateTime = Timestamp.FromDateTime(DateTime.UtcNow),
-                    Fields =
-                    {
-                        { "connector", message.ConnectorItemRef?.Configuration.Name },
-                        { "path", message.Path },
-                        { "data", JsonConvert.SerializeObject(message.Data) },
-                        { "timestamp", message.Timestamp.ToString() }
-                    }
-                };
-                var reply = client.SendEventData(@event);
+                var isNumeric = IsNumericDatatype(message.Data);
+                var id = new Guid(md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)))).ToString();
 
-                if (reply.Error is not null)
+                if (isNumeric && Configuration.NumbersToMetrics)
                 {
-                    throw new Exception(reply.Error.Message);
+                    var metric = new SendMetricDataRequest()
+                    {
+                        Id = id,
+                        CreateTime = Timestamp.FromDateTime(DateTime.UtcNow),
+                        Metrics =
+                        {
+                            new Metric()
+                            {
+                                Name= $"{message.ConnectorItemRef?.Configuration.Name}/{message.Path}",
+                                Value = Convert.ToSingle(message.Data)
+                            }
+                        },
+                        Dimensions =
+                        {
+                            { "connector", message.ConnectorItemRef?.Configuration.Name },
+                            { "path", message.Path }
+                        }
+                    };
+                    var reply = client.SendMetricData(metric);
+                            
+                    if (reply.Error is not null)
+                    {
+                        throw new Exception(reply.Error.Message);
+                    }
+                }
+                else
+                {
+                    var @event = new SendEventDataRequest()
+                    {
+                        Id = id,
+                        CreateTime = Timestamp.FromDateTime(DateTime.UtcNow),
+                        Fields =
+                        {
+                            { "connector", message.ConnectorItemRef?.Configuration.Name },
+                            { "path", message.Path },
+                            { "data", JsonConvert.SerializeObject(message.Data) },
+                            { "timestamp", message.Timestamp.ToString() }
+                        }
+                    };
+                    var reply = client.SendEventData(@event);
+
+                    if (reply.Error is not null)
+                    {
+                        throw new Exception(reply.Error.Message);
+                    }
                 }
             }
         }
@@ -72,5 +105,24 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     protected override bool DeinitializeImplementation()
     {
         return true;
+    }
+    
+    private bool IsNumericDatatype(object obj) {
+        switch (Type.GetTypeCode(obj.GetType())) {
+            case TypeCode.Byte:
+            case TypeCode.SByte:
+            case TypeCode.UInt16:
+            case TypeCode.UInt32:
+            case TypeCode.UInt64:
+            case TypeCode.Int16:
+            case TypeCode.Int32:
+            case TypeCode.Int64:
+            case TypeCode.Decimal:
+            case TypeCode.Double:
+            case TypeCode.Single:
+                return true;
+            default:
+                return false;
+        }
     }
 }

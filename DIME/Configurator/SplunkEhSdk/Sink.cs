@@ -15,6 +15,7 @@ public static class Sink
         config.Name = section.ContainsKey("name") ? Convert.ToString(section["name"]) : Guid.NewGuid().ToString();
         config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 50051;
+        config.NumbersToMetrics = section.ContainsKey("numbers_to_metrics") ? Convert.ToBoolean(section["numbers_to_metrics"]) : false;
         var connector = new Connectors.SplunkEhSdk.Sink(config, disruptor);
 
         return connector;
