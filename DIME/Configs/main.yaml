@@ -17,6 +17,7 @@ sources:
   - *modbusSource1
   - *mqttSource1
   - *mtConnectSource1
+  - *opcUaSource1
   - *redisSource1
   - *scriptSource1
   - *smartPacSource1

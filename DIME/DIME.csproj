@@ -21,12 +21,14 @@
 
     <ItemGroup>
       <PackageReference Include="Disruptor" Version="6.0.0" />
+      <PackageReference Include="Google.Protobuf" Version="3.29.1" />
       <PackageReference Include="InfluxDB.Client" Version="4.19.0-dev.15190" />
       <PackageReference Include="Lextm.SharpSnmpLib" Version="12.5.5" />
       <PackageReference Include="libplctag" Version="1.5.2" />
       <PackageReference Include="MQTTnet" Version="4.3.7.1207" />
       <PackageReference Include="MTConnect.NET-Applications-Agents" Version="6.5.0" />
       <PackageReference Include="MTConnect.NET-SHDR" Version="6.5.0" />
+      <PackageReference Include="nauful-LibUA-core" Version="1.0.31" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="NLog" Version="5.3.4" />
       <PackageReference Include="NLua" Version="1.7.3" />
@@ -131,6 +133,9 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="liblua54.so">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Configs\opcUaSource1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

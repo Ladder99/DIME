@@ -57,7 +57,7 @@ public partial class Configurator
             {
                 Logger.Error($"[Configurator.Sources] Connector type is not supported: '{connectorType}'");
             }
-            if (connector.Configuration.Enabled)
+            else if (connector.Configuration.Enabled)
             {
                 return connector;
             }

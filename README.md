@@ -76,6 +76,7 @@ sources:
 
 | Source                                    |
 |-------------------------------------------|
+| Active MQ                                 |
 | [ASC CPC](#asc-cpc)                       |
 | Beckhoff ADS                              |
 | Brother CNC                               |
@@ -90,7 +91,7 @@ sources:
 | MS SQL Server                             |
 | [MTConnect Agent](#mtconnect-agent)       |
 | OPC-DA                                    |
-| OPC-UA                                    |
+| [OPC-UA](#opc-ua)                         |
 | OPC XML-DA                                |
 | Postgres                                  |
 | [Redis](#redis)                           |
@@ -99,13 +100,16 @@ sources:
 | [SNMP](#snmp)                             |
 | [Timebase Websocket](#timebase-websocket) | 
 | [Wintriss SmartPac](#wintriss-smartpac)   |
+| Zenoh                                     |
 
 </td><td valign="top">
 
 | Sink                              |
 |-----------------------------------|
+| ActiveMQ                          |
 | [HTTP Server](#http-server)       |
 | [Influx LP](#influx-lp)           |
+| IoTDB                             |
 | [MQTT](#mqtt)                     |
 | MS SQL Server                     |
 | MTConnect Agent                   |
@@ -116,6 +120,7 @@ sources:
 | [Splunk HEC](#splunk-hec)         |
 | [SparkplugB](#sparkplugb)         |
 | [TrakHound HTTP](#trakhound-http) |
+| Zenoh                             |
 
 </td></tr></table>
 
@@ -501,6 +506,54 @@ sources:
     device_key: ~
     heartbeat_interval: !!int 10000
     filter_duplicates: !!bool true
+```
+
+### OPC-UA
+
+| Name              | Type         | Description                        |
+|-------------------|--------------|------------------------------------|
+| name              | string       | unique connector name              |
+| enabled           | bool         | is connector enabled               |
+| scan_interval     | int          | scanning frequency in milliseconds |
+| rbe               | bool         | report by exception                |
+| init_script       | string       | startup lua script                 |
+| deinit_script     | string       | shutdown lua script                |
+| enter_script      | string       | before loop script                 |
+| exit_script       | string       | after loop script                  |
+| connector         | string       | connector type, `OpcUA`            |
+| address           | string       | hostname                           |
+| port              | int          | port                               |
+| timeout           | int          | timeout                            |
+| anonymous         | bool         | anonymous user                     |
+| username          | string       | username                           |
+| password          | string       | password                           |
+| bypass_ping       | bool         | bypass ping on connect             |
+| items             | object array | cpc items                          |
+| items[].name      | string       | unique item name                   |
+| items[].enabled   | bool         | is item enabled                    |
+| items[].rbe       | bool         | report by exception override       |
+| items[].address   | string       | node address                       |
+| items[].script    | string       | lua script                         |
+| items[].namespace | int          | namespace index                    |
+
+#### Source Example
+
+```yaml
+  - name: opcUaSource1
+    connector: OpcUA
+    address: localhost
+    port: !!int 49320
+    timeout: !!int 1000
+    anonymous: !!bool false
+    username: chris
+    password: passwordpassword
+    items:
+      - name: DateTime
+        namespace: !!int 2
+        address: _System._DateTime
+      - name: Random
+        namespace: !!int 2
+        address: Simulation Examples.Functions.Random6
 ```
 
 ### Redis

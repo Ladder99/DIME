@@ -1,0 +1,26 @@
+opcUaSource1: &opcUaSource1
+  name: opcUaSource1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: OpcUA
+  rbe: !!bool true
+  address: localhost
+  port: !!int 49320
+  timeout: !!int 1000
+  anonymous: !!bool false
+  username: chris
+  password: passwordpassword
+  init_script: ~
+  items:
+    - name: DateTime
+      enabled: !!bool true
+      rbe: !!bool true
+      namespace: !!int 2
+      address: _System._DateTime
+      script: ~
+    - name: Random
+      enabled: !!bool true
+      rbe: !!bool true
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Random6
+      script: ~
