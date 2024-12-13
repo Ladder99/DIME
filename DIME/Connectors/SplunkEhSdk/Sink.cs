@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using System.Text;
 using DIME.Configuration.SplunkEhSdk;
 using Google.Protobuf.Collections;
@@ -34,21 +35,34 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     {
         using (var channel = GrpcChannel.ForAddress($"{Configuration.Address}:{Configuration.Port}"))
         {
+            var client = new EdgeHubService.EdgeHubServiceClient(channel);
+            MD5 md5Hasher = MD5.Create();
+            
             foreach (var message in Outbox)
             {
-                var client = new EdgeHubService.EdgeHubServiceClient(channel);
                 var @event = new SendEventDataRequest()
                 {
-                    Id = JsonConvert.SerializeObject(message),
-                    CreateTime = Timestamp.FromDateTime(DateTime.UtcNow),
+                    Id = new Guid(md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)))).ToString(),
+                    CreateTime = Timestamp.FromDateTime(DateTime.Now),
                     Fields =
                     {
-                        { JsonConvert.SerializeObject(message), "" },
-                        { "name", "edge-hub-sdk" },
-                        { "type", "single-event" },
+                        { "path", message.Path },
+                        { "data", JsonConvert.SerializeObject(message.Data) },
+                        { "timestamp", message.Timestamp.ToString() }
                     }
                 };
                 var reply = client.SendEventData(@event);
+
+                try
+                {
+                    System.Console.WriteLine(reply.Error is null);
+                    System.Console.WriteLine(reply.Error.Message);
+                }
+                catch (Exception e)
+                {
+                    System.Console.WriteLine(e);
+                    throw;
+                }
             }
         }
 

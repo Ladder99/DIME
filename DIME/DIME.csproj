@@ -149,6 +149,18 @@
       <None Update="Configs\splunkEhSdkSink1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Connectors\SplunkEhSdk\Config\consoleSink1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Connectors\SplunkEhSdk\Config\scriptSource1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Connectors\SplunkEhSdk\Config\splunkEhSdkSink1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Connectors\SplunkEhSdk\Config\main.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 	<!--
