@@ -4,4 +4,5 @@ sinks:
   - *splunkEhSdkSink1
 sources:
   - *eipSource1
+  - *haasSource1
   - *scriptSource1

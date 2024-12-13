@@ -40,10 +40,29 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
             
             foreach (var message in Outbox)
             {
-                var isNumeric = IsNumericDatatype(message.Data);
                 var id = new Guid(md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)))).ToString();
 
-                if (isNumeric && Configuration.NumbersToMetrics)
+                float data = 0f;
+                var isNumeric = IsNumericDatatype(message.Data);
+                var isString = IsStringDatatype(message.Data);
+                var sendAsEvent = !Configuration.NumbersToMetrics;
+
+                if (Configuration.NumbersToMetrics)
+                {
+                    if (isNumeric)
+                    {
+                        data = Convert.ToSingle(message.Data);
+                    }
+                    else if (isString)
+                    {
+                        if (!Single.TryParse(message.Data.ToString(), out data))
+                        {
+                            sendAsEvent = true;
+                        }
+                    }
+                }
+                
+                if (!sendAsEvent)
                 {
                     var metric = new SendMetricDataRequest()
                     {
@@ -54,7 +73,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
                             new Metric()
                             {
                                 Name= $"{message.ConnectorItemRef?.Configuration.Name}/{message.Path}",
-                                Value = Convert.ToSingle(message.Data)
+                                Value = data
                             }
                         },
                         Dimensions =
@@ -120,6 +139,16 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
             case TypeCode.Decimal:
             case TypeCode.Double:
             case TypeCode.Single:
+                return true;
+            default:
+                return false;
+        }
+    }
+    
+    private bool IsStringDatatype(object obj) {
+        switch (Type.GetTypeCode(obj.GetType())) {
+            case TypeCode.String:
+            case TypeCode.Char:
                 return true;
             default:
                 return false;
