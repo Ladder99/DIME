@@ -88,4 +88,20 @@ public class OpcUaClient
 
             return dvs[0];
         }
+        
+        public DataValue[] Read(List<Tuple<ushort,string>> identifiers)
+        {
+            var readValueIds = identifiers
+                .Select(x => new ReadValueId(
+                    new NodeId(x.Item1, x.Item2), 
+                    NodeAttribute.Value, 
+                    null, 
+                    new QualifiedName(0, null))
+                )
+                .ToArray();
+            
+            var readRes = _client.Read(readValueIds, out DataValue[] dvs);
+            
+            return dvs;
+        }
     }

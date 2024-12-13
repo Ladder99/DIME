@@ -138,6 +138,9 @@
       <None Update="Configs\opcUaSource1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Configs\consoleSink1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 	<!--

@@ -1,6 +1,6 @@
 opcUaSource1: &opcUaSource1
   name: opcUaSource1
-  enabled: !!bool true
+  enabled: !!bool false
   scan_interval: !!int 1000
   connector: OpcUA
   rbe: !!bool true
@@ -18,9 +18,78 @@ opcUaSource1: &opcUaSource1
       namespace: !!int 2
       address: _System._DateTime
       script: ~
-    - name: Random
-      enabled: !!bool true
-      rbe: !!bool true
+    - name: Random1
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Random1
+    - name: Random2
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Random2
+    - name: Random3
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Random3
+    - name: Random4
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Random4
+    - name: Random5
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Random5
+    - name: Random6
       namespace: !!int 2
       address: Simulation Examples.Functions.Random6
-      script: ~
+    - name: Random7
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Random7
+    - name: Random8
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Random8
+    - name: Sine1
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Sine1
+    - name: Sine2
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Sine2
+    - name: Sine3
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Sine3
+    - name: Sine4
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Sine4
+    - name: User1
+      namespace: !!int 2
+      address: Simulation Examples.Functions.User1
+    - name: User2
+      namespace: !!int 2
+      address: Simulation Examples.Functions.User2
+    - name: User3
+      namespace: !!int 2
+      address: Simulation Examples.Functions.User3
+    - name: User4
+      namespace: !!int 2
+      address: Simulation Examples.Functions.User4
+    - name: Ramp1
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Ramp1
+    - name: Ramp2
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Ramp2
+    - name: Ramp3
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Ramp3
+    - name: Ramp4
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Ramp4
+    - name: Ramp5
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Ramp5
+    - name: Ramp6
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Ramp6
+    - name: Ramp7
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Ramp7
+    - name: Ramp8
+      namespace: !!int 2
+      address: Simulation Examples.Functions.Ramp8
+    
+    
+    

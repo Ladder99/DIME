@@ -42,13 +42,13 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
             _client.ConnectAsync(Properties.GetProperty<Uri>("uri"), CancellationToken.None).Wait();
             var request = Properties.GetProperty<string>("format_message");
             var response = SendAndReceiveMessage(request);
-            Console.WriteLine($"FMT RESPONSE {request} >> {response}");
+            System.Console.WriteLine($"FMT RESPONSE {request} >> {response}");
 
             foreach (var item in Configuration.Items)
             {
                 request = string.Format(Properties.GetProperty<string>("subscribe_message"), item.Group, item.Address);
                 response = SendAndReceiveMessage(request);
-                Console.WriteLine($"SUB RESPONSE {request} >> {response}");
+                System.Console.WriteLine($"SUB RESPONSE {request} >> {response}");
             }
             
             _receiveTimer.Enabled = true;
@@ -87,7 +87,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
     {
         if (_receiveTimerExecuting)
         {
-            Console.WriteLine("TIMER OVERLAP");
+            System.Console.WriteLine("TIMER OVERLAP");
             return;
         }
         
@@ -105,7 +105,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
                 var result = _client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None).GetAwaiter()
                     .GetResult();
                 var message = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
-                Console.WriteLine($"RECEIVED {message}");
+                System.Console.WriteLine($"RECEIVED {message}");
 
                 payload = JsonConvert.DeserializeObject<SubscriptionResultPayload>(Regex.Replace(message, @"\p{C}", ""));
                 var tagDataset = payload.Arguments[0].Dataset;
@@ -120,7 +120,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
                 }
                 catch (InvalidOperationException e)
                 {
-                    Console.WriteLine($"ITEM NF {tagDataset}/{tagName}");
+                    System.Console.WriteLine($"ITEM NF {tagDataset}/{tagName}");
                 }
             }
             catch (WebSocketException we)
@@ -134,7 +134,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         }
         else
         {
-            Console.WriteLine($"RECV STATE {_client.State}");
+            System.Console.WriteLine($"RECV STATE {_client.State}");
         }
 
         _receiveTimerExecuting = false;

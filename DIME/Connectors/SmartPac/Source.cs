@@ -70,7 +70,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
             (string[])networkResponse03
         }.SelectMany(x => x).ToList();
 
-        Console.WriteLine(networkResponse);
+        System.Console.WriteLine(networkResponse);
         
         foreach (var item in Configuration.Items.Where(x => x.Enabled))
         {

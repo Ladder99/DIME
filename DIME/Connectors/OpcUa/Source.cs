@@ -1,4 +1,5 @@
 using DIME.Configuration.OpcUa;
+using TrakHound.Configurations;
 
 namespace DIME.Connectors.OpcUa;
 
@@ -32,13 +33,24 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
         return _client.Connect();
     }
 
+    /*
+    public override bool Read()
+    {
+        var itemsToRead = Configuration.Items.Select(x => new Tuple<ushort, string>(x.Namespace, x.Address)).ToList();
+        var dvs = _client.Read(itemsToRead);
+        
+        return true;
+    }
+    */
+    
     protected override object ReadFromDevice(ConnectorItem item)
     {
+        
         var result = _client.Read(item.Namespace, item.Address);
 
         return result.Value;
     }
-
+    
     protected override bool DisconnectImplementation()
     {
         return _client.Disconnect();

@@ -107,6 +107,7 @@ sources:
 | Sink                              |
 |-----------------------------------|
 | ActiveMQ                          |
+| [Console](#console)               |
 | [HTTP Server](#http-server)       |
 | [Influx LP](#influx-lp)           |
 | IoTDB                             |
@@ -159,6 +160,27 @@ sources:
     items:
       - name: Temperature
         address: .Autoclave.Inputs.AIRTC\Value
+```
+
+### Console
+
+| Name          | Type   | Description                        |
+|---------------|--------|------------------------------------|
+| name          | string | unique connector name              |
+| enabled       | bool   | is connector enabled               |
+| scan_interval | int    | scanning frequency in milliseconds |
+| rbe           | bool   | report by exception                |
+| init_script   | string | startup lua script                 |
+| deinit_script | string | shutdown lua script                |
+| enter_script  | string | before loop script                 |
+| exit_script   | string | after loop script                  |
+| connector     | string | connector type, `Console`          |
+
+#### Sink Example
+
+```yaml
+  - name: consoleSink1
+    connector: Console
 ```
 
 ### Ethernet/IP
@@ -862,7 +884,7 @@ sources:
 Each connector configuration allows for Lua script execution.  The `init_script` property is executed on 
 startup and is used to import additional .NET or Lua libraries.  The `deinit_script` property is executed on shutdown. 
 The `enter_script` and `exit_script` properties are executed before and after reading all items, respectively. 
-Within each item script, the primary cache can be accessed using the `cache(path, defaultValue)`, 
+Within each item script, the primary cache can be accessed using the `cache(path, defaultValue)` and 
 `cache_ts(path, defaultValue)` function calls. The `path` refers to the item's unique path which is a combination of 
 the connector's and item's name (e.g. `eipSource1/boolTag2`, `mqttSource1/ffe4Sensor`). Within the connector's execution context, 
 the connector name can be omitted and replaced with a period, `./boolTag2`. A secondary cache can be accessed 

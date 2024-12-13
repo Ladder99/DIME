@@ -10,6 +10,9 @@ public static class SinkConnectorFactory
         
         switch (connectorType)
         {
+            case "console":
+                connector = Console.Sink.Create(section, disruptor);
+                break;
             case "httpserver":
                 connector = HttpServer.Sink.Create(section, disruptor);
                 break;

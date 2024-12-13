@@ -4,8 +4,8 @@ ascCpcSource1: &ascCpcSource1
   scan_interval: !!int 5000
   connector: AscCPC
   rbe: !!bool true
-  #address: 192.168.111.12
-  address: 75.242.18.121
+  address: 192.168.111.12
+  #address: 75.242.18.121
   port: !!int 9999
   bypass_ping: !!bool true
   init_script: ~
