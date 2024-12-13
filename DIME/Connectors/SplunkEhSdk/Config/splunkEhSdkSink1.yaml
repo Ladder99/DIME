@@ -5,4 +5,4 @@ splunkEhSdkSink1: &splunkEhSdkSink1
   connector: SplunkEhSDK
   address: http://host.docker.internal
   port: !!int 50051
-  numbers_to_metrics: !!bool false
+  numbers_to_metrics: !!bool true
