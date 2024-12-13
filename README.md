@@ -1,5 +1,5 @@
 ![DIME Logo](dime_logo.png)
-
+  
 Reshape and move data from enterprise and industrial sources to message queues, databases, and other sinks.  
   
 <i>Data integration made easy!</i>™  
