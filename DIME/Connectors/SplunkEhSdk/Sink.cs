@@ -40,6 +40,11 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
             
             foreach (var message in Outbox)
             {
+                if (message.Data is null)
+                {
+                    continue;
+                }
+                
                 var id = new Guid(md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)))).ToString();
 
                 float data = 0f;
