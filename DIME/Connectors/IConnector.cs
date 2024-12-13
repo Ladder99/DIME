@@ -9,6 +9,8 @@ public interface ISourceConnector: IConnector
     public ConcurrentBag<MessageBoxMessage> Samples { get; }
     public ConcurrentDictionary<string, MessageBoxMessage> Current { get; }
     public bool Read();
+    public event Action<ConcurrentBag<MessageBoxMessage>, ConcurrentDictionary<string, MessageBoxMessage>, ConcurrentBag<MessageBoxMessage>> OnInboxReady;
+    public event Action<ConcurrentBag<MessageBoxMessage>, ConcurrentDictionary<string, MessageBoxMessage>, ConcurrentBag<MessageBoxMessage>> OnInboxSent;
 }
 
 public interface ISinkConnector: IConnector
@@ -17,6 +19,8 @@ public interface ISinkConnector: IConnector
     public ConcurrentBag<MessageBoxMessage> Outbox { get; }
     public bool IsWriting { get; }
     public bool Write();
+    public event Action<ConcurrentBag<MessageBoxMessage>> OnOutboxReady;
+    public event Action<ConcurrentBag<MessageBoxMessage>, bool> OnOutboxSent;
 }
 
 public interface IConnector
@@ -33,4 +37,6 @@ public interface IConnector
     public bool AfterUpdate();
     public bool Disconnect();
     public bool Deinitialize();
+    public event Action<Exception> OnRaiseFault;
+    public event Action<Exception> OnClearFault;
 }

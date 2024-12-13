@@ -137,7 +137,7 @@
       <None Update="Configs\splunkHecSink1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="liblua54.so">
+      <None Update="liblua54-arm64.so">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Configs\opcUaSource1.yaml">
@@ -159,8 +159,15 @@
     </ItemGroup>
 	-->
 
+    <Target Name="CopyAndRenameFile" AfterTargets="Build">
+      <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
+            DestinationFiles="$(OutDir)runtimes/linux-arm64/native/liblua54.so" />
+    </Target>
+
+	<!--
     <ItemGroup>
       <Protobuf Include="Connectors\SplunkEhSdk\edgehub.proto" GrpcServices="Client" />
     </ItemGroup>
+	-->
 
 </Project>

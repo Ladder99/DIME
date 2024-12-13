@@ -38,6 +38,8 @@ public abstract class Connector<TConfig, TItem>: IConnector
     public bool IsInitialized { get; private set; }
     public bool IsCreated { get; private set; }
     public bool IsConnected { get; protected set; }
+    public event Action<Exception>? OnRaiseFault;
+    public event Action<Exception>? OnClearFault;
 
     public Connector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
     {
@@ -326,6 +328,7 @@ public abstract class Connector<TConfig, TItem>: IConnector
         if(!IsFaulted) Logger.Warn($"[{Configuration.Name}] Fault Set within {FaultContext.ToString()} context. {ex.Message}");
         IsFaulted = true;
         FaultReason = ex;
+        OnRaiseFault?.Invoke(ex);
         
         Logger.Trace($"[{Configuration.Name}] Connector:MarkFaulted::EXIT");
     }
@@ -338,6 +341,7 @@ public abstract class Connector<TConfig, TItem>: IConnector
         {
             Logger.Info($"[{Configuration.Name}] Fault Cleared within {FaultContext.ToString()} context.");
             IsFaulted = false;
+            OnClearFault?.Invoke(FaultReason);
             FaultReason = null;
         }
         

@@ -32,23 +32,24 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool WriteImplementation()
     {
-        foreach (var message in Outbox)
+        using (var channel = GrpcChannel.ForAddress("host.docker.internal:50051"))
         {
-            var channel = GrpcChannel.ForAddress("host.docker.internal:50051");
-            var client = new EdgeHubService.EdgeHubServiceClient(channel);
-            var @event = new SendEventDataRequest()
+            foreach (var message in Outbox)
             {
-                Id = JsonConvert.SerializeObject(message),
-                CreateTime = Timestamp.FromDateTime(DateTime.UtcNow),
-                Fields =
+                var client = new EdgeHubService.EdgeHubServiceClient(channel);
+                var @event = new SendEventDataRequest()
                 {
-                    { JsonConvert.SerializeObject(message), "" },
-                    { "name", "edge-hub-sdk" },
-                    { "type", "single-event" },
-                }
-            };
-            var reply = client.SendEventData(@event);
-            
+                    Id = JsonConvert.SerializeObject(message),
+                    CreateTime = Timestamp.FromDateTime(DateTime.UtcNow),
+                    Fields =
+                    {
+                        { JsonConvert.SerializeObject(message), "" },
+                        { "name", "edge-hub-sdk" },
+                        { "type", "single-event" },
+                    }
+                };
+                var reply = client.SendEventData(@event);
+            }
         }
 
         return true;

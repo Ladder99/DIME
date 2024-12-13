@@ -13,6 +13,8 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     public ConcurrentBag<MessageBoxMessage> Samples { get; set; }
     public ConcurrentDictionary<string, MessageBoxMessage> Current { get; set; }
     protected bool PublishInboxInBatch { get; set; }
+    public event Action<ConcurrentBag<MessageBoxMessage>, ConcurrentDictionary<string, MessageBoxMessage>, ConcurrentBag<MessageBoxMessage>> OnInboxReady;
+    public event Action<ConcurrentBag<MessageBoxMessage>, ConcurrentDictionary<string, MessageBoxMessage>, ConcurrentBag<MessageBoxMessage>> OnInboxSent;
     
     public SourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
     {
@@ -338,6 +340,8 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     {
         if (Inbox.Count > 0)
         {
+            OnInboxReady?.Invoke(Inbox, Current, Samples);
+            
             if (Inbox.Count > Disruptor.RingBuffer.BufferSize)
             {
                 Logger.Warn("Inbox is larger than ring buffer!");
@@ -373,6 +377,8 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                     }
                 }
             }
+            
+            OnInboxSent?.Invoke(Inbox, Current, Samples);
         }
     }
 }

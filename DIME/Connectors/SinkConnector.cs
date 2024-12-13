@@ -8,6 +8,9 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
     where TItem : ConnectorItem
 {
     public ConcurrentBag<MessageBoxMessage> Outbox { get; set; }
+    public event Action<ConcurrentBag<MessageBoxMessage>> OnOutboxReady;
+    public event Action<ConcurrentBag<MessageBoxMessage>, bool> OnOutboxSent;
+    
     public bool IsWriting { get; protected set; }
     
     public SinkConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
@@ -58,7 +61,17 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         {
             try
             {
+                if (Outbox.Count > 0)
+                {
+                    OnOutboxReady?.Invoke(Outbox);
+                }
+
                 result = WriteImplementation();
+                
+                if (Outbox.Count > 0)
+                {
+                    OnOutboxSent?.Invoke(Outbox, result);
+                }
 
                 if (result)
                 {

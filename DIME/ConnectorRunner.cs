@@ -29,6 +29,43 @@ public class ConnectorRunner
     public void Start()
     {
         Logger.Trace($"[{Connector.Configuration.Name}] Start::ENTER");
+
+        Connector.OnRaiseFault += (fault) =>
+        {
+
+        };
+        
+        Connector.OnClearFault += (fault) =>
+        {
+
+        };
+        
+        if (Connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
+        {
+            ((ISinkConnector)Connector).OnOutboxReady += (outbox) =>
+            {
+                
+            };
+
+            ((ISinkConnector)Connector).OnOutboxSent += (outbox, result) =>
+            {
+
+            };
+        }
+        
+        if (Connector.Configuration.Direction == ConnectorDirectionEnum.Source)
+        {
+            ((ISourceConnector)Connector).OnInboxReady += (bag, current, samples) =>
+            {
+
+            };
+
+            ((ISourceConnector)Connector).OnInboxSent += (bag, current, samples) =>
+            {
+
+            };
+        }
+        
         ConnectorInitialize();
         ConnectorCreate();
         StartTimer();
