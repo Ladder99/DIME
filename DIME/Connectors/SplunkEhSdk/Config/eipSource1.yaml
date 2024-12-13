@@ -1,0 +1,42 @@
+eipSource1: &eipSource1
+  name: eipSource1
+  enabled: !!bool true
+  scan_interval: !!int 500
+  connector: EthernetIP
+  rbe: !!bool true
+  type: !!int 5
+  address: 192.168.111.20
+  #address: 75.242.18.121
+  path: 1,0
+  log: !!int 0
+  timeout: !!int 1000
+  bypass_ping: !!bool true
+  init_script: ~
+  enter_script: ~
+  exit_script: ~
+  deinit_script: ~
+  items:
+    - name: boolSetUserCacheOnly
+      enabled: !!bool true
+      type: bool
+      address: B3:0/2
+      script: |
+        set('boolTag', result);
+        return nil;
+    - name: boolGetUserCache
+      enabled: !!bool true
+      script: |
+        return get('boolTag', false);
+    - name: Execution
+      enabled: !!bool true
+      type: bool
+      address: B3:0/3
+      script: |
+        local m = { [0]='Ready', [1]='Active' };
+        return m[result and 1 or 0];
+      meta:
+        mtconnect: Device[name=device1]/Controller/Path/Execution[category=Event]
+    - name: GoodPartCount
+      enabled: !!bool true
+      type: int
+      address: N7:1

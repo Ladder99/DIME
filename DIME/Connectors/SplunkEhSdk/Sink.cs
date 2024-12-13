@@ -43,9 +43,10 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
                 var @event = new SendEventDataRequest()
                 {
                     Id = new Guid(md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)))).ToString(),
-                    CreateTime = Timestamp.FromDateTime(DateTime.Now),
+                    CreateTime = Timestamp.FromDateTime(DateTime.UtcNow),
                     Fields =
                     {
+                        { "connector", message.ConnectorItemRef?.Configuration.Name },
                         { "path", message.Path },
                         { "data", JsonConvert.SerializeObject(message.Data) },
                         { "timestamp", message.Timestamp.ToString() }
