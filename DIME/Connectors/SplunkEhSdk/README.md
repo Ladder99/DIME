@@ -6,10 +6,9 @@
 
 ```json
 {
-  "name": "ladder99/DIME:latest",
+  "name": "ladder99/dime:latest",
   "containerArchive": "dime.tar",
-  "portMap": ["8080:8080"],
-  "mappedStorage": "/app/Configs",
-  "mappedStorageMb": 100
+  "portMap": ["51000:8080"],
+  "mappedStorage": "/app/Configs"
 }
 ```

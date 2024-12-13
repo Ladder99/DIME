@@ -13,6 +13,8 @@ public static class Sink
         config.Enabled = section.ContainsKey("enabled") ? Convert.ToBoolean(section["enabled"]) : true;
         config.ScanIntervalMs = section.ContainsKey("scan_interval") ? Convert.ToInt32(section["scan_interval"]) : 1000;
         config.Name = section.ContainsKey("name") ? Convert.ToString(section["name"]) : Guid.NewGuid().ToString();
+        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";
+        config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 50051;
         var connector = new Connectors.SplunkEhSdk.Sink(config, disruptor);
 
         return connector;

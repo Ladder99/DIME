@@ -32,7 +32,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool WriteImplementation()
     {
-        using (var channel = GrpcChannel.ForAddress("host.docker.internal:50051"))
+        using (var channel = GrpcChannel.ForAddress($"{Configuration.Address}:{Configuration.Port}"))
         {
             foreach (var message in Outbox)
             {

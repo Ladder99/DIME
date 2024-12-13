@@ -3,3 +3,5 @@ splunkEhSdkSink1: &splunkEhSdkSink1
   enabled: !!bool true
   scan_interval: !!int 1000
   connector: SplunkEhSDK
+  address: host.docker.internal
+  port: !!int 50051
