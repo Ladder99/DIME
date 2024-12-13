@@ -22,6 +22,11 @@
     <ItemGroup>
       <PackageReference Include="Disruptor" Version="6.0.0" />
       <PackageReference Include="Google.Protobuf" Version="3.29.1" />
+      <PackageReference Include="Grpc.Net.Client" Version="2.67.0" />
+      <PackageReference Include="Grpc.Tools" Version="2.68.1">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="InfluxDB.Client" Version="4.19.0-dev.15190" />
       <PackageReference Include="Lextm.SharpSnmpLib" Version="12.5.5" />
       <PackageReference Include="libplctag" Version="1.5.2" />
@@ -141,6 +146,9 @@
       <None Update="Configs\consoleSink1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Configs\splunkEhSdkSink1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 	<!--
@@ -150,5 +158,9 @@
       </Content>
     </ItemGroup>
 	-->
+
+    <ItemGroup>
+      <Protobuf Include="Connectors\SplunkEhSdk\edgehub.proto" GrpcServices="Client" />
+    </ItemGroup>
 
 </Project>

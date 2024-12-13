@@ -1,0 +1,12 @@
+splunkHecSink1: &splunkHecSink1
+  name: splunkHecSink1
+  enabled: !!bool false
+  scan_interval: !!int 1000
+  connector: SplunkHEC
+  address: localhost
+  port: 8088
+  use_ssl: false
+  token: abc123
+  event_or_metric: event
+  source: source1
+  source_type: _json

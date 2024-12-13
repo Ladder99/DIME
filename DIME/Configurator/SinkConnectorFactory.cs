@@ -34,6 +34,9 @@ public static class SinkConnectorFactory
             case "sparkplugb":
                 connector = SparkplugB.Sink.Create(section, disruptor);
                 break;
+            case "splunkehsdk":
+                connector = SplunkEhSdk.Sink.Create(section, disruptor);
+                break;
             case "splunkhec":
                 connector = SplunkHec.Sink.Create(section, disruptor);
                 break;

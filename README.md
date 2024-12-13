@@ -117,7 +117,7 @@ sources:
 | [MTConnect SHDR](#mtconnect-shdr) |
 | Postgres                          |
 | [Redis](#redis)                   |
-| Splunk EH SDK                     |
+| [Splunk EH SDK](#splunk-eh-sdk)   |
 | [Splunk HEC](#splunk-hec)         |
 | [SparkplugB](#sparkplugb)         |
 | [TrakHound HTTP](#trakhound-http) |
@@ -737,6 +737,27 @@ sources:
     device_id: dime
     reconnect_interval: !!int 15000
     birth_delay: !!int 10000
+```
+
+### Splunk EH SDK
+
+| Name            | Type   | Description                        |
+|-----------------|--------|------------------------------------|
+| name            | string | unique connector name              |
+| enabled         | bool   | is connector enabled               |
+| scan_interval   | int    | scanning frequency in milliseconds |
+| rbe             | bool   | report by exception                |
+| init_script     | string | startup lua script                 |
+| deinit_script   | string | shutdown lua script                |
+| enter_script    | string | before loop script                 |
+| exit_script     | string | after loop script                  |
+| connector       | string | connector type, `SplunkEhSDK`      |
+
+#### Sink Example
+
+```yaml
+  - name: splunkEhSdk
+    connector: SplunkEhSDK
 ```
 
 ### Splunk HEC

@@ -7,6 +7,7 @@ sinks:
   - *redisSink1
   - *shdrSink1
   - *sparkplugBSink1
+  - *splunkEhSdkSink1
   - *splunkHecSink1
   - *trakhoundHttpSink1
 sources:

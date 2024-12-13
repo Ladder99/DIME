@@ -1,0 +1,81 @@
+syntax = "proto3";
+option csharp_namespace = "DIME.Connectors.SplunkEhSdk";
+
+package edgehub.sdk;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+// Hub Version: 1.8 release
+service EdgeHubService {
+    rpc GetDiscovery(google.protobuf.Empty) returns (GetDiscoveryResponse) {}
+
+    rpc GetReading(GetReadingRequest) returns (GetReadingResponse) {}
+    rpc GetReadingStreamResponse(GetReadingRequest) returns (stream GetReadingResponse) {}
+
+    rpc SendEventData(SendEventDataRequest) returns (SendEventDataResponse) {}
+    rpc SendEventDataStream(stream SendEventDataRequest) returns (stream SendEventDataResponse) {}
+
+    rpc SendMetricData(SendMetricDataRequest) returns (SendMetricDataResponse) {}
+    rpc SendMetricDataStream(stream SendMetricDataRequest) returns (stream SendMetricDataResponse) {}
+}
+
+// rpc: GetDiscovery
+message GetDiscoveryResponse {
+    repeated DiscoveryInfo discovery_info = 1;
+}
+
+message DiscoveryInfo { 
+    string topic_name = 1;
+    string type = 2;
+    google.protobuf.Struct additional_information = 3;
+}
+
+// rpc: GetReading & GetReadingStreamResponse
+message GetReadingRequest {
+    string topic_name = 1;
+}
+
+message GetReadingResponse {
+    string topic_name = 1;
+    google.protobuf.Timestamp timestamp = 2;
+    google.protobuf.Struct fields = 3;
+}
+
+// rpc: SendEventData & SendEventDataStream
+message SendEventDataRequest {
+    string id = 1;
+    google.protobuf.Timestamp create_time = 2;
+    map<string, string> fields = 3;
+}
+
+message SendEventDataResponse {
+    string id = 1;
+    optional Error error = 2;
+}
+
+// rpc: SendMetricData & SendMetricDataStream
+message SendMetricDataRequest {
+    string id = 1;
+    google.protobuf.Timestamp create_time = 2;
+    map<string, string> dimensions = 3;
+    repeated Metric metrics = 4;
+    optional bytes additional_details = 5;
+}
+
+message SendMetricDataResponse {
+    string id = 1;
+    optional Error error = 2;
+}
+
+message Metric {
+    string name = 1;
+    float value = 2;
+    string unit = 3;
+}
+
+// Common
+message Error {
+    string message = 1;
+}
