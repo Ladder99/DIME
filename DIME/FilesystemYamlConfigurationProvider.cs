@@ -29,9 +29,15 @@ public class FilesystemYamlConfigurationProvider: IConfigurationProvider
         }
         
         Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-        Directory.GetFiles("./Configs", "*.yaml").ToList().ForEach(File.Delete);
-        File.WriteAllText("./Configs/main.yaml", yamlConfiguration);
+        // backup current configuration
         var (stringConfiguration, dictionaryConfiguration) = ReadConfiguration();
+        File.WriteAllText($"./Configs/{DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss")}.bak", yamlConfiguration);
+        // remove all yaml files
+        Directory.GetFiles("./Configs", "*.yaml").ToList().ForEach(File.Delete);
+        // write new configuration
+        File.WriteAllText("./Configs/main.yaml", yamlConfiguration);
+        // return new configuration
+        (stringConfiguration, dictionaryConfiguration) = ReadConfiguration();
         return (true, stringConfiguration, dictionaryConfiguration);
     }
     
