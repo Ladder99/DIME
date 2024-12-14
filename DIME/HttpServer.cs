@@ -177,8 +177,7 @@ public class HttpServer
             }
             else if (request.RawUrl == "/service/restart")
             {
-                _service.Stop();
-                _service.Start();
+                _service.Restart();
                 responseString = "Restarted";
                 response.StatusCode = 200;
             }
@@ -194,7 +193,10 @@ public class HttpServer
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            if (_isRunning)
+            {
+                BeginAcceptRequest();
+            }
         }
     }
 

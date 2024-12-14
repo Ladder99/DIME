@@ -1,6 +1,6 @@
 shdrSink1: &shdrSink1
   name: shdrSink1
-  enabled: !!bool true
+  enabled: !!bool false
   scan_interval: !!int 1000
   connector: MTConnectSHDR
   port: !!int 7878

@@ -1,6 +1,6 @@
 httpServerSink1: &httpServerSink1
   name: httpServerSink1
-  enabled: !!bool true
+  enabled: !!bool false
   scan_interval: !!int 1000
   connector: HTTPServer
   uri: http://localhost:8080/

@@ -11,17 +11,30 @@ public class DimeService
     private IConfigurationProvider _configurationProvider;
     private HttpServer _httpServer;
     private Disruptor<MessageBoxMessage> _disruptor;
+    private bool _isRunning = false;
+    private List<IConnector> _externalConnectors = new List<IConnector>();
 
     public DimeService(IConfigurationProvider configurationProvider)
     {
         _configurationProvider = configurationProvider;
     }
     
-    public void AddConnector(IConnector connector)
+    /// <summary>
+    /// Add an external connector instance.
+    /// External connector instance must be added before Startup() is invoked.
+    /// </summary>
+    /// <param name="connector">External connector instance.</param>
+    /// <returns>Whether the external connector instance was successfully added or not.</returns>
+    public bool AddConnector(IConnector connector)
     {
-        _runners.Add(new ConnectorRunner(_runners, connector, _disruptor, _httpServer));
+        if (_isRunning) return false;
+        _externalConnectors.Add(connector);
+        return true;
     }
-
+    
+    /// <summary>
+    /// Startup and run the DIME service.
+    /// </summary>
     public void Startup()
     {
         Logger.Info("Starting DIME");
@@ -35,6 +48,9 @@ public class DimeService
         _httpServer.Start();
     }
 
+    /// <summary>
+    /// Shutdown the DIME service.
+    /// </summary>
     public void Shutdown()
     {
         Logger.Info("Stopping DIME");
@@ -43,9 +59,20 @@ public class DimeService
         _httpServer.Stop();
         Stop();
     }
-    
-    public void Start()
+
+    /// <summary>
+    /// Restart all internal and external connectors.
+    /// </summary>
+    public void Restart()
     {
+        Logger.Info("Restarting DIME");
+        Stop();
+        Start();
+    }
+    
+    private void Start()
+    {
+        _isRunning = true;
         var dictionaryConfiguration = _configurationProvider.ReadConfiguration().Item2;
         var appConfig = Configurator.AppConfig.Create(dictionaryConfiguration);
         _disruptor = new(() => new MessageBoxMessage(), appConfig.RingBufferSize);
@@ -53,8 +80,14 @@ public class DimeService
         Logger.Info("Creating connectors.");
         var connectors = Configurator.Configurator.CreateConnectors(dictionaryConfiguration, _disruptor);
         
-        Logger.Info("Creating runners.");
+        Logger.Info("Creating runners for internal connectors.");
         foreach (var connector in connectors)
+        {
+            _runners.Add(new ConnectorRunner(_runners, connector, _disruptor, _httpServer));
+        }
+
+        Logger.Info("Creating runners for external connectors.");
+        foreach (var connector in _externalConnectors)
         {
             _runners.Add(new ConnectorRunner(_runners, connector, _disruptor, _httpServer));
         }
@@ -68,7 +101,7 @@ public class DimeService
         _disruptor.Start();
     }
 
-    public void Stop()
+    private void Stop()
     {
         Logger.Info("Stopping runners.");
         foreach (var runner in _runners)
@@ -77,7 +110,8 @@ public class DimeService
         }
         _runners.Clear();
         
-        _disruptor.Shutdown();
+        _disruptor.Shutdown(); ;
+        _isRunning = false;
     }
     
     private void ConsoleOnCancelKeyPress(object? sender, ConsoleCancelEventArgs e)
