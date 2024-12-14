@@ -1,6 +1,6 @@
 httpServerSource1: &httpServerSource1
   name: httpServerSource1
-  enabled: !!bool false
+  enabled: !!bool true
   scan_interval: !!int 2000
   connector: HTTPServer
   rbe: !!bool true

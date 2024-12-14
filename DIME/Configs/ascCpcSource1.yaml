@@ -1,6 +1,6 @@
 ascCpcSource1: &ascCpcSource1
   name: ascCpcSource1
-  enabled: !!bool false
+  enabled: !!bool true
   scan_interval: !!int 5000
   connector: AscCPC
   rbe: !!bool true

@@ -1,6 +1,6 @@
 opcUaSource1: &opcUaSource1
   name: opcUaSource1
-  enabled: !!bool false
+  enabled: !!bool true
   scan_interval: !!int 1000
   connector: OpcUA
   rbe: !!bool true
