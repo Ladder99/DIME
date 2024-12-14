@@ -23,17 +23,17 @@ public static class Sink
         config.DeviceId = section.ContainsKey("device_id") ? Convert.ToString(section["device_id"]) : "dime";
         config.ReconnectIntervalMs = section.ContainsKey("reconnect_interval") ? Convert.ToInt32(section["reconnect_interval"]) : 15000;
         config.BirthDelayMs = section.ContainsKey("birth_delay") ? Convert.ToInt32(section["birth_delay"]) : 10000;
+        config.ExcludeFilter = new List<string>();
+        config.IncludeFilter = new List<string>();
         
-        if (section.ContainsKey("exclude_filter"))
+        if (section.ContainsKey("exclude_filter") && section["exclude_filter"] as List<object> is not null)
         {
-            var filter = section["exclude_filter"] as List<object>;
-            config.ExcludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+            config.ExcludeFilter = (section["exclude_filter"] as List<object>).Cast<string>().ToList();
         }
         
-        if (section.ContainsKey("include_filter"))
+        if (section.ContainsKey("include_filter") && section["include_filter"] as List<object> is not null)
         {
-            var filter = section["include_filter"] as List<object>;
-            config.IncludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+            config.ExcludeFilter = (section["include_filter"] as List<object>).Cast<string>().ToList();
         }
         
         var connector = new Connectors.SparkplugB.Sink(config, disruptor);

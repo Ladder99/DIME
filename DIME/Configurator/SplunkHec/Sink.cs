@@ -20,17 +20,17 @@ public static class Sink
         config.EventOrMetric = section.ContainsKey("event_or_metric") ? Convert.ToString(section["event_or_metric"]) : "event";
         config.Source = section.ContainsKey("source") ? Convert.ToString(section["source"]) : string.Empty;
         config.SourceType = section.ContainsKey("source_type") ? Convert.ToString(section["source_type"]) : "_json";
+        config.ExcludeFilter = new List<string>();
+        config.IncludeFilter = new List<string>();
         
-        if (section.ContainsKey("exclude_filter"))
+        if (section.ContainsKey("exclude_filter") && section["exclude_filter"] as List<object> is not null)
         {
-            var filter = section["exclude_filter"] as List<object>;
-            config.ExcludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+            config.ExcludeFilter = (section["exclude_filter"] as List<object>).Cast<string>().ToList();
         }
         
-        if (section.ContainsKey("include_filter"))
+        if (section.ContainsKey("include_filter") && section["include_filter"] as List<object> is not null)
         {
-            var filter = section["include_filter"] as List<object>;
-            config.IncludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+            config.ExcludeFilter = (section["include_filter"] as List<object>).Cast<string>().ToList();
         }
         
         var connector = new Connectors.SplunkHec.Sink(config, disruptor);

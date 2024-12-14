@@ -20,17 +20,17 @@ public static class Sink
         config.BaseTopic = section.ContainsKey("base_topic") ? Convert.ToString(section["base_topic"]) : "ids";
         config.QoS = section.ContainsKey("qos") ? Convert.ToInt32(section["qos"]) : 0;
         config.RetainPublish = section.ContainsKey("retain") ? Convert.ToBoolean(section["retain"]) : true;
-
-        if (section.ContainsKey("exclude_filter"))
+        config.ExcludeFilter = new List<string>();
+        config.IncludeFilter = new List<string>();
+        
+        if (section.ContainsKey("exclude_filter") && section["exclude_filter"] as List<object> is not null)
         {
-            var filter = section["exclude_filter"] as List<object>;
-            config.ExcludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+            config.ExcludeFilter = (section["exclude_filter"] as List<object>).Cast<string>().ToList();
         }
         
-        if (section.ContainsKey("include_filter"))
+        if (section.ContainsKey("include_filter") && section["include_filter"] as List<object> is not null)
         {
-            var filter = section["include_filter"] as List<object>;
-            config.IncludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+            config.ExcludeFilter = (section["include_filter"] as List<object>).Cast<string>().ToList();
         }
         
         var connector = new Connectors.Mqtt.Sink(config, disruptor);

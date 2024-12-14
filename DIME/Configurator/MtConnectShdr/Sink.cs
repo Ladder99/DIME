@@ -17,17 +17,17 @@ public static class Sink
         config.DeviceKey = section.ContainsKey("device_key") ? Convert.ToString(section["device_key"]) : null;
         config.HeartbeatMs = section.ContainsKey("heartbeat_interval") ? Convert.ToInt32(section["heartbeat_interval"]) : 10000;
         config.FilterDuplicates = section.ContainsKey("filter_duplicates") ? Convert.ToBoolean(section["filter_duplicates"]) : true;
+        config.ExcludeFilter = new List<string>();
+        config.IncludeFilter = new List<string>();
         
-        if (section.ContainsKey("exclude_filter"))
+        if (section.ContainsKey("exclude_filter") && section["exclude_filter"] as List<object> is not null)
         {
-            var filter = section["exclude_filter"] as List<object>;
-            config.ExcludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+            config.ExcludeFilter = (section["exclude_filter"] as List<object>).Cast<string>().ToList();
         }
         
-        if (section.ContainsKey("include_filter"))
+        if (section.ContainsKey("include_filter") && section["include_filter"] as List<object> is not null)
         {
-            var filter = section["include_filter"] as List<object>;
-            config.IncludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+            config.ExcludeFilter = (section["include_filter"] as List<object>).Cast<string>().ToList();
         }
         
         var connector = new Connectors.MtConnectShdr.Sink(config, disruptor);
