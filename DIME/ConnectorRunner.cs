@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using DIME.Configuration;
 using DIME.Connectors;
 using Timer = System.Timers.Timer;
@@ -6,22 +7,23 @@ namespace DIME;
 
 public class ConnectorRunner
 {
-    protected readonly NLog.Logger Logger;
+    protected readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     public List<ConnectorRunner> Runners { get;}
     public  IConnector Connector { get; }
     private Disruptor.Dsl.Disruptor<MessageBoxMessage> _disruptor;
+    private HttpServer _httpServer;
     private Timer _timer;
     private bool _isExecuting;
     private long _executionEnter = DateTime.UtcNow.ToEpochMilliseconds();
     private long _executionExit = DateTime.UtcNow.ToEpochMilliseconds();
     public long ExecutionDuration { get; private set; }
 
-    public ConnectorRunner(List<ConnectorRunner> runners, IConnector connector, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
+    public ConnectorRunner(List<ConnectorRunner> runners, IConnector connector, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor, HttpServer httpServer)
     {
-        Logger = NLog.LogManager.GetLogger(GetType().FullName);
         Connector = connector;
         Runners = runners;
         _disruptor = disruptor;
+        _httpServer = httpServer;
         
         Logger.Trace($"[{Connector.Configuration.Name}] .ctor");
     }
@@ -30,39 +32,64 @@ public class ConnectorRunner
     {
         Logger.Trace($"[{Connector.Configuration.Name}] Start::ENTER");
 
+        Connector.OnCreate += () =>
+        {
+            _httpServer.OnCreate(Connector);
+        };
+
+        Connector.OnDestroy += () =>
+        {
+            _httpServer.OnDestroy(Connector);
+        };
+        
+        Connector.OnConnect += () =>
+        {
+            _httpServer.OnConnect(Connector);
+        };
+        
+        Connector.OnDisconnect += () =>
+        {
+            _httpServer.OnDisconnect(Connector);
+        };
+        
         Connector.OnRaiseFault += (fault) =>
         {
-
+            _httpServer.OnRaiseFault(Connector, fault);
         };
         
         Connector.OnClearFault += (fault) =>
         {
-
+            _httpServer.OnClearFault(Connector, fault);
+        };
+        
+        Connector.OnLoopPerf += (read, script, total) =>
+        {
+            _httpServer.OnLoopPerf(Connector, read, script, total);
         };
         
         if (Connector.Configuration.Direction == ConnectorDirectionEnum.Sink)
         {
             ((ISinkConnector)Connector).OnOutboxReady += (outbox) =>
             {
-                
+                _httpServer.OnOutboxReady(Connector, outbox);
             };
 
             ((ISinkConnector)Connector).OnOutboxSent += (outbox, result) =>
             {
-
+                _httpServer.OnOutboxSent(Connector, outbox, result);
             };
         }
         
         if (Connector.Configuration.Direction == ConnectorDirectionEnum.Source)
         {
-            ((ISourceConnector)Connector).OnInboxReady += (bag, current, samples) =>
+            ((ISourceConnector)Connector).OnInboxReady += (inbox, current, samples) =>
             {
-
+                _httpServer.OnInboxReady(Connector, inbox, current, samples);
             };
 
-            ((ISourceConnector)Connector).OnInboxSent += (bag, current, samples) =>
+            ((ISourceConnector)Connector).OnInboxSent += (inbox, current, samples) =>
             {
-
+                _httpServer.OnInboxSent(Connector, inbox, current, samples);
             };
         }
         

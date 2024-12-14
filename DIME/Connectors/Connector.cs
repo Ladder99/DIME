@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using DIME.Configuration;
 
 namespace DIME.Connectors;
@@ -27,25 +28,31 @@ public abstract class Connector<TConfig, TItem>: IConnector
         }
     }
     
-    protected readonly NLog.Logger Logger;
+    protected readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     public ConnectorRunner Runner { get; private set; }
     public FaultContextEnum FaultContext { get; set; }
     public bool IsFaulted {get; private set;}
     public Exception FaultReason { get; set; }
-    public TConfig Configuration { get; set; }
-    protected PropertyBag Properties { get; set; }
-    protected Disruptor.Dsl.Disruptor<MessageBoxMessage> Disruptor { get; set; }
+    public TConfig Configuration { get; }
+    protected PropertyBag Properties { get; } = new PropertyBag();
+    protected Disruptor.Dsl.Disruptor<MessageBoxMessage> Disruptor { get; }
     public bool IsInitialized { get; private set; }
     public bool IsCreated { get; private set; }
     public bool IsConnected { get; protected set; }
-    public event Action<Exception>? OnRaiseFault;
-    public event Action<Exception>? OnClearFault;
+    public event Action OnCreate;
+    public event Action OnDestroy;
+    public event Action OnConnect;
+    public event Action OnDisconnect;
+    public event Action<Exception> OnRaiseFault;
+    public event Action<Exception> OnClearFault;
+    public event Action<long, long, long> OnLoopPerf;
+    protected readonly Stopwatch ReadFromDeviceSumStopwatch = new Stopwatch();
+    protected readonly Stopwatch ExecuteScriptSumStopwatch = new Stopwatch();
+    protected readonly Stopwatch EntireReadLoopStopwatch = new Stopwatch();
 
-    public Connector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
+    protected Connector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
     {
-        Logger = NLog.LogManager.GetLogger(GetType().FullName);
         Configuration = configuration;
-        Properties = new PropertyBag();
         Disruptor = disruptor;
         
         Logger.Trace($"[{Configuration.Name}] Connector:.ctor");
@@ -58,6 +65,8 @@ public abstract class Connector<TConfig, TItem>: IConnector
         Logger.Trace($"[{Configuration.Name}] Connector:Initialize::ENTER");
         
         FaultContext = FaultContextEnum.Initialize;
+        
+        OnCreate?.Invoke();
 
         bool result = false;
         
@@ -212,6 +221,11 @@ public abstract class Connector<TConfig, TItem>: IConnector
             }
             
             result = IsConnected;
+
+            if (result)
+            {
+                OnConnect?.Invoke();
+            }
         }
         
         Logger.Trace($"[{Configuration.Name}] Connector:Connect::EXIT");
@@ -266,6 +280,11 @@ public abstract class Connector<TConfig, TItem>: IConnector
                 result = false;
             }
         }
+
+        if (result)
+        {
+            OnDisconnect?.Invoke();
+        }
         
         Logger.Trace($"[{Configuration.Name}] Connector:Disconnect::EXIT");
         
@@ -279,6 +298,8 @@ public abstract class Connector<TConfig, TItem>: IConnector
         Logger.Trace($"[{Configuration.Name}] Connector:Deinitialize::ENTER");
         
         FaultContext = FaultContextEnum.Deinitialize;
+        
+        OnDestroy?.Invoke();
         
         bool result = false;
         
@@ -348,5 +369,10 @@ public abstract class Connector<TConfig, TItem>: IConnector
         Logger.Trace($"[{Configuration.Name}] Connector:ClearFault::EXIT");
 
         return;
+    }
+    
+    protected void InvokeOnLoopPerf(long readMs, long scriptMs, long totalMs)
+    {
+        OnLoopPerf?.Invoke(readMs, scriptMs, totalMs);
     }
 }

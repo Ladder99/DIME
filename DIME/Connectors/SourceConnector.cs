@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using DIME.Configuration;
 using Newtonsoft.Json;
 
@@ -8,22 +9,17 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     where TConfig : ConnectorConfiguration<TItem>
     where TItem : ConnectorItem
 {
-    protected LuaRunner ScriptRunner { get; set; }
-    public ConcurrentBag<MessageBoxMessage> Inbox { get; set; }
-    public ConcurrentBag<MessageBoxMessage> Samples { get; set; }
-    public ConcurrentDictionary<string, MessageBoxMessage> Current { get; set; }
-    protected bool PublishInboxInBatch { get; set; }
+    protected LuaRunner ScriptRunner { get; } = new LuaRunner();
+    public ConcurrentBag<MessageBoxMessage> Inbox { get; } = new ConcurrentBag<MessageBoxMessage>();
+    public ConcurrentBag<MessageBoxMessage> Samples { get; } = new ConcurrentBag<MessageBoxMessage>();
+    public ConcurrentDictionary<string, MessageBoxMessage> Current { get; } = new ConcurrentDictionary<string, MessageBoxMessage>();
+    protected bool PublishInboxInBatch { get; } = true;
     public event Action<ConcurrentBag<MessageBoxMessage>, ConcurrentDictionary<string, MessageBoxMessage>, ConcurrentBag<MessageBoxMessage>> OnInboxReady;
     public event Action<ConcurrentBag<MessageBoxMessage>, ConcurrentDictionary<string, MessageBoxMessage>, ConcurrentBag<MessageBoxMessage>> OnInboxSent;
     
+
     public SourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
     {
-        ScriptRunner = new LuaRunner();
-        Inbox = new ConcurrentBag<MessageBoxMessage>();
-        Samples = new ConcurrentBag<MessageBoxMessage>();
-        Current = new ConcurrentDictionary<string, MessageBoxMessage>();
-        PublishInboxInBatch = true;
-        
         Logger.Trace($"[{Configuration.Name}] SourceConnector:.ctor");
     }
 
@@ -341,7 +337,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         if (Inbox.Count > 0)
         {
             OnInboxReady?.Invoke(Inbox, Current, Samples);
-            
+
             if (Inbox.Count > Disruptor.RingBuffer.BufferSize)
             {
                 Logger.Warn("Inbox is larger than ring buffer!");
@@ -377,7 +373,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                     }
                 }
             }
-            
+
             OnInboxSent?.Invoke(Inbox, Current, Samples);
         }
     }

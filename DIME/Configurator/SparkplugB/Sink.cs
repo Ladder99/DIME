@@ -24,6 +24,18 @@ public static class Sink
         config.ReconnectIntervalMs = section.ContainsKey("reconnect_interval") ? Convert.ToInt32(section["reconnect_interval"]) : 15000;
         config.BirthDelayMs = section.ContainsKey("birth_delay") ? Convert.ToInt32(section["birth_delay"]) : 10000;
         
+        if (section.ContainsKey("exclude_filter"))
+        {
+            var filter = section["exclude_filter"] as List<object>;
+            config.ExcludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+        }
+        
+        if (section.ContainsKey("include_filter"))
+        {
+            var filter = section["include_filter"] as List<object>;
+            config.IncludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+        }
+        
         var connector = new Connectors.SparkplugB.Sink(config, disruptor);
 
         return connector;

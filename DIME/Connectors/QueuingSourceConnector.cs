@@ -26,6 +26,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
 
     protected IncomingMessage AddToIncomingBuffer(string key, object value, long timestamp = 0)
     {
+        ReadFromDeviceSumStopwatch.Start();
         lock (IncomingBufferLock)
         {
             var message = new IncomingMessage()
@@ -36,7 +37,8 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
             };
             
             IncomingBuffer.Add(message);
-            
+            ReadFromDeviceSumStopwatch.Stop();
+        
             return message;
         }
     }
@@ -44,6 +46,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
     protected override bool ReadImplementation()
     {
         Logger.Trace($"[{Configuration.Name}] QueuingSourceConnector:ReadImplementation::ENTER");
+        EntireReadLoopStopwatch.Start();
         
         if (!string.IsNullOrEmpty(Configuration.LoopEnterScript))
         {
@@ -73,11 +76,13 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                             object readResult = result;
                             object scriptResult = "n/a";
 
+                            ExecuteScriptSumStopwatch.Start();
                             if (item.Script is not null)
                             {
                                 result = ExecuteScript(message.Value, item);
                                 scriptResult = result;
                             }
+                            ExecuteScriptSumStopwatch.Stop();
 
                             if (result is not null)
                             {
@@ -98,8 +103,10 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                     }
                     else if (item.Script is not null)
                     {
+                        ExecuteScriptSumStopwatch.Start();
                         var result = ExecuteScript(null, item);
-
+                        ExecuteScriptSumStopwatch.Stop();
+                        
                         if (result is not null)
                         {
                             Samples.Add(new MessageBoxMessage()
@@ -176,8 +183,22 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
             ExecuteScript(Configuration.LoopExitScript);
         }
         
+        EntireReadLoopStopwatch.Stop();
         Logger.Trace($"[{Configuration.Name}] QueuingSourceConnector:ReadImplementation::ENTER");
         
+        Logger.Debug($"[{Configuration.Name}] Loop Perf. " +
+                    $"DeviceRead: {ReadFromDeviceSumStopwatch.ElapsedMilliseconds}ms, " +
+                    $"ExecuteScript: {ExecuteScriptSumStopwatch.ElapsedMilliseconds}ms, " +
+                    $"EntireLoop: {EntireReadLoopStopwatch.ElapsedMilliseconds}ms");
+        
+        base.InvokeOnLoopPerf(
+            ReadFromDeviceSumStopwatch.ElapsedMilliseconds,
+            ExecuteScriptSumStopwatch.ElapsedMilliseconds,
+            EntireReadLoopStopwatch.ElapsedMilliseconds);
+        
+        ReadFromDeviceSumStopwatch.Reset();
+        ExecuteScriptSumStopwatch.Reset();
+        EntireReadLoopStopwatch.Reset();
         return true;
     }
 }

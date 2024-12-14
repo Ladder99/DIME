@@ -19,7 +19,18 @@ public static class Sink
         config.BucketName = section.ContainsKey("bucket_name") ? Convert.ToString(section["bucket_name"]) : string.Empty;
         config.OrgId = section.ContainsKey("org_id") ? Convert.ToString(section["org_id"]) : string.Empty;
         
-
+        if (section.ContainsKey("exclude_filter"))
+        {
+            var filter = section["exclude_filter"] as List<object>;
+            config.ExcludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+        }
+        
+        if (section.ContainsKey("include_filter"))
+        {
+            var filter = section["include_filter"] as List<object>;
+            config.IncludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+        }
+        
         var connector = new Connectors.InfluxLp.Sink(config, disruptor);
 
         return connector;

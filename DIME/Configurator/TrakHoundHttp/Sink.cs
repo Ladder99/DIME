@@ -19,6 +19,19 @@ public static class Sink
         config.HostPath = section.ContainsKey("host_path") ? Convert.ToString(section["host_path"]) : null;
         config.Router = section.ContainsKey("router") ? Convert.ToString(section["router"]) : null;
         config.BasePath = section.ContainsKey("base_path") ? Convert.ToString(section["base_path"]) : null;
+        
+        if (section.ContainsKey("exclude_filter"))
+        {
+            var filter = section["exclude_filter"] as List<object>;
+            config.ExcludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+        }
+        
+        if (section.ContainsKey("include_filter"))
+        {
+            var filter = section["include_filter"] as List<object>;
+            config.IncludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+        }
+        
         var connector = new Connectors.TrakHoundHttp.Sink(config, disruptor);
 
         return connector;

@@ -14,5 +14,7 @@ public abstract class ConnectorConfiguration<TItem> : IConnectorConfiguration
     public string DeinitScript { get; set; }
     public string LoopEnterScript { get; set; }
     public string LoopExitScript { get; set; }
+    public List<string> ExcludeFilter { get; set; }
+    public List<string> IncludeFilter { get; set; }
     public List<TItem> Items { get; set; }
 }

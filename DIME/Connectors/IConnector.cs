@@ -37,6 +37,11 @@ public interface IConnector
     public bool AfterUpdate();
     public bool Disconnect();
     public bool Deinitialize();
+    public event Action OnCreate;
+    public event Action OnDestroy;
+    public event Action OnConnect;
+    public event Action OnDisconnect;
     public event Action<Exception> OnRaiseFault;
     public event Action<Exception> OnClearFault;
+    public event Action<long, long, long> OnLoopPerf;
 }

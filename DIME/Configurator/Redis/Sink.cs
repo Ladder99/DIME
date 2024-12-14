@@ -17,6 +17,18 @@ public static class Sink
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 6379;
         config.Database = section.ContainsKey("database") ? Convert.ToInt32(section["database"]) : 0;
 
+        if (section.ContainsKey("exclude_filter"))
+        {
+            var filter = section["exclude_filter"] as List<object>;
+            config.ExcludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+        }
+        
+        if (section.ContainsKey("include_filter"))
+        {
+            var filter = section["include_filter"] as List<object>;
+            config.IncludeFilter = filter is null ? new List<string>() : filter.Cast<string>().ToList();
+        }
+        
         var connector = new Connectors.Redis.Sink(config, disruptor);
 
         return connector;

@@ -7,15 +7,14 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
     where TConfig : ConnectorConfiguration<TItem>
     where TItem : ConnectorItem
 {
-    public ConcurrentBag<MessageBoxMessage> Outbox { get; set; }
+    public ConcurrentBag<MessageBoxMessage> Outbox { get; private set; } = new ConcurrentBag<MessageBoxMessage>();
     public event Action<ConcurrentBag<MessageBoxMessage>> OnOutboxReady;
     public event Action<ConcurrentBag<MessageBoxMessage>, bool> OnOutboxSent;
     
     public bool IsWriting { get; protected set; }
     
-    public SinkConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
+    protected SinkConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
     {
-        Outbox = new ConcurrentBag<MessageBoxMessage>();
         IsWriting = false;
         
         Logger.Trace($"[{Configuration.Name}] SinkConnector:.ctor");
@@ -61,17 +60,20 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         {
             try
             {
-                if (Outbox.Count > 0)
-                {
-                    OnOutboxReady?.Invoke(Outbox);
-                }
-
+                OnOutboxReady?.Invoke(Outbox);
+                
+                EntireReadLoopStopwatch.Start();
+                
+                //TODO: implement inclusion filter
+                
+                Outbox = new ConcurrentBag<MessageBoxMessage>(Outbox
+                    .Where(x => !Configuration.ExcludeFilter.Contains(x.ConnectorItemRef.Configuration.Name)));
+                
                 result = WriteImplementation();
                 
-                if (Outbox.Count > 0)
-                {
-                    OnOutboxSent?.Invoke(Outbox, result);
-                }
+                EntireReadLoopStopwatch.Stop();
+                
+                OnOutboxSent?.Invoke(Outbox, result);
 
                 if (result)
                 {
@@ -91,6 +93,18 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         }
         
         Logger.Trace($"[{Configuration.Name}] SinkConnector:Write::EXIT");
+        
+        Logger.Debug($"[{Configuration.Name}] Loop Perf. " +
+                    $"DeviceRead: {ReadFromDeviceSumStopwatch.ElapsedMilliseconds}ms, " +
+                    $"ExecuteScript: {ExecuteScriptSumStopwatch.ElapsedMilliseconds}ms, " +
+                    $"EntireLoop: {EntireReadLoopStopwatch.ElapsedMilliseconds}ms");
+        
+        base.InvokeOnLoopPerf(
+            ReadFromDeviceSumStopwatch.ElapsedMilliseconds,
+            ExecuteScriptSumStopwatch.ElapsedMilliseconds,
+            EntireReadLoopStopwatch.ElapsedMilliseconds);
+        
+        EntireReadLoopStopwatch.Reset();
 
         return result;
     }

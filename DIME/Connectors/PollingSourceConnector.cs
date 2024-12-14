@@ -8,10 +8,6 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
     where TConfig : ConnectorConfiguration<TItem>
     where TItem : ConnectorItem
 {
-    private Stopwatch _readFromDeviceSumStopwatch = new Stopwatch();
-    private Stopwatch _executeScriptSumStopwatch = new Stopwatch();
-    private Stopwatch _entireReadLoopStopwatch = new Stopwatch();
-    
     public PollingSourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
         Logger.Trace($"[{Configuration.Name}] PollingSourceConnector:.ctor");
@@ -22,7 +18,7 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
     protected override bool ReadImplementation()
     {
         Logger.Trace($"[{Configuration.Name}] PollingSourceConnector:ReadImplementation::ENTER");
-        _entireReadLoopStopwatch.Start();
+        EntireReadLoopStopwatch.Start();
         
         /*
          * iterate through connector items
@@ -40,22 +36,22 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
             object readResult = "n/a";
             object scriptResult = "n/a";
             
-            _readFromDeviceSumStopwatch.Start();
+            ReadFromDeviceSumStopwatch.Start();
             if (!string.IsNullOrEmpty(item.Address))
             {
                 response = ReadFromDevice(item);
                 readResult = response;
             }
-            _readFromDeviceSumStopwatch.Stop();
+            ReadFromDeviceSumStopwatch.Stop();
 
             //Console.WriteLine($"SCRIPT: {item.Script}");
-            _executeScriptSumStopwatch.Start();
+            ExecuteScriptSumStopwatch.Start();
             if (!string.IsNullOrEmpty(item.Script))
             {
                 response = ExecuteScript(response, item);
                 scriptResult = response;
             }
-            _executeScriptSumStopwatch.Stop();
+            ExecuteScriptSumStopwatch.Stop();
 
             /*
             try
@@ -91,15 +87,22 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
             ExecuteScript(Configuration.LoopExitScript);
         }
         
+        EntireReadLoopStopwatch.Stop();
         Logger.Trace($"[{Configuration.Name}] PollingSourceConnector:ReadImplementation::EXIT");
         
-        Logger.Info($"[{Configuration.Name}] Read Loop Perf. " +
-                    $"DeviceRead: {_readFromDeviceSumStopwatch.ElapsedMilliseconds}ms, " +
-                    $"ExecuteScript: {_executeScriptSumStopwatch.ElapsedMilliseconds}ms, " +
-                    $"EntireLoop: {_entireReadLoopStopwatch.ElapsedMilliseconds}ms");
-        _readFromDeviceSumStopwatch.Reset();
-        _executeScriptSumStopwatch.Reset();
-        _entireReadLoopStopwatch.Reset();
+        Logger.Debug($"[{Configuration.Name}] Loop Perf. " +
+                    $"DeviceRead: {ReadFromDeviceSumStopwatch.ElapsedMilliseconds}ms, " +
+                    $"ExecuteScript: {ExecuteScriptSumStopwatch.ElapsedMilliseconds}ms, " +
+                    $"EntireLoop: {EntireReadLoopStopwatch.ElapsedMilliseconds}ms");
+        
+        base.InvokeOnLoopPerf(
+            ReadFromDeviceSumStopwatch.ElapsedMilliseconds,
+            ExecuteScriptSumStopwatch.ElapsedMilliseconds,
+            EntireReadLoopStopwatch.ElapsedMilliseconds);
+        
+        ReadFromDeviceSumStopwatch.Reset();
+        ExecuteScriptSumStopwatch.Reset();
+        EntireReadLoopStopwatch.Reset();
         return true;
     }
 

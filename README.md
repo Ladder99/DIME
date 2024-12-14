@@ -741,23 +741,29 @@ sources:
 
 ### Splunk EH SDK
 
-| Name            | Type   | Description                        |
-|-----------------|--------|------------------------------------|
-| name            | string | unique connector name              |
-| enabled         | bool   | is connector enabled               |
-| scan_interval   | int    | scanning frequency in milliseconds |
-| rbe             | bool   | report by exception                |
-| init_script     | string | startup lua script                 |
-| deinit_script   | string | shutdown lua script                |
-| enter_script    | string | before loop script                 |
-| exit_script     | string | after loop script                  |
-| connector       | string | connector type, `SplunkEhSDK`      |
+| Name               | Type   | Description                        |
+|--------------------|--------|------------------------------------|
+| name               | string | unique connector name              |
+| enabled            | bool   | is connector enabled               |
+| scan_interval      | int    | scanning frequency in milliseconds |
+| rbe                | bool   | report by exception                |
+| init_script        | string | startup lua script                 |
+| deinit_script      | string | shutdown lua script                |
+| enter_script       | string | before loop script                 |
+| exit_script        | string | after loop script                  |
+| connector          | string | connector type, `SplunkEhSDK`      |
+| address            | string | address                            |
+| port               | int    | port                               | 
+| numbers_to_metrics | bool   | write numbers as metrics           |
 
 #### Sink Example
 
 ```yaml
   - name: splunkEhSdk
     connector: SplunkEhSDK
+    address: http://host.docker.internal
+    port: !!int 50051
+    numbers_to_metrics: !!bool true
 ```
 
 ### Splunk HEC

@@ -1,6 +1,6 @@
 splunkEhSdkSink1: &splunkEhSdkSink1
   name: splunkEhSdkSink1
-  enabled: !!bool true
+  enabled: !!bool false
   scan_interval: !!int 1000
   connector: SplunkEhSDK
   address: http://host.docker.internal

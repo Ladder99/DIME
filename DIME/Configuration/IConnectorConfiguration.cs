@@ -8,4 +8,9 @@ public interface IConnectorConfiguration
     public string ConnectorType { get; }
     public int ScanIntervalMs { get; }
     public string InitScript { get; }
+    public string DeinitScript { get; }
+    public string LoopEnterScript { get; }
+    public string LoopExitScript { get; }
+    public List<string> ExcludeFilter { get; }
+    public List<string> IncludeFilter { get; }
 }
