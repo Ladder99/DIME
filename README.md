@@ -29,6 +29,7 @@ cp DIME/DIME/Lua/* volumes/dime/lua
 docker run \
    -p 8080:8080 \
    -p 8081:8081 \
+   -p 9999:9999 \
    -v ~/volumes/dime/nlog.config:/app/nlog.config \
    -v ~/volumes/dime/configs:/app/Configs \
    -v ~/volumes/dime/lua:/app/Lua \
@@ -1060,13 +1061,14 @@ sources:
 ```sh
 cd ~
 git clone https://github.com/ladder99/DIME
-cd DIME/DIME
-docker build -f Dockerfile --tag=ladder99/dime:1.0.0 --tag=ladder99/dime:latest .
-docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest ladder99/dime:latest
 docker login
-docker push ladder99/dime:1.0.0
-docker push ladder99/dime:latest
-docker logout
+
+docker run --privileged --rm tonistiigi/binfmt --install all
+docker buildx create --name multi-arch-builder --use
+
+cd DIME/DIME
+docker buildx build --platform linux/amd64,linux/arm64 -t ladder99/dime:1.0.0 -t ladder99/dime:latest --push .
+#docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest ladder99/dime:latest
 
 cd ~
 mkdir -p volumes/dime/configs
@@ -1079,6 +1081,7 @@ cp DIME/DIME/Lua/* volumes/dime/lua
 docker run \
    -p 8080:8080 \
    -p 8081:8081 \
+   -p 9999:9999 \
    -v ~/volumes/dime/nlog.config:/app/nlog.config \
    -v ~/volumes/dime/configs:/app/Configs \
    -v ~/volumes/dime/lua:/app/Lua \
