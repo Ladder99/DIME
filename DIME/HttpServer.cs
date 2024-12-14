@@ -34,13 +34,12 @@ public class HttpServer
         public List<string> ActiveInclusionFilters { get; set; }
     }
 
-    private Dictionary<string, ConnectorStatus> _connectorStatuses;
+    private readonly Dictionary<string, ConnectorStatus> _connectorStatuses = new Dictionary<string, ConnectorStatus>();
     private HttpListener _listener;
     private bool _isRunning;
     
     public HttpServer(string uri)
     {
-        _connectorStatuses = new Dictionary<string, ConnectorStatus>();
         _listener = new HttpListener();
         _listener.Prefixes.Add(uri);
     }

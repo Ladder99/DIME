@@ -14,7 +14,7 @@ public static class Sink
         config.Enabled = section.ContainsKey("enabled") ? Convert.ToBoolean(section["enabled"]) : true;
         config.ScanIntervalMs = section.ContainsKey("scan_interval") ? Convert.ToInt32(section["scan_interval"]) : 1000;
         config.Name = section.ContainsKey("name") ? Convert.ToString(section["name"]) : Guid.NewGuid().ToString();
-        config.Uri = section.ContainsKey("uri") ? Convert.ToString(section["uri"]) : "http://*:8080/";
+        config.Uri = section.ContainsKey("uri") ? Convert.ToString(section["uri"]) : "http://localhost:8080/";
         config.ExcludeFilter = new List<string>();
         config.IncludeFilter = new List<string>();
         

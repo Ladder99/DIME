@@ -10,7 +10,7 @@ public class LuaRunner
     
     private NLua.Lua _state;
     private ISourceConnector _connector;
-    private Dictionary<string, object> _userCache = new ();
+    private Dictionary<string, object> _userCache = new Dictionary<string, object>();
     
     public bool Initialize(ISourceConnector connector)
     {

@@ -10,9 +10,9 @@ public static class Program
     {
         HostFactory.Run(x =>
         {
-            x.Service<TransporterService>(s =>
+            x.Service<DimeService>(s =>
             {
-                s.ConstructUsing(name => new TransporterService(new FilesystemYamlConfigurationProvider()));
+                s.ConstructUsing(name => new DimeService(new FilesystemYamlConfigurationProvider()));
                 s.WhenStarted(tc => tc.Start());
                 s.WhenStopped(tc => tc.Stop());
             });
@@ -21,7 +21,7 @@ public static class Program
             x.SetServiceName("DIME");
             x.SetDisplayName("DIME");
             x.SetDescription("Data in Motion Enterprise");
-            x.OnException(ex => HostLogger.Get<TransporterService>().Fatal(ex));
+            x.OnException(ex => HostLogger.Get<DimeService>().Fatal(ex));
             x.UnhandledExceptionPolicy = UnhandledExceptionPolicyCode.LogErrorAndStopService;
             x.UseNLog();
         });

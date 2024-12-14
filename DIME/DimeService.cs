@@ -3,21 +3,20 @@ using Disruptor.Dsl;
 
 namespace DIME;
 
-public class TransporterService
+public class DimeService
 {
     private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-    private List<ConnectorRunner> _runners;
+    private readonly List<ConnectorRunner> _runners = new List<ConnectorRunner>();
     private HttpServer _httpServer;
     private Disruptor<MessageBoxMessage> _disruptor;
 
-    public TransporterService(IConfigurationProvider configurationProvider)
+    public DimeService(IConfigurationProvider configurationProvider)
     {
         Logger.Info("Initialize Service.");
         
         var configuration = configurationProvider.GetConfiguration();
         var appConfig = Configurator.AppConfig.Create(configuration);
         
-        _runners = new List<ConnectorRunner>();
         _httpServer = new HttpServer(appConfig.ServerUri);
         _disruptor = new(() => new MessageBoxMessage(), appConfig.RingBufferSize);
         

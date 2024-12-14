@@ -3,11 +3,10 @@ namespace DIME;
 public class PropertyBag
 {
     private readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-    public Dictionary<string,object> Properties { get; private set; }
+    public Dictionary<string,object> Properties { get; } = new Dictionary<string, object>();
 
     public PropertyBag()
     {
-        Properties = new Dictionary<string, object>();
     }
     
     public T GetProperty<T>(string key, T defaultValue = default(T))
