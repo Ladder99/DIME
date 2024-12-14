@@ -1,6 +1,6 @@
 snmpSource1: &snmpSource1
   name: snmpSource1
-  enabled: !!bool true
+  enabled: !!bool false
   scan_interval: !!int 1000
   connector: SNMP
   rbe: !!bool true

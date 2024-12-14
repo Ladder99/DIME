@@ -2,16 +2,19 @@ using System.Net.NetworkInformation;
 using DIME.Configuration.EthernetIp;
 using libplctag;
 using libplctag.DataTypes;
+using Microsoft.Extensions.FileSystemGlobbing.Internal.PatternContexts;
 using NLog;
 
 namespace DIME.Connectors.EthernetIp;
 
 public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorItem>
 {
+    private object _lock = new();
+    
     public Source(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
     }
-
+    
     protected override bool InitializeImplementation()
     {
         Properties.SetProperty("typeEnum", Configuration.PlcType switch
@@ -59,94 +62,109 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
     {
         object response = null;
         
-        Tag tag = null;
-        
-        switch (item.Type.ToLower())
+        lock (_lock)
         {
-            case "bool":
-                response = new Tag<BoolPlcMapper, bool>()
-                {
-                    Name = item.Address,
-                    Gateway = Configuration.Address,
-                    Path = Configuration.Path,
-                    PlcType = Properties.GetProperty<PlcType>("typeEnum"),
-                    Protocol = Protocol.ab_eip,
-                    Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
-                    DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
-                }.Read();
-                break;
-            case "sint":
-                response = new Tag<SintPlcMapper, sbyte>()
-                {
-                    Name = item.Address,
-                    Gateway = Configuration.Address,
-                    Path = Configuration.Path,
-                    PlcType = Properties.GetProperty<PlcType>("typeEnum"),
-                    Protocol = Protocol.ab_eip,
-                    Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
-                    DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
-                }.Read();
-                break;
-            case "int":
-                response = new Tag<IntPlcMapper, short>()
-                {
-                    Name = item.Address,
-                    Gateway = Configuration.Address,
-                    Path = Configuration.Path,
-                    PlcType = Properties.GetProperty<PlcType>("typeEnum"),
-                    Protocol = Protocol.ab_eip,
-                    Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
-                    DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
-                }.Read();
-                break;
-            case "dint":
-                response = new Tag<DintPlcMapper, int>()
-                {
-                    Name = item.Address,
-                    Gateway = Configuration.Address,
-                    Path = Configuration.Path,
-                    PlcType = Properties.GetProperty<PlcType>("typeEnum"),
-                    Protocol = Protocol.ab_eip,
-                    Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
-                    DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
-                }.Read();
-                break;
-            case "lint":
-                response = new Tag<LintPlcMapper, long>()
-                {
-                    Name = item.Address,
-                    Gateway = Configuration.Address,
-                    Path = Configuration.Path,
-                    PlcType = Properties.GetProperty<PlcType>("typeEnum"),
-                    Protocol = Protocol.ab_eip,
-                    Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
-                    DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
-                }.Read();
-                break;
-            case "real":
-                response = new Tag<RealPlcMapper, float>()
-                {
-                    Name = item.Address,
-                    Gateway = Configuration.Address,
-                    Path = Configuration.Path,
-                    PlcType = Properties.GetProperty<PlcType>("typeEnum"),
-                    Protocol = Protocol.ab_eip,
-                    Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
-                    DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
-                }.Read();
-                break;
-            case "string":
-                response = new Tag<StringPlcMapper, string>()
-                {
-                    Name = item.Address,
-                    Gateway = Configuration.Address,
-                    Path = Configuration.Path,
-                    PlcType = Properties.GetProperty<PlcType>("typeEnum"),
-                    Protocol = Protocol.ab_eip,
-                    Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
-                    DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
-                }.Read();
-                break;
+            switch (item.Type.ToLower())
+            {
+                case "bool":
+                    var tag1 = new Tag<BoolPlcMapper, bool>()
+                    {
+                        Name = item.Address,
+                        Gateway = Configuration.Address,
+                        Path = Configuration.Path,
+                        PlcType = Properties.GetProperty<PlcType>("typeEnum"),
+                        Protocol = Protocol.ab_eip,
+                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
+                        DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
+                    };
+                    response = tag1.Read();
+                    tag1.Dispose();
+                    break;
+                case "sint":
+                    var tag2 = new Tag<SintPlcMapper, sbyte>()
+                    {
+                        Name = item.Address,
+                        Gateway = Configuration.Address,
+                        Path = Configuration.Path,
+                        PlcType = Properties.GetProperty<PlcType>("typeEnum"),
+                        Protocol = Protocol.ab_eip,
+                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
+                        DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
+                    };
+                    response = tag2.Read();
+                    tag2.Dispose();
+                    break;
+                case "int":
+                    var tag3 = new Tag<IntPlcMapper, short>()
+                    {
+                        Name = item.Address,
+                        Gateway = Configuration.Address,
+                        Path = Configuration.Path,
+                        PlcType = Properties.GetProperty<PlcType>("typeEnum"),
+                        Protocol = Protocol.ab_eip,
+                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
+                        DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
+                    };
+                    response = tag3.Read();
+                    tag3.Dispose();
+                    break;
+                case "dint":
+                    var tag4 = new Tag<DintPlcMapper, int>()
+                    {
+                        Name = item.Address,
+                        Gateway = Configuration.Address,
+                        Path = Configuration.Path,
+                        PlcType = Properties.GetProperty<PlcType>("typeEnum"),
+                        Protocol = Protocol.ab_eip,
+                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
+                        DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
+                    };
+                    response = tag4.Read();
+                    tag4.Dispose();
+                    break;
+                case "lint":
+                    var tag5 = new Tag<LintPlcMapper, long>()
+                    {
+                        Name = item.Address,
+                        Gateway = Configuration.Address,
+                        Path = Configuration.Path,
+                        PlcType = Properties.GetProperty<PlcType>("typeEnum"),
+                        Protocol = Protocol.ab_eip,
+                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
+                        DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
+                    };
+                    response = tag5.Read();
+                    tag5.Dispose();
+                    break;
+                case "real":
+                    var tag6 = new Tag<RealPlcMapper, float>()
+                    {
+                        Name = item.Address,
+                        Gateway = Configuration.Address,
+                        Path = Configuration.Path,
+                        PlcType = Properties.GetProperty<PlcType>("typeEnum"),
+                        Protocol = Protocol.ab_eip,
+                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
+                        DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
+                    };
+                    response = tag6.Read();
+                    tag6.Dispose();
+                    break;
+                case "string":
+                    var tag7 = new Tag<StringPlcMapper, string>()
+                    {
+                        Name = item.Address,
+                        Gateway = Configuration.Address,
+                        Path = Configuration.Path,
+                        PlcType = Properties.GetProperty<PlcType>("typeEnum"),
+                        Protocol = Protocol.ab_eip,
+                        Timeout = TimeSpan.FromMilliseconds(Configuration.TimeoutMs),
+                        DebugLevel = Properties.GetProperty<DebugLevel>("logLevel")
+                    };
+                    response = tag7.Read();
+                    tag7.Dispose();
+                    break;
+            }
         }
 
         return response;
@@ -160,7 +178,10 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
     protected override bool DeinitializeImplementation()
     {
         LibPlcTag.LogEvent -= LibPlcTagOnLogEvent;
-        LibPlcTag.Shutdown();
+        lock (_lock)
+        {
+            LibPlcTag.Shutdown();
+        }
         return true;
     }
     

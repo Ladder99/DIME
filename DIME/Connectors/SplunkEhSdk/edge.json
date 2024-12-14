@@ -1,6 +1,6 @@
 {
   "name": "ladder99/dime:latest",
   "containerArchive": "dime.tar",
-  "portMap": ["51000:8080"],
+  "portMap": ["51000:7878", "51001:8080", "51002:8081", "52000:9999"],
   "mappedStorage": "/app/Configs"
 }

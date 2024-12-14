@@ -13,8 +13,8 @@ public static class Program
             x.Service<DimeService>(s =>
             {
                 s.ConstructUsing(name => new DimeService(new FilesystemYamlConfigurationProvider()));
-                s.WhenStarted(tc => tc.Start());
-                s.WhenStopped(tc => tc.Stop());
+                s.WhenStarted(tc => tc.Startup());
+                s.WhenStopped(tc => tc.Shutdown());
             });
             x.RunAsLocalSystem();
             x.EnableHandleCtrlBreak();

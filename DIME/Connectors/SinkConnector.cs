@@ -63,12 +63,41 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
                 OnOutboxReady?.Invoke(Outbox);
                 
                 EntireReadLoopStopwatch.Start();
-                
-                //TODO: implement inclusion filter
-                
-                Outbox = new ConcurrentBag<MessageBoxMessage>(Outbox
-                    .Where(x => !Configuration.ExcludeFilter.Contains(x.ConnectorItemRef.Configuration.Name)));
-                
+
+                if (Outbox.Count > 0)
+                {
+                    if (Configuration.IncludeFilter.Count > 0)
+                    {
+                        Outbox = new ConcurrentBag<MessageBoxMessage>(
+                            Outbox.Where(message =>
+                                Configuration.IncludeFilter.Any(prefix =>
+                                    message.Path.StartsWith(prefix))));
+                    }
+                    else
+                    {
+                        Outbox = new ConcurrentBag<MessageBoxMessage>(
+                            Outbox.Where(message =>
+                                !Configuration.ExcludeFilter.Any(prefix =>
+                                    message.Path.StartsWith(prefix))));
+                        
+                        /*var newOutbox = new ConcurrentBag<MessageBoxMessage>();
+                        foreach (var message in Outbox)
+                        {
+                            foreach (var filter in Configuration.ExcludeFilter)
+                            {
+                                if (!message.Path.StartsWith(filter))
+                                {
+                                    newOutbox.Add(message);
+                                }
+                                else
+                                {
+                                    var a = 1;
+                                }
+                            }
+                        }*/
+                    }
+                }
+
                 result = WriteImplementation();
                 
                 EntireReadLoopStopwatch.Stop();

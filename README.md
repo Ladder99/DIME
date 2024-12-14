@@ -18,15 +18,18 @@ Download the latest [release](https://github.com/Ladder99/DIME/releases) and run
 
 ```sh
 cd ~
+git clone https://github.com/ladder99/DIME
+
 mkdir -p volumes/dime/configs
 mkdir -p volumes/dime/lua
 mkdir -p volumes/dime/logs
-git clone https://github.com/ladder99/DIME
+
 cp DIME/DIME/nlog.config volumes/dime/nlog.config
 cp DIME/DIME/Configs/* volumes/dime/configs
 cp DIME/DIME/Lua/* volumes/dime/lua
 
 docker run \
+   -p 7878:7878 \
    -p 8080:8080 \
    -p 8081:8081 \
    -p 9999:9999 \
@@ -36,6 +39,13 @@ docker run \
    -v ~/volumes/dime/logs:/app/Logs \
    ladder99/dime:latest
 ```
+
+### Status and Configuration Server
+
+`GET http://localhost:9999/status` - Server status.  
+`GET http://localhost:9999/config/yaml` - Running configuration, YAML formatted.  
+`GET http://localhost:9999/config/json` - Running configuration, JSON formatted.  
+`POST http://localhost:9999/config/yaml` - Upload new configuration, YAML formatted.  
 
 ## Configuration Example
 
@@ -882,7 +892,7 @@ sources:
 | deinit_script   | string       | shutdown lua script                |
 | enter_script    | string       | before loop script                 |
 | exit_script     | string       | after loop script                  |
-| connector       | string       | connector type, `SmartPac`         |
+| connector       | string       | connector type, `SmartPAC`         |
 | address         | string       | device hostname                    |
 | port            | int          | port                               |
 | items           | object array | subscription topics                |
@@ -895,7 +905,7 @@ sources:
 
 ```yaml
   - name: smartpacSource1
-    connector: SmartPac
+    connector: SmartPAC
     address: 172.16.200.18
     port: !!int 1007
     items:
@@ -1079,6 +1089,7 @@ cp DIME/DIME/Configs/* volumes/dime/configs
 cp DIME/DIME/Lua/* volumes/dime/lua
 
 docker run \
+   -p 7878:7878 \
    -p 8080:8080 \
    -p 8081:8081 \
    -p 9999:9999 \

@@ -9,7 +9,7 @@ public class FilesystemYamlConfigurationProvider: IConfigurationProvider
 {
     private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     
-    public Dictionary<object, object> GetConfiguration()
+    public (string, Dictionary<object, object>) ReadConfiguration()
     {
         Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
         
@@ -21,7 +21,35 @@ public class FilesystemYamlConfigurationProvider: IConfigurationProvider
         return ReadFiles(configFiles);
     }
     
-    public Dictionary<object,object> ReadFiles(string[] configurationFilenames)
+    public (bool, string, Dictionary<object, object>) WriteConfiguration(string yamlConfiguration)
+    {
+        if (!IsValid(yamlConfiguration))
+        {
+            return (false, string.Empty, new Dictionary<object, object>());
+        }
+        
+        Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+        Directory.GetFiles("./Configs", "*.yaml").ToList().ForEach(File.Delete);
+        File.WriteAllText("./Configs/main.yaml", yamlConfiguration);
+        var (stringConfiguration, dictionaryConfiguration) = ReadConfiguration();
+        return (true, stringConfiguration, dictionaryConfiguration);
+    }
+    
+    private bool IsValid(string yamlString)
+    {
+        try
+        {
+            var deserializer = new Deserializer();
+            deserializer.Deserialize(new StringReader(yamlString));
+            return true;
+        }
+        catch (YamlException)
+        {
+            return false;
+        }
+    }
+    
+    private (string, Dictionary<object,object>) ReadFiles(string[] configurationFilenames)
     {
         Logger.Info("[ConfigProvider.Read] Reading files {0}", JsonConvert.SerializeObject(configurationFilenames));
         var yaml = "";
@@ -58,6 +86,6 @@ public class FilesystemYamlConfigurationProvider: IConfigurationProvider
         }
         
         Logger.Debug("[ConfigProvider.Read] Dictionary \r\n{0}", JsonConvert.SerializeObject(dictionary));
-        return dictionary;
+        return (yaml, dictionary);
     }
 }

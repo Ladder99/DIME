@@ -31,7 +31,7 @@ public static class ConfigurationHelper<TConfig, TItem>
         
         if (section.ContainsKey("include_filter") && section["include_filter"] as List<object> is not null)
         {
-            instance.ExcludeFilter = (section["include_filter"] as List<object>).Cast<string>().ToList();
+            instance.IncludeFilter = (section["include_filter"] as List<object>).Cast<string>().ToList();
         }
         
         return instance;

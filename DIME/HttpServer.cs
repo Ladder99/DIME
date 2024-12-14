@@ -9,6 +9,38 @@ namespace DIME;
 
 public class HttpServer
 {
+    public class LastNTracker<T>
+    {
+        public List<T> Items { get; }
+        private readonly int capacity;
+
+        public LastNTracker(int capacity)
+        {
+            this.capacity = capacity;
+            this.Items = new List<T>(capacity);
+        }
+
+        public void Add(T item)
+        {
+            if (Items.Count == capacity)
+            {
+                Items.RemoveAt(0);
+            }
+            Items.Add(item);
+        }
+
+        public IReadOnlyList<T> GetItems()
+        {
+            return Items.AsReadOnly();
+        }
+    }
+
+    private class TimestampMessage
+    {
+        public DateTime Timestamp { get; set; }
+        public string Message { get; set; }
+    }
+    
     private class ConnectorStatus
     {
         public string Name { get; set; }
@@ -28,18 +60,27 @@ public class HttpServer
         public long MaximumLoopMs { get; set; }
         public long LastLoopMs { get; set; }
         public long LoopCount { get; set; }
+        public long ConnectCount { get; set; }
+        public long DisconnectCount { get; set; }
+        public long FaultCount { get; set; }
+        public long OutboxSendFailCount { get; set; }
         public DateTime LastUpdate { get; set; }
         public DateTime StartTime { get; set; }
         public List<string> ActiveExclusionFilters { get; set; }
         public List<string> ActiveInclusionFilters { get; set; }
+        public LastNTracker<TimestampMessage> RecentErrors { get; set; }
     }
 
     private readonly Dictionary<string, ConnectorStatus> _connectorStatuses = new Dictionary<string, ConnectorStatus>();
     private HttpListener _listener;
     private bool _isRunning;
+    private DimeService _service;
+    private IConfigurationProvider _configurationProvider;
     
-    public HttpServer(string uri)
+    public HttpServer(DimeService service, IConfigurationProvider configurationProvider, string uri)
     {
+        _service = service;
+        _configurationProvider = configurationProvider;
         _listener = new HttpListener();
         _listener.Prefixes.Add(uri);
     }
@@ -92,24 +133,68 @@ public class HttpServer
     
     private void ProcessRequest(HttpListenerContext context)
     {
-        HttpListenerRequest request = context.Request;
-        HttpListenerResponse response = context.Response;
-
-        var responseString = "{}";
-
-        if (request.RawUrl == "/stats")
+        try
         {
-            responseString = JsonConvert.SerializeObject(_connectorStatuses);
-            response.StatusCode = 200;
-        }
+            HttpListenerRequest request = context.Request;
+            HttpListenerResponse response = context.Response;
 
-        byte[] buffer = Encoding.UTF8.GetBytes(responseString);
-        response.ContentType = "application/json";
-        response.ContentLength64 = buffer.Length;
+            var responseString = "{}";
+
+            if (request.RawUrl == "/status")
+            {
+                responseString = JsonConvert.SerializeObject(_connectorStatuses);
+                response.StatusCode = 200;
+            }
+            else if (request.RawUrl == "/config/yaml")
+            {
+                if (request.HttpMethod == "GET")
+                {
+                    responseString = _configurationProvider.ReadConfiguration().Item1;
+                    response.StatusCode = 200;
+                }
+
+                if (request.HttpMethod == "POST")
+                {
+                    string postData = "";
             
-        using (var output = response.OutputStream)
+                    using (Stream body = request.InputStream)
+                    {
+                        using (StreamReader reader = new StreamReader(body, request.ContentEncoding))
+                        {
+                            postData = reader.ReadToEnd();
+                        }
+                    }
+
+                    var (success, stringConfiguration, dictionaryConfiguration) = _configurationProvider.WriteConfiguration(postData);
+                    responseString = stringConfiguration;
+                    response.StatusCode = success ? 200 : 400;
+                }
+            }
+            else if (request.RawUrl == "/config/json")
+            {
+                responseString = JsonConvert.SerializeObject(_configurationProvider.ReadConfiguration().Item2);
+                response.StatusCode = 200;
+            }
+            else if (request.RawUrl == "/service/restart")
+            {
+                _service.Stop();
+                _service.Start();
+                responseString = "Restarted";
+                response.StatusCode = 200;
+            }
+
+            byte[] buffer = Encoding.UTF8.GetBytes(responseString);
+            response.ContentType = "application/json";
+            response.ContentLength64 = buffer.Length;
+            
+            using (var output = response.OutputStream)
+            {
+                output.Write(buffer, 0, buffer.Length);
+            }
+        }
+        catch (Exception e)
         {
-            output.Write(buffer, 0, buffer.Length);
+            Console.WriteLine(e);
         }
     }
 
@@ -129,10 +214,15 @@ public class HttpServer
             MaximumReadMs = 0,
             MaximumLoopMs = 0,
             LoopCount = 0,
+            ConnectCount = 0,
+            DisconnectCount = 0,
+            FaultCount = 0,
+            OutboxSendFailCount = 0,
             LastUpdate = DateTime.Now,
             StartTime = DateTime.Now,
             ActiveExclusionFilters = connector.Configuration.ExcludeFilter,
-            ActiveInclusionFilters = connector.Configuration.IncludeFilter
+            ActiveInclusionFilters = connector.Configuration.IncludeFilter,
+            RecentErrors = new LastNTracker<TimestampMessage>(10)
         };
     }
 
@@ -143,18 +233,23 @@ public class HttpServer
     
     public void OnConnect(IConnector connector)
     {
+        _connectorStatuses[connector.Configuration.Name].ConnectCount += 1;
         _connectorStatuses[connector.Configuration.Name].IsConnected = true;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
     }
     
     public void OnDisconnect(IConnector connector)
     {
+        _connectorStatuses[connector.Configuration.Name].DisconnectCount += 1;
         _connectorStatuses[connector.Configuration.Name].IsConnected = true;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
     }
     
     public void OnRaiseFault(IConnector connector, Exception exception)
     {
+        _connectorStatuses[connector.Configuration.Name].RecentErrors.Add(
+            new TimestampMessage() { Message = exception.Message, Timestamp = DateTime.Now });
+        _connectorStatuses[connector.Configuration.Name].FaultCount += 1;
         _connectorStatuses[connector.Configuration.Name].IsFaulted = true;
         _connectorStatuses[connector.Configuration.Name].FaultMessage = exception.Message;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
@@ -175,6 +270,7 @@ public class HttpServer
 
     public void OnOutboxSent(IConnector connector, ConcurrentBag<MessageBoxMessage> outbox, bool success)
     {
+        if (!success) _connectorStatuses[connector.Configuration.Name].OutboxSendFailCount += 1;
         _connectorStatuses[connector.Configuration.Name].MessagesAccepted += outbox.Count;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
     }

@@ -2,7 +2,7 @@ smartPacSource1: &smartPacSource1
   name: smartPacSource1
   enabled: !!bool false
   scan_interval: !!int 1000
-  connector: SmartPac
+  connector: SmartPAC
   address: 172.16.200.18
   port: !!int 1007
   items:
