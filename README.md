@@ -75,33 +75,33 @@ sources:
 
 <table><tr><td valign="top">
 
-| Source                                    |
-|-------------------------------------------|
-| Active MQ                                 |
-| [ASC CPC](#asc-cpc)                       |
-| Beckhoff ADS                              |
-| Brother CNC                               |
-| [Ethernet/IP](#ethernetip)                |
-| Fanuc Focas                               |
-| Filesystem                                |
-| [Haas SHDR](#haas-shdr)                   |
-| HTTP Client                               |
-| [HTTP Server](#http-server)               |
-| [Modbus/TCP](#modbus-tcp)                 |
-| [MQTT](#mqtt)                             |
-| MS SQL Server                             |
-| [MTConnect Agent](#mtconnect-agent)       |
-| OPC-DA                                    |
-| [OPC-UA](#opc-ua)                         |
-| OPC XML-DA                                |
-| Postgres                                  |
-| [Redis](#redis)                           |
-| [Script](#script)                         |
-| Siemens S7                                |
-| [SNMP](#snmp)                             |
-| [Timebase Websocket](#timebase-websocket) | 
-| [Wintriss SmartPac](#wintriss-smartpac)   |
-| Zenoh                                     |
+| Source                                                                    |
+|---------------------------------------------------------------------------|
+| Active MQ                                                                 |
+| [ASC CPC](#asc-cpc)                                                       |
+| Beckhoff ADS                                                              |
+| Brother CNC                                                               |
+| [Ethernet/IP](#ethernetip)                                                |
+| Fanuc Focas [[external driver]](https://github.com/Ladder99/fanuc-driver) |
+| Filesystem                                                                |
+| [Haas SHDR](#haas-shdr)                                                   |
+| HTTP Client                                                               |
+| [HTTP Server](#http-server)                                               |
+| [Modbus/TCP](#modbus-tcp)                                                 |
+| [MQTT](#mqtt)                                                             |
+| MS SQL Server                                                             |
+| [MTConnect Agent](#mtconnect-agent)                                       |
+| OPC-DA                                                                    |
+| [OPC-UA](#opc-ua)                                                         |
+| OPC XML-DA                                                                |
+| Postgres                                                                  |
+| [Redis](#redis)                                                           |
+| [Script](#script)                                                         |
+| Siemens S7                                                                |
+| [SNMP](#snmp)                                                             |
+| [Timebase Websocket](#timebase-websocket)                                 | 
+| [Wintriss SmartPac](#wintriss-smartpac)                                   |
+| Zenoh                                                                     |
 
 </td><td valign="top">
 
