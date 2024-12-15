@@ -13,6 +13,8 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     public ConcurrentBag<MessageBoxMessage> Inbox { get; } = new ConcurrentBag<MessageBoxMessage>();
     public ConcurrentBag<MessageBoxMessage> Samples { get; } = new ConcurrentBag<MessageBoxMessage>();
     public ConcurrentDictionary<string, MessageBoxMessage> Current { get; } = new ConcurrentDictionary<string, MessageBoxMessage>();
+    public ConcurrentDictionary<string, MessageBoxMessage> UserCache { get; } = new ConcurrentDictionary<string, MessageBoxMessage>();
+    public ConcurrentDictionary<string, MessageBoxMessage> TagValues { get; } = new ConcurrentDictionary<string, MessageBoxMessage>();
     protected bool PublishInboxInBatch { get; } = true;
     public event Action<ConcurrentBag<MessageBoxMessage>, ConcurrentDictionary<string, MessageBoxMessage>, ConcurrentBag<MessageBoxMessage>> OnInboxReady;
     public event Action<ConcurrentBag<MessageBoxMessage>, ConcurrentDictionary<string, MessageBoxMessage>, ConcurrentBag<MessageBoxMessage>> OnInboxSent;
@@ -30,7 +32,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         var result = base.Initialize(runner) && ScriptRunner.Initialize(this);
         if (!string.IsNullOrEmpty(Configuration.InitScript))
         {
-            ExecuteScript(Configuration.InitScript);
+            ExecuteScript(Configuration.InitScript, this);
         }
         
         Logger.Trace($"[{Configuration.Name}] SourceConnector:Initialize::EXIT");
@@ -38,7 +40,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         return result;
     }
 
-    protected object ExecuteScript(string script)
+    protected object ExecuteScript(string script, IConnector connector)
     {
         Logger.Trace($"[{Configuration.Name}] SourceConnector:ExecuteScript::ENTER");
 
@@ -46,6 +48,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
 
         try
         {
+            ScriptRunner["this"] = connector;
             var scriptResult = ScriptRunner.DoString(script);
             response = scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
         }
@@ -68,8 +71,11 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         try
         {
             ScriptRunner["result"] = intermediateResult;
+            ScriptRunner["this"] = item;
             var scriptResult = ScriptRunner.DoString(item);
-            response =  scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
+            response = scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
+            
+            
         }
         catch (Exception e)
         {
@@ -168,7 +174,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         var result = base.Deinitialize();
         if (!string.IsNullOrEmpty(Configuration.DeinitScript))
         {
-            ExecuteScript(Configuration.DeinitScript);
+            ExecuteScript(Configuration.DeinitScript, this);
         }
         
         Logger.Trace($"[{Configuration.Name}] SourceConnector:Deinitialize::EXIT");

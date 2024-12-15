@@ -28,3 +28,5 @@ sources:
   - *smartPacSource1
   - *snmpSource1
   - *timebaseWsSource1
+  - *instanceMotor1A
+  - *instanceMotor1B

@@ -21,7 +21,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
     
     public QueuingSourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
-        Logger.Trace($"[{Configuration.Name}] PollingSourceConnector:.ctor");
+        Logger.Trace($"[{Configuration.Name}] QueuingSourceConnector:.ctor");
     }
 
     protected IncomingMessage AddToIncomingBuffer(string key, object value, long timestamp = 0)
@@ -50,7 +50,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
         
         if (!string.IsNullOrEmpty(Configuration.LoopEnterScript))
         {
-            ExecuteScript(Configuration.LoopEnterScript);
+            ExecuteScript(Configuration.LoopEnterScript, this);
         }
         
         if (Configuration.ItemizedRead)
@@ -66,7 +66,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                 {
                     IEnumerable<IncomingMessage> messages = null;
 
-                    if (item.Address is not null)
+                    if (!string.IsNullOrEmpty(item.Address))
                     {
                         messages = IncomingBuffer.Where(x => x.Key == item.Address);
 
@@ -76,6 +76,14 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                             object readResult = result;
                             object scriptResult = "n/a";
 
+                            TagValues[$"{Configuration.Name}/{item.Name}"] = new MessageBoxMessage()
+                            {
+                                Path = $"{Configuration.Name}/{item.Name}",
+                                Data = readResult,
+                                Timestamp = DateTime.Now.ToEpochMilliseconds(),
+                                ConnectorItemRef = item
+                            };
+                            
                             ExecuteScriptSumStopwatch.Start();
                             if (item.Script is not null)
                             {
@@ -101,10 +109,10 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                                          $"Sample={(result == null ? "DROPPED" : "ADDED")}");
                         }
                     }
-                    else if (item.Script is not null)
+                    else if (!string.IsNullOrEmpty(item.Script))
                     {
                         ExecuteScriptSumStopwatch.Start();
-                        var result = ExecuteScript(null, item);
+                        var result = ExecuteScript(item.Script, item);
                         ExecuteScriptSumStopwatch.Stop();
                         
                         if (result is not null)
@@ -144,7 +152,15 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                     try
                     {
                         var item = Configuration.Items
-                            .First(x => x.Enabled && x.Address == message.Key && x.Script is not null);
+                            .First(x => x.Enabled && x.Address == message.Key && !string.IsNullOrEmpty(x.Script));
+                        
+                        TagValues[$"{Configuration.Name}/{item.Name}"] = new MessageBoxMessage()
+                        {
+                            Path = $"{Configuration.Name}/{item.Name}",
+                            Data = message.Value,
+                            Timestamp = DateTime.Now.ToEpochMilliseconds(),
+                            ConnectorItemRef = item
+                        };
                         
                         var result = ExecuteScript(message.Value, item);
 
@@ -180,7 +196,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
 
         if (!string.IsNullOrEmpty(Configuration.LoopExitScript))
         {
-            ExecuteScript(Configuration.LoopExitScript);
+            ExecuteScript(Configuration.LoopExitScript, this);
         }
         
         EntireReadLoopStopwatch.Stop();

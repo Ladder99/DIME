@@ -27,7 +27,7 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
          */
         if (!string.IsNullOrEmpty(Configuration.LoopEnterScript))
         {
-            ExecuteScript(Configuration.LoopEnterScript);
+            ExecuteScript(Configuration.LoopEnterScript, this);
         }
         
         foreach (var item in Configuration.Items.Where(x => x.Enabled))
@@ -42,6 +42,15 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
                 response = ReadFromDevice(item);
                 readResult = response;
             }
+            
+            TagValues[$"{Configuration.Name}/{item.Name}"] = new MessageBoxMessage()
+            {
+                Path = $"{Configuration.Name}/{item.Name}",
+                Data = readResult,
+                Timestamp = DateTime.Now.ToEpochMilliseconds(),
+                ConnectorItemRef = item
+            };
+            
             ReadFromDeviceSumStopwatch.Stop();
 
             //Console.WriteLine($"SCRIPT: {item.Script}");
@@ -84,7 +93,7 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
         
         if (!string.IsNullOrEmpty(Configuration.LoopExitScript))
         {
-            ExecuteScript(Configuration.LoopExitScript);
+            ExecuteScript(Configuration.LoopExitScript, this);
         }
         
         EntireReadLoopStopwatch.Stop();

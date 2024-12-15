@@ -23,11 +23,11 @@ modbusSource1: &modbusSource1
     - name: DO0
       enabled: !!bool true
       script: |
-        return get('outputs', nil)[0];
+        return cache('outputs', nil)[0];
     - name: DO1
       enabled: !!bool true
       script: |
-        return get('outputs', nil)[1];
+        return cache('outputs', nil)[1];
     - name: holdingTags
       type: !!int 3
       address: !!int 24

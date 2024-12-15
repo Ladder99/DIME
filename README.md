@@ -46,6 +46,7 @@ docker run \
 `GET http://localhost:9999/config/yaml` - Running configuration, YAML formatted.  
 `GET http://localhost:9999/config/json` - Running configuration, JSON formatted.  
 `POST http://localhost:9999/config/yaml` - Upload new configuration, YAML formatted.  
+`GET http://localhost:9999/service/restart` - Restart all connectors.  
 
 ## Configuration Example
 
@@ -922,12 +923,22 @@ sources:
 Each connector configuration allows for Lua script execution.  The `init_script` property is executed on 
 startup and is used to import additional .NET or Lua libraries.  The `deinit_script` property is executed on shutdown. 
 The `enter_script` and `exit_script` properties are executed before and after reading all items, respectively. 
-Within each item script, the primary cache can be accessed using the `cache(path, defaultValue)` and 
+Within each item script, the caches can be accessed using the `cache(path, defaultValue)` and 
 `cache_ts(path, defaultValue)` function calls. The `path` refers to the item's unique path which is a combination of 
 the connector's and item's name (e.g. `eipSource1/boolTag2`, `mqttSource1/ffe4Sensor`). Within the connector's execution context, 
-the connector name can be omitted and replaced with a period, `./boolTag2`. A secondary cache can be accessed 
-using the `get(key, defaultValue)` and `set(key, value)` function calls.  This user-defined cache is scoped to 
-the individual connector.
+the connector name can be omitted or replaced with a period, `./boolTag2`. A secondary user cache can be accessed 
+using the `cache(key, defaultValue)` and `set(key, value)` function calls.  The connector and configuration objects 
+can be accessed using the `connector()` and `configuration()` function calls, respectively.  
+
+### Functions
+
+`value = cache(path, defaultValue)` - retrieve value from caches, shared across connectors.  
+`value, timestamp = cache_ts(path, defaultValue)` - retrieve value and timestamp from caches.   
+`value = set(key, value)` - set value into user cache.  
+`connector = connector()` - retrieve the connector instance.  
+`configuration = configuration()` - retrieve the connector's configuration instance.  
+
+### Example
 
 ```yaml
 mqttSink1: &mqttSink1
@@ -960,7 +971,7 @@ eipSource1: &eipSource1
       - name: boolGetUserCache
         enabled: !!bool true
         script: |
-           return get('boolTag', false);
+           return cache('boolTag', false);
       - name: Execution
         enabled: !!bool true
         type: bool
@@ -1023,7 +1034,7 @@ scriptSource1: &scriptSource1
            return nil;
       - name: randomFromUserCache
         script: |
-           return get('random', -1);
+           return cache('random', -1);
       - name: mqttSensorReading
         script: |
            return cache('mqttSource1/ffe4Sensor', nil);

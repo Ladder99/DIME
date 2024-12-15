@@ -54,6 +54,6 @@ ascCpcSource1: &ascCpcSource1
       rbe: !!bool true
       address: ~
       script: |
-        local cptrig = get('cptrig', false);
-        local cpalm = get('cpalm', false);
+        local cptrig = cache('cptrig', false);
+        local cpalm = cache('cpalm', false);
         return cpalm and 'Fault' or (cptrig and 'Warning' or 'Normal');

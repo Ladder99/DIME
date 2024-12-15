@@ -8,6 +8,8 @@ public interface ISourceConnector: IConnector
     public ConcurrentBag<MessageBoxMessage> Inbox { get; }
     public ConcurrentBag<MessageBoxMessage> Samples { get; }
     public ConcurrentDictionary<string, MessageBoxMessage> Current { get; }
+    public ConcurrentDictionary<string, MessageBoxMessage> UserCache { get; }
+    public ConcurrentDictionary<string, MessageBoxMessage> TagValues { get; }
     public bool Read();
     public event Action<ConcurrentBag<MessageBoxMessage>, ConcurrentDictionary<string, MessageBoxMessage>, ConcurrentBag<MessageBoxMessage>> OnInboxReady;
     public event Action<ConcurrentBag<MessageBoxMessage>, ConcurrentDictionary<string, MessageBoxMessage>, ConcurrentBag<MessageBoxMessage>> OnInboxSent;

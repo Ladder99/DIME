@@ -170,6 +170,12 @@
       <None Update="Connectors\SplunkEhSdk\Config\haasSource1.yaml">
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </None>
+      <None Update="Configs\instanceMotor1A.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Configs\instanceMotor1B.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 	<!--

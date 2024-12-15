@@ -26,7 +26,7 @@ eipSource1: &eipSource1
     - name: boolGetUserCache
       enabled: !!bool true
       script: |
-        return get('boolTag', false);
+        return cache('boolTag', false);
     - name: Execution
       enabled: !!bool true
       type: bool

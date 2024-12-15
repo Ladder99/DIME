@@ -39,7 +39,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         var result = _client.ConnectAsync(options).Result;
         
         var mqttSubscribeOptions = new MqttFactory().CreateSubscribeOptionsBuilder();
-        foreach(var item in Configuration.Items.Where(x => x.Enabled && x.Address is not null))
+        foreach(var item in Configuration.Items.Where(x => x.Enabled && !string.IsNullOrEmpty(x.Address)))
         {
             mqttSubscribeOptions.WithTopicFilter(f =>
             {

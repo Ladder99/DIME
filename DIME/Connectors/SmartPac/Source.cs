@@ -35,7 +35,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
         
         if (!string.IsNullOrEmpty(Configuration.LoopEnterScript))
         {
-            ExecuteScript(Configuration.LoopEnterScript);
+            ExecuteScript(Configuration.LoopEnterScript, this);
         }
         
         object networkResponse01 = null;
@@ -103,7 +103,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
         
         if (!string.IsNullOrEmpty(Configuration.LoopExitScript))
         {
-            ExecuteScript(Configuration.LoopExitScript);
+            ExecuteScript(Configuration.LoopExitScript, this);
         }
         
         Logger.Trace($"[{Configuration.Name}] PollingSourceConnector:ReadImplementation::EXIT");
