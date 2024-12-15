@@ -72,7 +72,7 @@
       </None>
     </ItemGroup>
 
-    <Target Name="CopyAndRenameFile" AfterTargets="Build">
+    <Target Name="CopyAndRenameFile" BeforeTargets="Build">
       <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
             DestinationFiles="$(OutDir)runtimes/linux-arm64/native/liblua54.so" />
       <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/consoleSink1.yaml" 
