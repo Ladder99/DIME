@@ -25,7 +25,7 @@ mkdir -p volumes/dime/lua
 mkdir -p volumes/dime/logs
 
 cp DIME/DIME/nlog.config volumes/dime/nlog.config
-cp DIME/DIME/Configs/* volumes/dime/configs
+cp DIME/DIME/Configs/Examples/Basic/* volumes/dime/configs
 cp DIME/DIME/Lua/* volumes/dime/lua
 
 docker run \
@@ -1131,7 +1131,8 @@ docker run --privileged --rm tonistiigi/binfmt --install all
 docker buildx create --name multi-arch-builder --use
 
 cd DIME/DIME
-docker buildx build --platform linux/amd64,linux/arm64 -t ladder99/dime:1.0.0 -t ladder99/dime:latest --push .
+#docker buildx build --platform linux/amd64,linux/arm64 -t ladder99/dime:1.0.0 -t ladder99/dime:latest --push .
+docker build -f Dockerfile --tag=ladder99/dime:1.0.0 --tag=ladder99/dime:latest .
 #docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest ladder99/dime:latest
 
 cd ~
