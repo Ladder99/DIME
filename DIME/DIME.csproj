@@ -7,7 +7,7 @@
         <AssemblyName>DIME</AssemblyName>
         <RootNamespace>DIME</RootNamespace>
         <LangVersion>12</LangVersion>
-        <Version>1.2.1</Version>
+        <Version>1</Version>
         <Title>DIME</Title>
         <Authors>MRIIOT</Authors>
         <Description>Data In Motion Enterprise</Description>
@@ -60,196 +60,23 @@
       <None Update="lua\struct.lua">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="agent.config.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Update="Lua\middleclass.lua">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Lua\stateful.lua">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="liblua54-arm64.so">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </None>
-      <None Update="Connectors\SplunkEhSdk\Config\consoleSink1.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </None>
-      <None Update="Connectors\SplunkEhSdk\Config\scriptSource1.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </None>
-      <None Update="Connectors\SplunkEhSdk\Config\splunkEhSdkSink1.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </None>
-      <None Update="Connectors\SplunkEhSdk\Config\main.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </None>
-      <None Update="Connectors\SplunkEhSdk\Config\eipSource1.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </None>
-      <None Update="Connectors\SplunkEhSdk\Config\httpServerSink1.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </None>
-      <None Update="Connectors\SplunkEhSdk\Config\haasSource1.yaml">
-        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\ascCpcSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\consoleSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\eipSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\haasSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\httpServerSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\httpServerSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\influxLpSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\instanceMotor1A.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\instanceMotor1B.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\main.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\mettlerToledoScale1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\modbusSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\mqttSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\mqttSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\mtConnectSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\mtConnectSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\opcUaSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\redisSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\redisSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\scriptSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\shdrSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\smartPacSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\snmpSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\sparkplugBSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\splunkEhSdkSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\splunkHecSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\timebaseWsSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\All\trakhoundHttpSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\MqttMotors\main.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\MqttMotors\instanceMotor1A.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\MqttMotors\instanceMotor1B.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\MqttMotors\consoleSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\MqttMotors\mqttSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\MqttMotors\httpServerSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\MqttMotors\redisSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\ShdrModel\main.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\ShdrModel\mtInstance1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\ShdrModel\shdrSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\ShdrModel\consoleSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\ShdrModel\httpServerSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\consoleSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\wsServerSink.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\main.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\mqttSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\MqttToWebsocket\consoleSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\MqttToWebsocket\main.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\MqttToWebsocket\mqttSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\Examples\MqttToWebsocket\wsServerSink.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
     </ItemGroup>
-
-	<!--
-    <ItemGroup Condition="'$(RuntimeIdentifier)' == 'linux-arm64'">
-      <Content Include="liblua54.so">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-    </ItemGroup>
-	-->
 
     <Target Name="CopyAndRenameFile" AfterTargets="Build">
       <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
             DestinationFiles="$(OutDir)runtimes/linux-arm64/native/liblua54.so" />
+      <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/consoleSink1.yaml" 
+            DestinationFiles="$(OutDir)Configs/consoleSink1.yaml" />
+      <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/mqttSource1.yaml" 
+            DestinationFiles="$(OutDir)Configs/mqttSource1.yaml" />
+      <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/main.yaml" 
+            DestinationFiles="$(OutDir)Configs/main.yaml" />
     </Target>
 
 	<!--
