@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
 
 COPY DIME.csproj ./
-RUN dotnet restore
+RUN dotnet restore --verbosity diagnostic
 
 COPY . ./
 RUN dotnet publish -c Release -o out
