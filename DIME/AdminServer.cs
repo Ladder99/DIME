@@ -220,7 +220,7 @@ public class AdminServer
         if (sessions is null) return;
         foreach (var session in sessions)
         {
-            if (session.State == WebSocketState.Open)
+            if (session.ConnectionState == WebSocketState.Open)
             {
                 session.Context.WebSocket.Send(msg);
             }

@@ -38,62 +38,63 @@
       <PackageReference Include="NLog" Version="5.3.4" />
       <PackageReference Include="NLua" Version="1.7.3" />
       <PackageReference Include="NModbus" Version="3.0.81" />
+      <PackageReference Include="SIPSorcery.WebSocketSharp" Version="0.0.1" />
       <PackageReference Include="SparkplugNet" Version="1.3.10" />
       <PackageReference Include="StackExchange.Redis" Version="2.8.22" />
       <PackageReference Include="Topshelf" Version="4.3.0" />
       <PackageReference Include="Topshelf.NLog" Version="4.3.0" />
       <PackageReference Include="TrakHound.Common" Version="0.1.6.6" />
-      <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
       <PackageReference Include="YamlDotNet" Version="16.2.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="nlog.config">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="lua\json.lua">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="lua\moses.lua">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="lua\struct.lua">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Lua\middleclass.lua">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Lua\stateful.lua">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="runtimes/linux-arm64/native/liblua54.so">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="runtimes/linux-arm64/native/liblua54.so">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+      <LuaFiles Include="$(ProjectDir)Lua/*.lua" />
+      <ConfigExampleBasic Include="$(ProjectDir)Configs/Examples/Basic/*.yaml" />
+      <ConfigExampleMqttMotors Include="$(ProjectDir)Configs/Examples/MqttMotors/*.yaml" />
+      <ConfigExampleMqttToWebsocket Include="$(ProjectDir)Configs/Examples/MqttToWebsocket/*.yaml" />
+      <ConfigExampleShdrModel Include="$(ProjectDir)Configs/Examples/ShdrModel/*.yaml" />
     </ItemGroup>
 
-    <Target Name="CopyAfterBuild" AfterTargets="Build">
+    <Target 
+      Name="Debug_CopyAfterBuild"
+      Condition="'$(Configuration)' == 'Debug'"
+      AfterTargets="Build">
+      <Copy SourceFiles="$(ProjectDir)nlog.config" 
+            DestinationFiles="$(OutDir)nlog.config" />
       <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
             DestinationFiles="$(OutDir)runtimes/linux-arm64/native/liblua54.so" />
-      <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/consoleSink1.yaml" 
-            DestinationFiles="$(OutDir)Configs/consoleSink1.yaml" />
-      <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/mqttSource1.yaml" 
-            DestinationFiles="$(OutDir)Configs/mqttSource1.yaml" />
-      <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/main.yaml" 
-            DestinationFiles="$(OutDir)Configs/main.yaml" />
+      <Copy SourceFiles="@(LuaFiles)" 
+            DestinationFolder="$(OutDir)Lua" />
+      <Copy SourceFiles="@(ConfigExampleBasic)" 
+            DestinationFolder="$(OutDir)Configs" />
     </Target>
 
-    <Target Name="CopyAfterPublish" AfterTargets="Publish">
+    <Target 
+      Name="Release_CopyAfterBuild"
+      Condition="'$(Configuration)' == 'Release'"
+      AfterTargets="Build">
+      <Copy SourceFiles="$(ProjectDir)nlog.config" 
+            DestinationFiles="$(OutDir)nlog.config" />
+      <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
+            DestinationFiles="$(OutDir)runtimes/linux-arm64/native/liblua54.so" />
+      <Copy SourceFiles="@(LuaFiles)" 
+            DestinationFolder="$(OutDir)Lua" />
+      <Copy SourceFiles="@(ConfigExampleBasic)" 
+            DestinationFolder="$(OutDir)Configs" />
+    </Target>
+
+    <Target 
+      Name="Release_CopyAfterPublish"
+      Condition="'$(Configuration)' == 'Release'"
+      AfterTargets="Publish">
+      <Copy SourceFiles="$(ProjectDir)nlog.config" 
+            DestinationFiles="$(PublishDir)nlog.config" />
       <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
             DestinationFiles="$(PublishDir)runtimes/linux-arm64/native/liblua54.so" />
-      <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/consoleSink1.yaml" 
-            DestinationFiles="$(PublishDir)Configs/consoleSink1.yaml" />
-      <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/mqttSource1.yaml" 
-            DestinationFiles="$(PublishDir)Configs/mqttSource1.yaml" />
-      <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/main.yaml" 
-            DestinationFiles="$(PublishDir)Configs/main.yaml" />
+      <Copy SourceFiles="@(LuaFiles)" 
+            DestinationFolder="$(PublishDir)Lua" />
+      <Copy SourceFiles="@(ConfigExampleBasic)" 
+            DestinationFolder="$(PublishDir)Configs" />
     </Target>
 
 	<!--
