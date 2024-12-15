@@ -1,0 +1,6 @@
+websocketServerSink1: &websocketServerSink1
+  name: websocketServerSink1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: WebsocketServer
+  uri: http://localhost:8082/

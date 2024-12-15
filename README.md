@@ -32,6 +32,8 @@ docker run \
    -p 7878:7878 \
    -p 8080:8080 \
    -p 8081:8081 \
+   -p 8082:8082 \
+   -p 9998:9998 \
    -p 9999:9999 \
    -v ~/volumes/dime/nlog.config:/app/nlog.config \
    -v ~/volumes/dime/configs:/app/Configs \
@@ -47,6 +49,7 @@ docker run \
 `GET http://localhost:9999/config/json` - Running configuration, JSON formatted.  
 `POST http://localhost:9999/config/yaml` - Upload new configuration, YAML formatted.  
 `GET http://localhost:9999/service/restart` - Restart all connectors.  
+`WS ws://localhost:9998/` - Connector status feed.
 
 ## Configuration Example
 
@@ -116,24 +119,25 @@ sources:
 
 </td><td valign="top">
 
-| Sink                              |
-|-----------------------------------|
-| ActiveMQ                          |
-| [Console](#console)               |
-| [HTTP Server](#http-server)       |
-| [Influx LP](#influx-lp)           |
-| IoTDB                             |
-| [MQTT](#mqtt)                     |
-| MS SQL Server                     |
-| MTConnect Agent                   |
-| [MTConnect SHDR](#mtconnect-shdr) |
-| Postgres                          |
-| [Redis](#redis)                   |
-| [Splunk EH SDK](#splunk-eh-sdk)   |
-| [Splunk HEC](#splunk-hec)         |
-| [SparkplugB](#sparkplugb)         |
-| [TrakHound HTTP](#trakhound-http) |
-| Zenoh                             |
+| Sink                                  |
+|---------------------------------------|
+| ActiveMQ                              |
+| [Console](#console)                   |
+| [HTTP Server](#http-server)           |
+| [Influx LP](#influx-lp)               |
+| IoTDB                                 |
+| [MQTT](#mqtt)                         |
+| MS SQL Server                         |
+| MTConnect Agent                       |
+| [MTConnect SHDR](#mtconnect-shdr)     |
+| Postgres                              |
+| [Redis](#redis)                       |
+| [Splunk EH SDK](#splunk-eh-sdk)       |
+| [Splunk HEC](#splunk-hec)             |
+| [SparkplugB](#sparkplugb)             |
+| [TrakHound HTTP](#trakhound-http)     |
+| [Websocket Server](#websocket-server) |
+| Zenoh                                 |
 
 </td></tr></table>
 
@@ -881,6 +885,29 @@ sources:
     base_path: Ladder99:/DIME/HttpSink
 ```
 
+### Websocket Server
+
+| Name              | Type         | Description                        |
+|-------------------|--------------|------------------------------------|
+| name              | string       | unique connector name              |
+| enabled           | bool         | is connector enabled               |
+| scan_interval     | int          | scanning frequency in milliseconds |
+| rbe               | bool         | report by exception                |
+| init_script       | string       | startup lua script                 |
+| deinit_script     | string       | shutdown lua script                |
+| enter_script      | string       | before loop script                 |
+| exit_script       | string       | after loop script                  |
+| connector         | string       | connector type, `WebsocketServer`  |
+| uri               | string       | base uri                           |
+
+#### Sink Example
+
+```yaml
+  - name: wsServerSink1
+    connector: WebsocketServer
+    uri: ws://127.0.0.1:8082/
+```
+
 ### Wintriss SmartPac
 
 | Name            | Type         | Description                        |
@@ -1103,6 +1130,8 @@ docker run \
    -p 7878:7878 \
    -p 8080:8080 \
    -p 8081:8081 \
+   -p 8082:8082 \
+   -p 9998:9998 \
    -p 9999:9999 \
    -v ~/volumes/dime/nlog.config:/app/nlog.config \
    -v ~/volumes/dime/configs:/app/Configs \

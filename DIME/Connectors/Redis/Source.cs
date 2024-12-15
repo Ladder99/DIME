@@ -29,7 +29,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
     protected override bool ConnectImplementation()
     {
         _client = ConnectionMultiplexer.Connect($"{Configuration.Address}:{Configuration.Port}");
-        _server = _client.GetServer($"{Configuration.Address}:{Configuration.Port}");
+        _server = _client.GetServer($"{Configuration.Address}");
         _database = _client.GetDatabase(Configuration.Database);
         _subscriber = _client.GetSubscriber();
         var keys =  _server.Keys(Configuration.Database).ToList();

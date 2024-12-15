@@ -1,0 +1,9 @@
+shdrSink1: &shdrSink1
+  name: shdrSink1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: MTConnectSHDR
+  port: !!int 7878
+  device_key: ~
+  heartbeat_interval: !!int 10000
+  filter_duplicates: !!bool true

@@ -9,7 +9,7 @@ public class DimeService
     private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     private readonly List<ConnectorRunner> _runners = new List<ConnectorRunner>();
     private IConfigurationProvider _configurationProvider;
-    private HttpServer _httpServer;
+    private AdminServer _httpServer;
     private Disruptor<MessageBoxMessage> _disruptor;
     private bool _isRunning = false;
     private List<IConnector> _externalConnectors = new List<IConnector>();
@@ -42,7 +42,7 @@ public class DimeService
         
         var dictionaryConfiguration = _configurationProvider.ReadConfiguration().Item2;
         var appConfig = Configurator.AppConfig.Create(dictionaryConfiguration);
-        _httpServer = new HttpServer(this, _configurationProvider, appConfig.ServerUri);
+        _httpServer = new AdminServer(this, _configurationProvider, appConfig.HttpServerUri, appConfig.WsServerUri);
         
         Start();
         _httpServer.Start();

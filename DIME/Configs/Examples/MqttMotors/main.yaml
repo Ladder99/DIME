@@ -1,6 +1,7 @@
 app:
   ring_buffer: !!int 4096
-  server_uri: http://localhost:9999/
+  http_server_uri: http://127.0.0.1:9999/
+  ws_server_uri: ws://127.0.0.1:9998/
 sinks:
   - *consoleSink1
   - *httpServerSink1

@@ -10,7 +10,8 @@ public static class AppConfig
             configuration["app"] = new Dictionary<object, object>()
             {
                 { "ring_buffer", 4096 },
-                { "server_uri", "http://localhost:9999" }
+                { "http_server_uri", "http://127.0.0.1:9999/" },
+                { "ws_server_uri", "http://127.0.0.1:9998/" }
             };
         }
         
@@ -18,7 +19,8 @@ public static class AppConfig
         
         Configuration.AppConfig config = new();
         config.RingBufferSize = Convert.ToInt32(section["ring_buffer"]);
-        config.ServerUri = Convert.ToString(section["server_uri"]);
+        config.HttpServerUri = Convert.ToString(section["http_server_uri"]);
+        config.WsServerUri = Convert.ToString(section["ws_server_uri"]);
 
         return config;
     }

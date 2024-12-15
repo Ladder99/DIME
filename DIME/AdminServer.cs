@@ -1,13 +1,14 @@
 using System.Collections.Concurrent;
 using System.Net;
 using System.Text;
-using DIME.Configuration;
 using DIME.Connectors;
 using Newtonsoft.Json;
+using WebSocketSharp;
+using WebSocketSharp.Server;
 
 namespace DIME;
 
-public class HttpServer
+public class AdminServer
 {
     public class LastNTracker<T>
     {
@@ -45,6 +46,7 @@ public class HttpServer
     {
         public string Name { get; set; }
         public string Direction { get; set; }
+        public string ConnectorType { get; set; }
         public bool IsConnected { get; set; }
         public bool IsFaulted { get; set; }
         public string FaultMessage { get; set; }
@@ -70,40 +72,50 @@ public class HttpServer
         public List<string> ActiveInclusionFilters { get; set; }
         public LastNTracker<TimestampMessage> RecentErrors { get; set; }
     }
+    
+    private class Feed : WebSocketBehavior
+    {
+        
+    }
 
     private readonly Dictionary<string, ConnectorStatus> _connectorStatuses = new Dictionary<string, ConnectorStatus>();
-    private HttpListener _listener;
+    private HttpListener _httpServer;
+    private WebSocketServer _wsServer;
     private bool _isRunning;
     private DimeService _service;
     private IConfigurationProvider _configurationProvider;
     
-    public HttpServer(DimeService service, IConfigurationProvider configurationProvider, string uri)
+    public AdminServer(DimeService service, IConfigurationProvider configurationProvider, string httpUri, string wsUri)
     {
         _service = service;
         _configurationProvider = configurationProvider;
-        _listener = new HttpListener();
-        _listener.Prefixes.Add(uri);
+        _httpServer = new HttpListener();
+        _httpServer.Prefixes.Add(httpUri);
+        _wsServer = new WebSocketServer(wsUri);
+        _wsServer.AddWebSocketService<Feed>("/");
     }
 
     public void Start()
     {
         _isRunning = true;
-        _listener.Start();
+        _httpServer.Start();
         BeginAcceptRequest();
+        _wsServer.Start();
     }
 
     public void Stop()
     {
         _isRunning = false;
-        _listener.Stop();
-        _listener.Close();
+        _httpServer.Stop();
+        _httpServer.Close();
+        _wsServer.Stop();
     }
     
     private void BeginAcceptRequest()
     {
         try
         {
-            _listener.BeginGetContext(HandleRequest, null);
+            _httpServer.BeginGetContext(HandleRequest, null);
         }
         catch (Exception e)
         {
@@ -118,7 +130,7 @@ public class HttpServer
     {
         try
         {
-            HttpListenerContext context = _listener.EndGetContext(result);
+            HttpListenerContext context = _httpServer.EndGetContext(result);
             BeginAcceptRequest();
             ThreadPool.QueueUserWorkItem(state => ProcessRequest(context));
         }
@@ -200,12 +212,28 @@ public class HttpServer
         }
     }
 
+    private void BroadcastToAllWebsocketClients(ConnectorStatus connectorStatus)
+    {
+        var msg = JsonConvert.SerializeObject(connectorStatus);
+        var sessions = _wsServer.WebSocketServices["/"]?.Sessions.Sessions;
+
+        if (sessions is null) return;
+        foreach (var session in sessions)
+        {
+            if (session.State == WebSocketState.Open)
+            {
+                session.Context.WebSocket.Send(msg);
+            }
+        }
+    }
+    
     public void OnCreate(IConnector connector)
     {
         _connectorStatuses[connector.Configuration.Name] = new ConnectorStatus()
         {
             Name = connector.Configuration.Name,
             Direction = connector.Configuration.Direction.ToString(),
+            ConnectorType = connector.Configuration.ConnectorType,
             IsFaulted = false,
             FaultMessage = string.Empty,
             MessagesAccepted = 0,
@@ -226,11 +254,14 @@ public class HttpServer
             ActiveInclusionFilters = connector.Configuration.IncludeFilter,
             RecentErrors = new LastNTracker<TimestampMessage>(10)
         };
+        
+        BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
 
     public void OnDestroy(IConnector connector)
     {
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
+        BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
     
     public void OnConnect(IConnector connector)
@@ -238,6 +269,7 @@ public class HttpServer
         _connectorStatuses[connector.Configuration.Name].ConnectCount += 1;
         _connectorStatuses[connector.Configuration.Name].IsConnected = true;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
+        BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
     
     public void OnDisconnect(IConnector connector)
@@ -245,6 +277,7 @@ public class HttpServer
         _connectorStatuses[connector.Configuration.Name].DisconnectCount += 1;
         _connectorStatuses[connector.Configuration.Name].IsConnected = true;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
+        BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
     
     public void OnRaiseFault(IConnector connector, Exception exception)
@@ -255,6 +288,7 @@ public class HttpServer
         _connectorStatuses[connector.Configuration.Name].IsFaulted = true;
         _connectorStatuses[connector.Configuration.Name].FaultMessage = exception.Message;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
+        BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
 
     public void OnClearFault(IConnector connector, Exception exception)
@@ -262,12 +296,14 @@ public class HttpServer
         _connectorStatuses[connector.Configuration.Name].IsFaulted = false;
         _connectorStatuses[connector.Configuration.Name].FaultMessage = string.Empty;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
+        BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
 
     public void OnOutboxReady(IConnector connector, ConcurrentBag<MessageBoxMessage> outbox)
     {
         _connectorStatuses[connector.Configuration.Name].MessagesAttempted += outbox.Count;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
+        BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
 
     public void OnOutboxSent(IConnector connector, ConcurrentBag<MessageBoxMessage> outbox, bool success)
@@ -275,18 +311,21 @@ public class HttpServer
         if (!success) _connectorStatuses[connector.Configuration.Name].OutboxSendFailCount += 1;
         _connectorStatuses[connector.Configuration.Name].MessagesAccepted += outbox.Count;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
+        BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
 
     public void OnInboxReady(IConnector connector, ConcurrentBag<MessageBoxMessage> inbox, ConcurrentDictionary<string, MessageBoxMessage> current, ConcurrentBag<MessageBoxMessage> samples)
     {
         _connectorStatuses[connector.Configuration.Name].MessagesAttempted += inbox.Count;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
+        BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
     
     public void OnInboxSent(IConnector connector, ConcurrentBag<MessageBoxMessage> inbox, ConcurrentDictionary<string, MessageBoxMessage> current, ConcurrentBag<MessageBoxMessage> samples)
     {
         _connectorStatuses[connector.Configuration.Name].MessagesAccepted += inbox.Count;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
+        BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
     
     public void OnLoopPerf(IConnector connector, long readMs, long scriptMs, long loopMs)
@@ -322,6 +361,7 @@ public class HttpServer
         status.LastUpdate = DateTime.Now;
 
         _connectorStatuses[connector.Configuration.Name] = status;
+        BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
     
 }

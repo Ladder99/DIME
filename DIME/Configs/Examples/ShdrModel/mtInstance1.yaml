@@ -1,0 +1,18 @@
+mtInstance1: &mtInstance1
+  name: mtInstance1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: Script
+  rbe: !!bool true
+  init_script: |
+    -- https://github.com/rxi/json.lua
+    json = require('json');
+  items:
+    - name: Availability
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        local n = cache('./$SYSTEM/IsConnected', nil);
+        return n==true and 'Available' or 'Unavailable';
+      meta:
+        mtconnect: Device[name=device1]/Availability

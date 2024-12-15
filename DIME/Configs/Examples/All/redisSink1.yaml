@@ -3,6 +3,5 @@ redisSink1: &redisSink1
   enabled: !!bool false
   scan_interval: !!int 1000
   connector: Redis
-  address: 172.24.56.104
-  port: !!int 6379
+  address: 172.24.56.104:6379
   database: !!int 0

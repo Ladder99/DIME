@@ -11,14 +11,14 @@ public class ConnectorRunner
     public List<ConnectorRunner> Runners { get;}
     public  IConnector Connector { get; }
     private Disruptor.Dsl.Disruptor<MessageBoxMessage> _disruptor;
-    private HttpServer _httpServer;
+    private AdminServer _httpServer;
     private Timer _timer;
     private bool _isExecuting;
     private long _executionEnter = DateTime.UtcNow.ToEpochMilliseconds();
     private long _executionExit = DateTime.UtcNow.ToEpochMilliseconds();
     public long ExecutionDuration { get; private set; }
 
-    public ConnectorRunner(List<ConnectorRunner> runners, IConnector connector, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor, HttpServer httpServer)
+    public ConnectorRunner(List<ConnectorRunner> runners, IConnector connector, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor, AdminServer httpServer)
     {
         Connector = connector;
         Runners = runners;

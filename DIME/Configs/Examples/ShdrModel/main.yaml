@@ -1,0 +1,10 @@
+app:
+  ring_buffer: !!int 4096
+  http_server_uri: http://localhost:9999/
+  ws_server_uri: ws://localhost:9998/
+sinks:
+  - *consoleSink1
+  - *httpServerSink1
+  - *shdrSink1
+sources:
+  - *mtInstance1

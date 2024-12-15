@@ -43,6 +43,7 @@
       <PackageReference Include="Topshelf" Version="4.3.0" />
       <PackageReference Include="Topshelf.NLog" Version="4.3.0" />
       <PackageReference Include="TrakHound.Common" Version="0.1.6.6" />
+      <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
       <PackageReference Include="YamlDotNet" Version="16.2.0" />
     </ItemGroup>
 
@@ -194,28 +195,46 @@
       <None Update="Configs\Examples\MqttMotors\httpServerSink1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Update="Configs\Examples\MqttMotors\redisSink1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Configs\Examples\ShdrModel\main.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Configs\Examples\ShdrModel\mtInstance1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Configs\Examples\ShdrModel\shdrSink1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Configs\Examples\ShdrModel\consoleSink1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Configs\Examples\ShdrModel\httpServerSink1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
       <None Update="Configs\consoleSink1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Configs\httpServerSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\instanceMotor1A.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs\instanceMotor1B.yaml">
+      <None Update="Configs\wsServerSink.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="Configs\main.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Configs\mqttSink1.yaml">
+      <None Update="Configs\mqttSource1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Configs\Examples\MqttMotors\redisSink1.yaml">
+      <None Update="Configs\Examples\MqttToWebsocket\consoleSink1.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Configs\redisSink1.yaml">
+      <None Update="Configs\Examples\MqttToWebsocket\main.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Configs\Examples\MqttToWebsocket\mqttSource1.yaml">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Configs\Examples\MqttToWebsocket\wsServerSink.yaml">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>

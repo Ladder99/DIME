@@ -43,6 +43,9 @@ public static class SinkConnectorFactory
             case "trakhoundhttp":
                 connector = TrakHoundHttp.Sink.Create(section, disruptor);
                 break;
+            case "websocketserver":
+                connector = WebsocketServer.Sink.Create(section, disruptor);
+                break;
             default:
                 break;
         }

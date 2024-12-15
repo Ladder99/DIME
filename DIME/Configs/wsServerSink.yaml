@@ -1,0 +1,6 @@
+wsServerSink1: &wsServerSink1
+  name: wsServerSink1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: WebsocketServer
+  uri: ws://127.0.0.1:8082/
