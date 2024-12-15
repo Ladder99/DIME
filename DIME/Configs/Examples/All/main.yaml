@@ -1,0 +1,32 @@
+app:
+  ring_buffer: !!int 4096
+  server_uri: http://localhost:9999/
+sinks:
+  - *consoleSink1
+  - *httpServerSink1
+  - *influxLpSink1
+  - *mqttSink1
+  - *mtConnectSink1
+  - *redisSink1
+  - *shdrSink1
+  - *sparkplugBSink1
+  - *splunkEhSdkSink1
+  - *splunkHecSink1
+  - *trakhoundHttpSink1
+sources:
+  - *ascCpcSource1
+  - *eipSource1
+  - *haasSource1
+  - *httpServerSource1
+  - *mettlerToledoScale1
+  - *modbusSource1
+  - *mqttSource1
+  - *mtConnectSource1
+  - *opcUaSource1
+  - *redisSource1
+  - *scriptSource1
+  - *smartPacSource1
+  - *snmpSource1
+  - *timebaseWsSource1
+  - *instanceMotor1A
+  - *instanceMotor1B
