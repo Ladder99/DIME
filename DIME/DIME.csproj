@@ -68,6 +68,7 @@
       </None>
       <None Update="runtimes/linux-arm64/native/liblua54.so">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToPublishDirectory>Always</CopyToPublishDirectory>
       </None>
     </ItemGroup>
 
