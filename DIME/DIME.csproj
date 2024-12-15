@@ -66,13 +66,15 @@
       <None Update="Lua\stateful.lua">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Include="runtimes/linux-arm64/native/liblua54.so">
+      <None Update="runtimes/linux-arm64/native/liblua54.so">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+      </None>
+      <None Update="runtimes/linux-arm64/native/liblua54.so">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 
-    <Target Name="CopyAndRenameFile" BeforeTargets="Build">
+    <Target Name="CopyAfterBuild" AfterTargets="Build">
       <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
             DestinationFiles="$(OutDir)runtimes/linux-arm64/native/liblua54.so" />
       <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/consoleSink1.yaml" 
@@ -81,6 +83,17 @@
             DestinationFiles="$(OutDir)Configs/mqttSource1.yaml" />
       <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/main.yaml" 
             DestinationFiles="$(OutDir)Configs/main.yaml" />
+    </Target>
+
+    <Target Name="CopyAfterPublish" AfterTargets="Publish">
+      <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
+            DestinationFiles="$(PublishDir)runtimes/linux-arm64/native/liblua54.so" />
+      <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/consoleSink1.yaml" 
+            DestinationFiles="$(PublishDir)Configs/consoleSink1.yaml" />
+      <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/mqttSource1.yaml" 
+            DestinationFiles="$(PublishDir)Configs/mqttSource1.yaml" />
+      <Copy SourceFiles="$(ProjectDir)Configs/Examples/Basic/main.yaml" 
+            DestinationFiles="$(PublishDir)Configs/main.yaml" />
     </Target>
 
 	<!--
