@@ -69,15 +69,6 @@
       <None Update="runtimes/linux-arm64/native/liblua54.so">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="Configs/consoleSink1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs/mqttSource1.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="Configs/main.yaml">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
     </ItemGroup>
 
     <Target Name="CopyAndRenameFile" AfterTargets="Build">

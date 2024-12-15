@@ -1139,7 +1139,7 @@ mkdir -p volumes/dime/configs
 mkdir -p volumes/dime/lua
 mkdir -p volumes/dime/logs
 cp DIME/DIME/nlog.config volumes/dime/nlog.config
-cp DIME/DIME/Configs/* volumes/dime/configs
+cp DIME/DIME/Configs/Examples/Basic/* volumes/dime/configs
 cp DIME/DIME/Lua/* volumes/dime/lua
 
 docker run \
@@ -1153,6 +1153,10 @@ docker run \
    -v ~/volumes/dime/configs:/app/Configs \
    -v ~/volumes/dime/lua:/app/Lua \
    -v ~/volumes/dime/logs:/app/Logs \
+   ladder99/dime:latest
+   
+docker run \
+   -v ~/volumes/dime/nlog.config:/app/nlog.config \
    ladder99/dime:latest
 ```
 
