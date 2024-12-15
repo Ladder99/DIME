@@ -9,6 +9,7 @@ mqttSource1: &mqttSource1
   port: !!int 1883
   qos: !!int 0
   init_script: |
+    print("hello world from lua");
     -- https://github.com/rxi/json.lua
     json = require('json');
   items:
