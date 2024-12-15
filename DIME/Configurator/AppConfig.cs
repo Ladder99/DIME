@@ -11,7 +11,7 @@ public static class AppConfig
             {
                 { "ring_buffer", 4096 },
                 { "http_server_uri", "http://127.0.0.1:9999/" },
-                { "ws_server_uri", "http://127.0.0.1:9998/" }
+                { "ws_server_uri", "ws://127.0.0.1:9998/" }
             };
         }
         

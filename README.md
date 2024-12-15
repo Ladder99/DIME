@@ -1104,6 +1104,22 @@ sources:
    - *scriptSource1
 ```
 
+## Manual Build
+
+```sh
+wget https://dot.net/v1/dotnet-install.sh
+bash ./dotnet-install.sh --channel 8.0
+export PATH="$HOME/.dotnet/:$PATH"
+
+cd ~
+git clone https://github.com/ladder99/DIME
+
+cd DIME/DIME
+dotnet restore
+dotnet publish -c Release -o out
+dotnet DIME.dll
+```
+
 ## Docker
 
 ```sh
