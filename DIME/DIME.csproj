@@ -15,8 +15,10 @@
         <RepositoryUrl>https://github.com/Ladder99/DIME</RepositoryUrl>
         <PackageId>MRIIOT.DIME</PackageId>
         <TargetFramework>net8.0</TargetFramework>
-	      <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
-	      <SelfContained>false</SelfContained>
+	  <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
+	  <SelfContained>false</SelfContained>
+	  <Configurations>Debug;Release;MqttMotors</Configurations>
+	  <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
@@ -49,60 +51,43 @@
 
     <ItemGroup>
       <LuaFiles Include="$(ProjectDir)Lua/*.lua" />
-      <ConfigExampleBasic Include="$(ProjectDir)Configs/Examples/Basic/*.yaml" />
-      <ConfigExampleMqttMotors Include="$(ProjectDir)Configs/Examples/MqttMotors/*.yaml" />
-      <ConfigExampleMqttToWebsocket Include="$(ProjectDir)Configs/Examples/MqttToWebsocket/*.yaml" />
-      <ConfigExampleShdrModel Include="$(ProjectDir)Configs/Examples/ShdrModel/*.yaml" />
+      <ConfigExampleFiles Include="$(ProjectDir)Configs/Examples/$(Configuration)/*.yaml" />
+      <ConfigExampleFilesBasic Include="$(ProjectDir)Configs/Examples/Basic/*.yaml" />
     </ItemGroup>
 
-    <Target 
-      Name="Debug_CopyAfterBuild"
-      Condition="'$(Configuration)' == 'Debug'"
-      AfterTargets="Build">
+    <Target Name="CopyAfterBuild" Condition="'$(Configuration)' != 'Release'" AfterTargets="Build">
       <Copy SourceFiles="$(ProjectDir)nlog.config" 
             DestinationFiles="$(OutDir)nlog.config" />
       <Copy SourceFiles="@(LuaFiles)" 
             DestinationFolder="$(OutDir)Lua" />
-      <Copy SourceFiles="@(ConfigExampleBasic)" 
+      <Copy SourceFiles="@(ConfigFiles)" 
             DestinationFolder="$(OutDir)Configs" />
     </Target>
 
-    <Target 
-      Name="Release_CopyAfterBuild"
-      Condition="'$(Configuration)' == 'Release'"
-      AfterTargets="Build">
+    <Target Name="Release_CopyAfterBuild" Condition="'$(Configuration)' == 'Release'" AfterTargets="Build">
       <Copy SourceFiles="$(ProjectDir)nlog.config" 
             DestinationFiles="$(OutDir)nlog.config" />
       <Copy SourceFiles="@(LuaFiles)" 
             DestinationFolder="$(OutDir)Lua" />
-      <Copy SourceFiles="@(ConfigExampleBasic)" 
+      <Copy SourceFiles="@(ConfigExampleFilesBasic)" 
             DestinationFolder="$(OutDir)Configs" />
     </Target>
 
-    <Target 
-      Name="Release_CopyAfterPublish"
-      Condition="'$(Configuration)' == 'Release'"
-      AfterTargets="Publish">
+    <Target Name="Release_CopyAfterPublish" Condition="'$(Configuration)' == 'Release'" AfterTargets="Publish">
       <Copy SourceFiles="$(ProjectDir)nlog.config" 
             DestinationFiles="$(PublishDir)nlog.config" />
       <Copy SourceFiles="@(LuaFiles)" 
             DestinationFolder="$(PublishDir)Lua" />
-      <Copy SourceFiles="@(ConfigExampleBasic)" 
+      <Copy SourceFiles="@(ConfigExampleFilesBasic)" 
             DestinationFolder="$(PublishDir)Configs" />
     </Target>
 
-    <Target 
-      Name="Release_CopyAfterBuild_arm64"
-      Condition="'$(Platform)' == 'arm64'"
-      AfterTargets="Build">
+    <Target Name="Release_CopyAfterBuild_arm64" Condition="'$(Platform)' == 'arm64'" AfterTargets="Build">
       <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
             DestinationFiles="$(OutDir)liblua54.so" />
     </Target>
 
-    <Target 
-      Name="Release_CopyAfterPublish_arm64"
-      Condition="'$(Platform)' == 'arm64'"
-      AfterTargets="Publish">
+    <Target Name="Release_CopyAfterPublish_arm64" Condition="'$(Platform)' == 'arm64'" AfterTargets="Publish">
       <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
             DestinationFiles="$(PublishDir)liblua54.so" />
     </Target>
