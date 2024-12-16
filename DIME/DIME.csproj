@@ -81,6 +81,8 @@
             DestinationFolder="$(OutDir)Lua" />
       <Copy SourceFiles="@(ConfigExampleBasic)" 
             DestinationFolder="$(OutDir)Configs" />
+      <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
+            DestinationFiles="$(PublishDir)liblua54.so" />
     </Target>
 
     <Target 
@@ -95,6 +97,8 @@
             DestinationFolder="$(PublishDir)Lua" />
       <Copy SourceFiles="@(ConfigExampleBasic)" 
             DestinationFolder="$(PublishDir)Configs" />
+      <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
+            DestinationFiles="$(PublishDir)liblua54.so" />
     </Target>
 
 	<!--
