@@ -8,7 +8,7 @@ COPY DIME.csproj ./
 RUN dotnet restore -a $TARGETARCH
 
 COPY . ./
-RUN dotnet publish -a $TARGETARCH -c Release -o out --self-contained false --no-restore
+RUN dotnet publish -a $TARGETARCH -c Release -o out --self-contained true --no-restore
 
 FROM mcr.microsoft.com/dotnet/runtime:8.0
 WORKDIR /app

@@ -1131,8 +1131,8 @@ docker run --privileged --rm tonistiigi/binfmt --install all
 docker buildx create --name multi-arch-builder --use
 
 cd DIME/DIME
-docker buildx build -f Dockerfilex --platform linux/amd64,linux/arm64 -t ladder99/dime:1.0.0 -t ladder99/dime:latest --push .
-#docker build -f Dockerfile --tag=ladder99/dime:1.0.0 --tag=ladder99/dime:latest .
+#docker buildx build -f Dockerfilex --platform linux/amd64,linux/arm64 -t ladder99/dime:1.0.0 -t ladder99/dime:latest --push .
+docker build -f Dockerfile --tag=ladder99/dime:1.0.0 --tag=ladder99/dime:latest .
 #docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest ladder99/dime:latest
 
 cd ~
