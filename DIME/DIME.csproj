@@ -16,7 +16,7 @@
         <PackageId>MRIIOT.DIME</PackageId>
         <TargetFramework>net8.0</TargetFramework>
 	  <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
-	  <SelfContained>false</SelfContained>
+	  <SelfContained>true</SelfContained>
 	  <Configurations>Debug;Release;MqttMotors</Configurations>
 	  <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
@@ -56,15 +56,18 @@
     </ItemGroup>
 
     <Target Name="CopyAfterBuild" Condition="'$(Configuration)' != 'Release'" AfterTargets="Build">
+      <Message Text="OUTDIR = $(OutDir)" Importance="HIGH"/>
+      <Message Text="Config FROM=$(ConfigExampleFiles), TO=$(OutDir)Configs" Importance="HIGH"/>
       <Copy SourceFiles="$(ProjectDir)nlog.config" 
             DestinationFiles="$(OutDir)nlog.config" />
       <Copy SourceFiles="@(LuaFiles)" 
             DestinationFolder="$(OutDir)Lua" />
-      <Copy SourceFiles="@(ConfigFiles)" 
+      <Copy SourceFiles="@(ConfigExampleFiles)" 
             DestinationFolder="$(OutDir)Configs" />
     </Target>
 
     <Target Name="Release_CopyAfterBuild" Condition="'$(Configuration)' == 'Release'" AfterTargets="Build">
+      <Message Text="OUTDIR = $(OutDir)" Importance="HIGH"/>
       <Copy SourceFiles="$(ProjectDir)nlog.config" 
             DestinationFiles="$(OutDir)nlog.config" />
       <Copy SourceFiles="@(LuaFiles)" 
@@ -74,6 +77,7 @@
     </Target>
 
     <Target Name="Release_CopyAfterPublish" Condition="'$(Configuration)' == 'Release'" AfterTargets="Publish">
+      <Message Text="PUBLISHDIR = $(PublishDir)" Importance="HIGH"/>
       <Copy SourceFiles="$(ProjectDir)nlog.config" 
             DestinationFiles="$(PublishDir)nlog.config" />
       <Copy SourceFiles="@(LuaFiles)" 
@@ -83,11 +87,13 @@
     </Target>
 
     <Target Name="Release_CopyAfterBuild_arm64" Condition="'$(Platform)' == 'arm64'" AfterTargets="Build">
+      <Message Text="OUTDIR = $(OutDir)" Importance="HIGH"/>
       <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
             DestinationFiles="$(OutDir)liblua54.so" />
     </Target>
 
     <Target Name="Release_CopyAfterPublish_arm64" Condition="'$(Platform)' == 'arm64'" AfterTargets="Publish">
+      <Message Text="OUTDIR = $(OutDir)" Importance="HIGH"/>
       <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
             DestinationFiles="$(PublishDir)liblua54.so" />
     </Target>
