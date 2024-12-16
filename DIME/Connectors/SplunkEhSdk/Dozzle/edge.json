@@ -1,5 +1,6 @@
 {
   "name": "amir20/dozzle:latest",
   "containerArchive": "dozzle.tar",
-  "portMap": ["51555:8080"]
+  "portMap": ["51555:8080"],
+  "mappedStorage": "/var/run/docker.sock"
 }
