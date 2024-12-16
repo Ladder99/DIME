@@ -1157,6 +1157,8 @@ docker run \
    ladder99/dime:latest
    
 docker run \
+   -p 9998:9998 \
+   -v ~/volumes/dime/configs:/app/Configs \
    -v ~/volumes/dime/nlog.config:/app/nlog.config \
    ladder99/dime:latest
 ```
