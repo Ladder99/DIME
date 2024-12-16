@@ -5,9 +5,17 @@ postgresSource1: &postgresSource1
   connector: Postgres
   rbe: !!bool true
   connection_string: Host=172.16.10.43;Port=5342;Username=postgres;Password=postgres;Database=postgres;
-  command_text: select * from public.fedex limit 3;
-  init_script: ~
+  command_text: select * from public.fedex limit {top};
+  init_script: |
+    top = "{top}"
   deinit_script: ~
+  enter_script: |
+    local conn = configuration().CommandText;
+    next_num = math.random(1, 9);
+    conn = string.gsub(conn, top, next_num);
+    top = next_num;
+    configuration().CommandText = conn;
+    print(conn);
   items:
     - name: TrackingNumber
       enabled: !!bool true
