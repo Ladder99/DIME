@@ -34,6 +34,9 @@ public static class SourceConnectorFactory
             case "opcua":
                 connector = OpcUa.Source.Create(section, disruptor);
                 break;
+            case "postgres":
+                connector = Postgres.Source.Create(section, disruptor);
+                break;
             case "redis":
                 connector = Redis.Source.Create(section, disruptor);
                 break;

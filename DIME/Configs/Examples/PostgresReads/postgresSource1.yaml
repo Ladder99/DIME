@@ -1,0 +1,15 @@
+postgresSource1: &postgresSource1
+  name: postgresSource1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: Postgres
+  rbe: !!bool true
+  connection_string: Host=172.16.10.8;Port=5342;Username=postgres;Password=postgres;Database=postgres;
+  command_text: select * from table;
+  init_script: ~
+  deinit_script: ~
+  items:
+    - name: Column1
+      enabled: !!bool true
+      address: column1
+      script: return result[0];

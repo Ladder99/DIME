@@ -17,7 +17,7 @@
         <TargetFramework>net8.0</TargetFramework>
 	  <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
 	  <SelfContained>true</SelfContained>
-	  <Configurations>Debug;Release;MqttMotors</Configurations>
+	  <Configurations>Debug;Release;MqttMotors;PostgresReads</Configurations>
 	  <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
@@ -40,6 +40,7 @@
       <PackageReference Include="NLog" Version="5.3.4" />
       <PackageReference Include="NLua" Version="1.7.3" />
       <PackageReference Include="NModbus" Version="3.0.81" />
+      <PackageReference Include="Npgsql" Version="9.0.2" />
       <PackageReference Include="SIPSorcery.WebSocketSharp" Version="0.0.1" />
       <PackageReference Include="SparkplugNet" Version="1.3.10" />
       <PackageReference Include="StackExchange.Redis" Version="2.8.22" />
@@ -50,6 +51,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ConfigExampleFilesBasic Include="Configs\Examples\PostgresReads\consoleSink1.yaml" />
+      <ConfigExampleFilesBasic Include="Configs\Examples\PostgresReads\main.yaml" />
+      <ConfigExampleFilesBasic Include="Configs\Examples\PostgresReads\postgresSource1.yaml" />
       <LuaFiles Include="$(ProjectDir)Lua/*.lua" />
       <ConfigExampleFiles Include="$(ProjectDir)Configs/Examples/$(Configuration)/*.yaml" />
       <ConfigExampleFilesBasic Include="$(ProjectDir)Configs/Examples/Basic/*.yaml" />
