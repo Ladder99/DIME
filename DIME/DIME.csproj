@@ -61,8 +61,8 @@
       AfterTargets="Build">
       <Copy SourceFiles="$(ProjectDir)nlog.config" 
             DestinationFiles="$(OutDir)nlog.config" />
-      <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
-            DestinationFiles="$(OutDir)runtimes/linux-arm64/native/liblua54.so" />
+      <!--<Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
+            DestinationFiles="$(OutDir)runtimes/linux-arm64/native/liblua54.so" />-->
       <Copy SourceFiles="@(LuaFiles)" 
             DestinationFolder="$(OutDir)Lua" />
       <Copy SourceFiles="@(ConfigExampleBasic)" 
@@ -75,14 +75,14 @@
       AfterTargets="Build">
       <Copy SourceFiles="$(ProjectDir)nlog.config" 
             DestinationFiles="$(OutDir)nlog.config" />
-      <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
-            DestinationFiles="$(OutDir)runtimes/linux-arm64/native/liblua54.so" />
+      <!--<Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
+            DestinationFiles="$(OutDir)runtimes/linux-arm64/native/liblua54.so" />-->
       <Copy SourceFiles="@(LuaFiles)" 
             DestinationFolder="$(OutDir)Lua" />
       <Copy SourceFiles="@(ConfigExampleBasic)" 
             DestinationFolder="$(OutDir)Configs" />
       <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
-            DestinationFiles="$(PublishDir)liblua54.so" />
+            DestinationFiles="$(OutDir)liblua54.so" />
     </Target>
 
     <Target 
@@ -91,12 +91,28 @@
       AfterTargets="Publish">
       <Copy SourceFiles="$(ProjectDir)nlog.config" 
             DestinationFiles="$(PublishDir)nlog.config" />
-      <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
-            DestinationFiles="$(PublishDir)runtimes/linux-arm64/native/liblua54.so" />
+      <!--<Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
+            DestinationFiles="$(PublishDir)runtimes/linux-arm64/native/liblua54.so" />-->
       <Copy SourceFiles="@(LuaFiles)" 
             DestinationFolder="$(PublishDir)Lua" />
       <Copy SourceFiles="@(ConfigExampleBasic)" 
             DestinationFolder="$(PublishDir)Configs" />
+      <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
+            DestinationFiles="$(PublishDir)liblua54.so" />
+    </Target>
+
+    <Target 
+      Name="Release_CopyAfterBuild_linux-arm64"
+      Condition="'$(Platform)' == 'ARM64'"
+      AfterTargets="Build">
+      <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
+            DestinationFiles="$(OutDir)liblua54.so" />
+    </Target>
+
+    <Target 
+      Name="Release_CopyAfterPublish_linux-arm64"
+      Condition="'$(Platform)' == 'ARM64'"
+      AfterTargets="Publish">
       <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
             DestinationFiles="$(PublishDir)liblua54.so" />
     </Target>
