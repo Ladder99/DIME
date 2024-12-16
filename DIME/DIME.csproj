@@ -99,7 +99,7 @@
 
     <Target 
       Name="Release_CopyAfterBuild_linux-arm64"
-      Condition="'$(Platform)' == 'ARM64'"
+      Condition="'$(Platform)' == 'arm64'"
       AfterTargets="Build">
       <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
             DestinationFiles="$(OutDir)liblua54.so" />
@@ -107,7 +107,7 @@
 
     <Target 
       Name="Release_CopyAfterPublish_linux-arm64"
-      Condition="'$(Platform)' == 'ARM64'"
+      Condition="'$(Platform)' == 'arm64'"
       AfterTargets="Publish">
       <Copy SourceFiles="$(ProjectDir)liblua54-arm64.so" 
             DestinationFiles="$(PublishDir)liblua54.so" />
