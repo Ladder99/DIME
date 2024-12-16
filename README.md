@@ -109,7 +109,7 @@ sources:
 | OPC-DA                                                                    |
 | [OPC-UA](#opc-ua)                                                         |
 | OPC XML-DA                                                                |
-| Postgres                                                                  |
+| [Postgres](#postgres)                                                     |
 | [Redis](#redis)                                                           |
 | [Script](#script)                                                         |
 | Siemens S7                                                                |
@@ -593,6 +593,43 @@ sources:
       - name: Random
         namespace: !!int 2
         address: Simulation Examples.Functions.Random6
+```
+
+### Postgres
+
+| Name              | Type         | Description                        |
+|-------------------|--------------|------------------------------------|
+| name              | string       | unique connector name              |
+| enabled           | bool         | is connector enabled               |
+| scan_interval     | int          | scanning frequency in milliseconds |
+| rbe               | bool         | report by exception                |
+| init_script       | string       | startup lua script                 |
+| deinit_script     | string       | shutdown lua script                |
+| enter_script      | string       | before loop script                 |
+| exit_script       | string       | after loop script                  |
+| connector         | string       | connector type, `Postgres`         |
+| connection_string | string       | connection string                  |
+| command_text      | string       | query command                      |
+| items             | object array | items                              |
+| items[].name      | string       | unique item name                   |
+| items[].enabled   | bool         | is item enabled                    |
+| items[].rbe       | bool         | report by exception override       |
+| items[].address   | string       | column name                        |
+
+#### Source Example
+
+```yaml
+  - name: postgresSource1
+    connector: Postgres
+    connection_string: Host=172.16.10.43;Port=5342;Username=postgres;Password=postgres;Database=postgres;
+    command_text: select * from public.fedex limit 3;
+    items:
+      - name: TrackingNumber
+        address: package_tracking_number
+        script: return result[0];
+      - name: ShipToName
+        address: ship_to_name
+        script: return result;
 ```
 
 ### Redis

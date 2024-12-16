@@ -43,7 +43,7 @@ public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<T
             {
                 response = dataTable.AsEnumerable()
                     .Select(row => row.Field<object>(item.Address))
-                    .ToList();
+                    .ToArray();
                 readResult = response;
             }
             

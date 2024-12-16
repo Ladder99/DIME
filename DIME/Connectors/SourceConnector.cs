@@ -283,8 +283,8 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                     // datas are not null
                     else
                     {
-                        bool isCurrentArray = matchingCurrent.Data.GetType().IsArray;
-                        bool isSampleArray = sampleResponse.Data.GetType().IsArray;
+                        bool isCurrentArray = matchingCurrent.Data.GetType().IsArray;// || (matchingCurrent.Data.GetType().IsGenericType && matchingCurrent.Data.GetType().GetGenericTypeDefinition() == typeof(List<>));
+                        bool isSampleArray = sampleResponse.Data.GetType().IsArray;// || (sampleResponse.Data.GetType().IsGenericType && sampleResponse.Data.GetType().GetGenericTypeDefinition() == typeof(List<>));
 
                         // both datas are array, compare datas as sequence
                         if (isCurrentArray && isSampleArray)

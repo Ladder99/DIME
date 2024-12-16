@@ -4,12 +4,16 @@ postgresSource1: &postgresSource1
   scan_interval: !!int 1000
   connector: Postgres
   rbe: !!bool true
-  connection_string: Host=172.16.10.8;Port=5342;Username=postgres;Password=postgres;Database=postgres;
-  command_text: select * from table;
+  connection_string: Host=172.16.10.43;Port=5342;Username=postgres;Password=postgres;Database=postgres;
+  command_text: select * from public.fedex limit 3;
   init_script: ~
   deinit_script: ~
   items:
-    - name: Column1
+    - name: TrackingNumber
       enabled: !!bool true
-      address: column1
+      address: package_tracking_number
       script: return result[0];
+    - name: ShipToName
+      enabled: !!bool true
+      address: ship_to_name
+      script: return result;

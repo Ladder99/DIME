@@ -30,7 +30,7 @@ public class Source: DatabaseSourceConnector<ConnectorConfiguration, ConnectorIt
         using (var connection = new NpgsqlConnection(Configuration.ConnectionString))
         {
             connection.Open();
-            var cmd = new NpgsqlCommand(Configuration.CommandText);
+            var cmd = new NpgsqlCommand(Configuration.CommandText, connection);
             var reader = cmd.ExecuteReader();
             var table = new DataTable();
             table.Load(reader);
