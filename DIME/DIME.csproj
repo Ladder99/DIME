@@ -51,6 +51,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ConfigExampleFiles Include="Configs\Examples\MsSqlReads\consoleSink1.yaml" />
+      <ConfigExampleFiles Include="Configs\Examples\MsSqlReads\main.yaml" />
+      <ConfigExampleFiles Include="Configs\Examples\MsSqlReads\msSqlSource1.yaml" />
       <LuaFiles Include="$(ProjectDir)Lua/*.lua" />
       <ConfigExampleFiles Include="$(ProjectDir)Configs/Examples/$(Configuration)/*.yaml" />
       <ConfigExampleFilesBasic Include="$(ProjectDir)Configs/Examples/Basic/*.yaml" />
