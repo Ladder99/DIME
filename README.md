@@ -104,7 +104,7 @@ sources:
 | [HTTP Server](#http-server)                                               |
 | [Modbus/TCP](#modbus-tcp)                                                 |
 | [MQTT](#mqtt)                                                             |
-| MS SQL Server                                                             |
+| [MS SQL Server](#ms-sql-server)                                           |
 | [MTConnect Agent](#mtconnect-agent)                                       |
 | OPC-DA                                                                    |
 | [OPC-UA](#opc-ua)                                                         |
@@ -469,6 +469,43 @@ sources:
     items:
       - name: subscribe1
         address: sharc/+/evt/#
+```
+
+### MS SQL Server
+
+| Name              | Type         | Description                        |
+|-------------------|--------------|------------------------------------|
+| name              | string       | unique connector name              |
+| enabled           | bool         | is connector enabled               |
+| scan_interval     | int          | scanning frequency in milliseconds |
+| rbe               | bool         | report by exception                |
+| init_script       | string       | startup lua script                 |
+| deinit_script     | string       | shutdown lua script                |
+| enter_script      | string       | before loop script                 |
+| exit_script       | string       | after loop script                  |
+| connector         | string       | connector type, `MSSQL`            |
+| connection_string | string       | connection string                  |
+| command_text      | string       | query command                      |
+| items             | object array | items                              |
+| items[].name      | string       | unique item name                   |
+| items[].enabled   | bool         | is item enabled                    |
+| items[].rbe       | bool         | report by exception override       |
+| items[].address   | string       | column name                        |
+
+#### Source Example
+
+```yaml
+  - name: msSqlSource1
+    connector: MSSQL
+    connection_string: Server=172.16.10.5;Database=Tykma;User Id=datareader;Password=datareader;Encrypt=True;TrustServerCertificate=True;
+    command_text: select top 5 * from dbo.SiliconeRubberOrders;
+    items:
+      - name: OrderNumber
+        address: ManufacturingOrderNumber
+        script: return result[0];
+      - name: OrderQuantity
+        address: OrderQuantity
+        script: return result[0];
 ```
 
 ### MTConnect Agent

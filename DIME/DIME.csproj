@@ -17,7 +17,7 @@
         <TargetFramework>net8.0</TargetFramework>
 	  <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
 	  <SelfContained>true</SelfContained>
-	  <Configurations>Debug;Release;MqttMotors;PostgresReads</Configurations>
+	  <Configurations>Debug;Release;MqttMotors;PostgresReads;MsSqlReads</Configurations>
 	  <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
@@ -32,6 +32,7 @@
       <PackageReference Include="InfluxDB.Client" Version="4.19.0-dev.15190" />
       <PackageReference Include="Lextm.SharpSnmpLib" Version="12.5.5" />
       <PackageReference Include="libplctag" Version="1.5.2" />
+      <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.0-preview3.24332.3" />
       <PackageReference Include="MQTTnet" Version="4.3.7.1207" />
       <PackageReference Include="MTConnect.NET-Applications-Agents" Version="6.5.0" />
       <PackageReference Include="MTConnect.NET-SHDR" Version="6.5.0" />
@@ -51,9 +52,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ConfigExampleFiles Include="Configs\Examples\MsSqlReads\consoleSink1.yaml" />
-      <ConfigExampleFiles Include="Configs\Examples\MsSqlReads\main.yaml" />
-      <ConfigExampleFiles Include="Configs\Examples\MsSqlReads\msSqlSource1.yaml" />
       <LuaFiles Include="$(ProjectDir)Lua/*.lua" />
       <ConfigExampleFiles Include="$(ProjectDir)Configs/Examples/$(Configuration)/*.yaml" />
       <ConfigExampleFilesBasic Include="$(ProjectDir)Configs/Examples/Basic/*.yaml" />

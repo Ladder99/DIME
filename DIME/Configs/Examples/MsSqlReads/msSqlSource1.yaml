@@ -4,8 +4,8 @@ msSqlSource1: &msSqlSource1
   scan_interval: !!int 1000
   connector: MSSQL
   rbe: !!bool true
-  connection_string: Server=172.16.10.5;Database=Tykma;User Id=datareader;Password=datareader;
-  command_text: select top * from dbo.SiliconeRubberOrders;
+  connection_string: Server=172.16.10.5;Database=Tykma;User Id=datareader;Password=datareader;Encrypt=True;TrustServerCertificate=True;
+  command_text: select top 5 * from dbo.SiliconeRubberOrders;
   init_script: ~
   deinit_script: ~
   enter_script: ~
