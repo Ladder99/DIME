@@ -1,6 +1,7 @@
 using DIME.Configuration.MtConnectShdr;
 using MTConnect.Adapters;
 using MTConnect.Devices;
+using MTConnect.Devices.DataItems;
 using MTConnect.Shdr;
 
 namespace DIME.Connectors.MtConnectShdr;
@@ -8,6 +9,7 @@ namespace DIME.Connectors.MtConnectShdr;
 public class Sink: SinkConnector<ConnectorConfiguration, Configuration.ConnectorItem>
 {
     private ShdrQueueAdapter _client = null;
+    private Dictionary<string, Device> _devices = null;
     
     public Sink(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
@@ -20,6 +22,8 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
 
     protected override bool CreateImplementation()
     {
+        _devices = new Dictionary<string, Device>();
+        
         _client = new ShdrQueueAdapter(
             Configuration.DeviceKey,
             Configuration.Port,
@@ -72,15 +76,6 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
         return true;
     }
 
-    private Dictionary<string, Device> _devices = new();
-
-    private string[] GetPartsFromMeta(string meta)
-    {
-        char[] delimiters = { '[', ']', '/', ',' };
-        string[] parts = meta.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
-        return parts;
-    }
-    
     protected override bool WriteImplementation()
     {
         foreach (var message in Outbox)
@@ -94,34 +89,29 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
                 string mtconnectPath = message.ConnectorItemRef.Meta["mtconnect"].ToString();
                 string mtconnectSource = message.Path;
 
-                var parts = GetPartsFromMeta(mtconnectPath);
-
-                string currentPart = null;
-
-                foreach (var part in parts)
-                {
-                    if (!part.Contains("="))
-                    {
-                        // component
-                        currentPart = part;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
-                    }
-                    else
-                    {
-                        // attributes
-                        var attributes = part.Split('=');
-                    }
-                }
-                
-                Device d = new Device();
-                MTConnect.Devices.Component c = Component.Create("ControllerComponent"); 
+                DeviceBuilder.Builder.Build(_devices, mtconnectPath, message.Path);
             }
             
             _client.AddDataItem(new ShdrDataItem(message.Path, message.Data, message.Timestamp));
         }
 
         _client.SendBuffer();
-        
+
         return true;
+    }
+
+    public override bool AfterUpdate()
+    {
+        Directory.CreateDirectory("./Output/MTConnect");
+        
+        foreach (var device in _devices)
+        {
+            var xmlBytes = MTConnect.Devices.Xml.XmlDevice.ToXml(device.Value);
+            var xmlString = System.Text.Encoding.UTF8.GetString(xmlBytes);
+            File.WriteAllText($"./Output/MTConnect/device-{device.Key}.xml", xmlString);
+        }
+        
+        return base.AfterUpdate();
     }
 
     protected override bool DisconnectImplementation()

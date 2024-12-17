@@ -17,7 +17,7 @@
         <TargetFramework>net8.0</TargetFramework>
 	  <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
 	  <SelfContained>true</SelfContained>
-	  <Configurations>Debug;Release;MqttMotors;PostgresReads;MsSqlReads</Configurations>
+	  <Configurations>Debug;Release;MqttMotors;PostgresReads;MsSqlReads;ShdrModel</Configurations>
 	  <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
