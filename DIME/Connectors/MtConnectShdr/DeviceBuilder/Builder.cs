@@ -42,10 +42,10 @@ static class Builder
             }
             else if (i == parts.Count - 1) // DataItem expected
             {
-                var dataItem = nextComponent.GetDataItemByType($"{part.Name}DataItem", SearchType.Child);
+                var dataItem = nextComponent.GetDataItemByType($"{part.Name}", SearchType.Child);
                 if (dataItem is null)
                 {
-                    dataItem = DataItem.Create($"{part.Name}DataItem");
+                    dataItem = DataItem.Create($"{part.Name}");
                     ((DataItem)dataItem).Source = new Source()
                     {
                         Value = mtConnectSource
@@ -73,32 +73,31 @@ static class Builder
             }
             else // Component expected
             {
-                var childComponent = nextComponent.GetComponent($"{part.Name}Component", searchType: SearchType.Child);
+                var childComponent = nextComponent.GetComponent($"{part.Name}", searchType: SearchType.Child);
                 if (childComponent is null)
                 {
-                    childComponent = Component.Create($"{part.Name}Component");
-                }
-                
-                part.Attributes.TryAdd("Id", Guid.NewGuid().ToString());
-                part.Attributes.TryAdd("Name", string.Empty);
-                part.Attributes.TryAdd("Type", part.Name);
-                
-                foreach (var attribute in part.Attributes)
-                {
-                    System.Console.WriteLine($"\t\tProcessing Attribute: {attribute.Key}={attribute.Value}");
-                    SetPropertyFromAttribute(childComponent, attribute.Key, attribute.Value);
-                }
+                    childComponent = Component.Create($"{part.Name}");
 
-                try
-                {
-                    ((Component)nextComponent).AddComponent(childComponent);
-                    nextComponent = childComponent;
+                    part.Attributes.TryAdd("Id", Guid.NewGuid().ToString());
+                    part.Attributes.TryAdd("Name", string.Empty);
+                    part.Attributes.TryAdd("Type", part.Name);
+
+                    foreach (var attribute in part.Attributes)
+                    {
+                        System.Console.WriteLine($"\t\tProcessing Attribute: {attribute.Key}={attribute.Value}");
+                        SetPropertyFromAttribute(childComponent, attribute.Key, attribute.Value);
+                    }
+
+                    try
+                    {
+                        ((Component)nextComponent).AddComponent(childComponent);
+                    }
+                    catch
+                    {
+                        ((Device)nextComponent).AddComponent(childComponent);
+                    }
                 }
-                catch
-                {
-                    ((Device)nextComponent).AddComponent(childComponent);
-                    nextComponent = childComponent;
-                }
+                nextComponent = childComponent;
             }
         }
 
