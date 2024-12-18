@@ -8,5 +8,5 @@ public class ConnectorItem
     public bool ReportByException { get; set; }
     public string Address { get; set; }
     public string Script { get; set; }
-    public Dictionary<object, object> Meta { get; set; }
+    public Dictionary<object, object> SinkMeta { get; set; }
 }

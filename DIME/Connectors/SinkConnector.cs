@@ -156,8 +156,8 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
     protected object TransformMessage(MessageBoxMessage message)
     {
         var transformExists = message.ConnectorItemRef is not null &&
-                              message.ConnectorItemRef.Meta is not null &&
-                              message.ConnectorItemRef.Meta.ContainsKey("transform");
+                              message.ConnectorItemRef.SinkMeta is not null &&
+                              message.ConnectorItemRef.SinkMeta.ContainsKey("transform");
 
         if (!transformExists)
         {
@@ -165,7 +165,7 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         }
         else
         {
-            var transformDict = message.ConnectorItemRef.Meta["transform"] as Dictionary<object,object>;
+            var transformDict = message.ConnectorItemRef.SinkMeta["transform"] as Dictionary<object,object>;
             var transformType = transformDict?["type"] as string;
             var transformTemplate = transformDict?["template"] as string;
 

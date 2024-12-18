@@ -58,7 +58,7 @@ public static class ConfigurationHelper<TConfig, TItem>
                         connectorItem.ReportByException = itemDictionary.ContainsKey("rbe") ? Convert.ToBoolean(itemDictionary["rbe"]) : configuration.ReportByException;
                         connectorItem.Address = itemDictionary.ContainsKey("address") ? Convert.ToString(itemDictionary["address"]) : null;
                         connectorItem.Script = itemDictionary.ContainsKey("script") ? Convert.ToString(itemDictionary["script"]) : null;
-                        connectorItem.Meta = itemDictionary.ContainsKey("meta") ? itemDictionary["meta"] as Dictionary<object, object> : null;
+                        connectorItem.SinkMeta = itemDictionary.ContainsKey("meta") ? itemDictionary["meta"] as Dictionary<object, object> : null;
                         editCallback(connectorItem, itemDictionary);
                         connectorItems.Add(connectorItem);
                     };

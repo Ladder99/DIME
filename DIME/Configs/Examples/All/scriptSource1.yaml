@@ -92,5 +92,5 @@ scriptSource1: &scriptSource1
       script: |
         local n = cache('eipSource1/$SYSTEM/IsConnected', nil);
         return n==true and 'Available' or 'Unavailable';
-      meta:
+      sink:
         mtconnect: Device[name=device1]/Availability[category=Event]

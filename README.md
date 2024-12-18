@@ -50,7 +50,7 @@ docker run \
 `GET http://localhost:9999/config/json` - Running configuration, JSON formatted.  
 `POST http://localhost:9999/config/yaml` - Upload new configuration, YAML formatted.  
 `GET http://localhost:9999/service/restart` - Restart all connectors.  
-`WS ws://localhost:9998/` - Connector status feed.
+`WS ws://localhost:9998/` - Server status feed.
 
 ## Configuration Example
 
@@ -101,7 +101,7 @@ sources:
 | Fanuc Focas [[external driver]](https://github.com/Ladder99/fanuc-driver) |
 | Filesystem                                                                |
 | [Haas SHDR](#haas-shdr)                                                   |
-| HTTP Client                                                               |
+| [HTTP Client](#http-client)                                               |
 | [HTTP Server](#http-server)                                               |
 | [Modbus/TCP](#modbus-tcp)                                                 |
 | [MQTT](#mqtt)                                                             |
@@ -296,6 +296,29 @@ sources:
           else
             return 'LOW';
           end
+```
+
+### HTTP Client
+
+| Name              | Type         | Description                        |
+|-------------------|--------------|------------------------------------|
+| name              | string       | unique connector name              |
+| enabled           | bool         | is connector enabled               |
+| scan_interval     | int          | scanning frequency in milliseconds |
+| rbe               | bool         | report by exception                |
+| init_script       | string       | startup lua script                 |
+| deinit_script     | string       | shutdown lua script                |
+| enter_script      | string       | before loop script                 |
+| exit_script       | string       | after loop script                  |
+| connector         | string       | connector type, `HttpClient`       |
+| uri               | string       | base uri                           |
+
+#### Sink Example
+
+```yaml
+  - name: httpClientSink1
+    connector: HttpClient
+    uri: https://webhook.site/0e10dc3d-6bec-45fa-952d-dba785bc3109
 ```
 
 ### HTTP Server

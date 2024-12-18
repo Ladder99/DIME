@@ -17,10 +17,6 @@ public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<T
     
     protected override bool ReadImplementation()
     {
-        
-
-        
-        
         Logger.Trace($"[{Configuration.Name}] PollingSourceConnector:ReadImplementation::ENTER");
         EntireReadLoopStopwatch.Start();
         

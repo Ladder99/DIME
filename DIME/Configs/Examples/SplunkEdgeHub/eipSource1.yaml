@@ -33,7 +33,7 @@ eipSource1: &eipSource1
       script: |
         local m = { [0]='Ready', [1]='Active' };
         return m[result and 1 or 0];
-      meta:
+      sink:
         mtconnect: Device[name=device1]/Controller/Path/Execution[category=Event]
     - name: GoodPartCount
       enabled: !!bool true

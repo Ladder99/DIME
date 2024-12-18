@@ -94,13 +94,13 @@ public class Module : MTConnectInputAgentModule
         foreach (var message in _connector.Outbox)
         {
             if (message.ConnectorItemRef is not null &&
-                message.ConnectorItemRef.Meta is not null &&
-                message.ConnectorItemRef.Meta.ContainsKey("mtconnect"))
+                message.ConnectorItemRef.SinkMeta is not null &&
+                message.ConnectorItemRef.SinkMeta.ContainsKey("mtconnect"))
             {
                 var (wasModified, device, dataItem) = 
                     Builder.Build(
                         devices, 
-                        message.ConnectorItemRef.Meta["mtconnect"].ToString(), 
+                        message.ConnectorItemRef.SinkMeta["mtconnect"].ToString(), 
                         message.Path);
 
                 if (wasModified)

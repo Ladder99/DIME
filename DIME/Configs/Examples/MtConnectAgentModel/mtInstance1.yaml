@@ -14,7 +14,7 @@ mtInstance1: &mtInstance1
       script: |
         local n = cache('./$SYSTEM/IsConnected', nil);
         return n and 'Available' or 'Unavailable';
-      meta:
+      sink:
         mtconnect: Device[Name=device1]/Availability[Category=Event]
     - name: Execution
       enabled: !!bool true
@@ -22,7 +22,7 @@ mtInstance1: &mtInstance1
       script: |
         local n = math.random(0, 1);
         return n==1 and 'Active' or 'Ready';
-      meta:
+      sink:
         mtconnect: Device[Name=device1]/Controller/Path/Execution[Category=Event]
     - name: SystemCondition
       enabled: !!bool true
@@ -30,12 +30,12 @@ mtInstance1: &mtInstance1
       script: |
         local n = math.random(0, 1);
         return n==1 and 'Fault' or 'Normal';
-      meta:
+      sink:
         mtconnect: Device[Name=device1]/Controller/Path/System[Category=Condition]
     - name: Position
       enabled: !!bool true
       rbe: !!bool true
       script: |
         return math.random(-100, 100);
-      meta:
+      sink:
         mtconnect: Device[Name=device1]/Axes/Linear[Name=X]/Position[Category=Sample,SubType=Actual]
