@@ -1,0 +1,41 @@
+mtInstance1: &mtInstance1
+  name: mtInstance1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: Script
+  rbe: !!bool true
+  init_script: |
+    -- https://github.com/rxi/json.lua
+    json = require('json');
+  items:
+    - name: Availability
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        local n = cache('./$SYSTEM/IsConnected', nil);
+        return n and 'Available' or 'Unavailable';
+      meta:
+        mtconnect: Device[Name=device1]/Availability[Category=Event]
+    - name: Execution
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        local n = math.random(0, 1);
+        return n==1 and 'Active' or 'Ready';
+      meta:
+        mtconnect: Device[Name=device1]/Controller/Path/Execution[Category=Event]
+    - name: SystemCondition
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        local n = math.random(0, 1);
+        return n==1 and 'Fault' or 'Normal';
+      meta:
+        mtconnect: Device[Name=device1]/Controller/Path/System[Category=Condition]
+    - name: Position
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        return math.random(-100, 100);
+      meta:
+        mtconnect: Device[Name=device1]/Axes/Linear[Name=X]/Position[Category=Sample,SubType=Actual]

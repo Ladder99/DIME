@@ -1,4 +1,5 @@
 using DIME.Configuration.MtConnectAgent;
+using DIME.ConnectorSupport.MtConnect.DeviceBuilder;
 using MTConnect.Agents;
 using MTConnect.Applications;
 using MTConnect.Configurations;
@@ -32,7 +33,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     protected override bool ConnectImplementation()
     {
         //_client.StartAgent(new AgentApplicationConfiguration());
-        _client.Run(["run", "agent.config.yaml"]);
+        _client.Run(["run", "MtConnectAgentSink.yaml"]);
         _module = new Module(_client.Agent, this);
         _module.Start();
         IsConnected = true;
@@ -60,12 +61,13 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
 public class Module : MTConnectInputAgentModule
 {
+    public const string ConfigurationTypeId = "dime-sink";
     Sink _connector = null;
-    private Device _device = null;
     
     public Module(IMTConnectAgentBroker agent, Sink connector) : base(agent)
     {
         _connector = connector;
+        this.StartBeforeLoad(false);
     }
     
     protected override IDevice OnAddDevice()
@@ -80,97 +82,36 @@ public class Module : MTConnectInputAgentModule
             //Model = _connector.Configuration.DeviceModel,
             //SerialNumber = _connector.Configuration.DeviceSerialNumber
         };
-
-        _device = device;
+        
         return device;
     }
     
     protected override void OnRead()
     {
+        var devices = new Dictionary<string, Device>();
+        devices[Device.Name] = (Device)Device;
         
-        // TODO: move this back into connector
         foreach (var message in _connector.Outbox)
         {
-            //_device.AddComponent();
-            //AddValueObservation();
+            if (message.ConnectorItemRef is not null &&
+                message.ConnectorItemRef.Meta is not null &&
+                message.ConnectorItemRef.Meta.ContainsKey("mtconnect"))
+            {
+                var (wasModified, device, dataItem) = 
+                    Builder.Build(
+                        devices, 
+                        message.ConnectorItemRef.Meta["mtconnect"].ToString(), 
+                        message.Path);
+
+                if (wasModified)
+                {
+                    Agent.AddDevice(device);
+                }
+
+                AddValueObservation(dataItem, message.Data, message.Timestamp);
+            }
         }
         
         _connector.Outbox.Clear();
-        
-        /*
-        Log(MTConnect.Logging.MTConnectLogLevel.Information, "Read PLC Data");
-
-        AddValueObservation<AvailabilityDataItem>(Availability.AVAILABLE);
-        AddValueObservation<ControllerComponent, EmergencyStopDataItem>(EmergencyStop.ARMED);
-        AddValueObservation<PathComponent, ProgramDataItem>("BRACKET.NC");
-        AddValueObservation<PathComponent, DateCodeDataItem>(DateTime.Now.ToString("o"));
-        AddConditionObservation<PathComponent, SystemDataItem>(MTConnect.Observations.ConditionLevel.WARNING, "404", "This is an Alarm");
-
-
-        AddValueObservation<LinearComponent, PositionDataItem>(0.0000, "X", PositionDataItem.SubTypes.PROGRAMMED);
-        AddValueObservation<LinearComponent, PositionDataItem>(0.0002, "X", PositionDataItem.SubTypes.ACTUAL);
-        AddValueObservation<LinearComponent, LoadDataItem>(2, "X");
-
-        AddValueObservation<LinearComponent, PositionDataItem>(150.0000, "Y", PositionDataItem.SubTypes.PROGRAMMED);
-        AddValueObservation<LinearComponent, PositionDataItem>(150.0001, "Y", PositionDataItem.SubTypes.ACTUAL);
-        AddValueObservation<LinearComponent, LoadDataItem>(1.5, "Y");
-
-        AddValueObservation<LinearComponent, PositionDataItem>(200.0000, "Z", PositionDataItem.SubTypes.PROGRAMMED);
-        AddValueObservation<LinearComponent, PositionDataItem>(200.0003, "Z", PositionDataItem.SubTypes.ACTUAL);
-        AddValueObservation<LinearComponent, LoadDataItem>(6.3, "Z");
-        */
-    }
-
-
-    private void AddController(Device device)
-    {
-        // Create a Controller Component
-        var controller = new ControllerComponent();
-
-        // Add an EmergencyStop DataItem to the controller component
-        controller.AddDataItem<EmergencyStopDataItem>();
-
-        // Create a Path Component
-        var path = new PathComponent();
-
-        // Add Path DataItems
-        path.AddDataItem<ControllerModeDataItem>();
-        path.AddDataItem<ExecutionDataItem>();
-        path.AddDataItem<ProgramDataItem>();
-        path.AddDataItem<DateCodeDataItem>();
-        path.AddDataItem<SystemDataItem>();
-
-        // Add the Path Component as a child of the Controller Component
-        controller.AddComponent(path);
-
-        // Add the Controller Component to the Device
-        device.AddComponent(controller);
-    }
-
-    private void AddAxes(Device device)
-    {
-        // Create a Axes Component
-        var axes = new AxesComponent();
-
-        AddLinearAxis(axes, "X");
-        AddLinearAxis(axes, "Y");
-        AddLinearAxis(axes, "Z");
-
-        // Add the Component to the Device
-        device.AddComponent(axes);
-    }
-
-    private void AddLinearAxis(AxesComponent axesComponent, string name)
-    {
-        // Create a Linear Component
-        var axis = new LinearComponent();
-        axis.Name = name;
-
-        axis.AddDataItem<PositionDataItem>(PositionDataItem.SubTypes.PROGRAMMED);
-        axis.AddDataItem<PositionDataItem>(PositionDataItem.SubTypes.ACTUAL);
-        axis.AddDataItem<LoadDataItem>();
-
-        // Add the Component to the AxesComponent
-        axesComponent.AddComponent(axis);
     }
 }

@@ -9,7 +9,8 @@ Global
 		MqttMotors|Any CPU = MqttMotors|Any CPU
 		PostgresReads|Any CPU = PostgresReads|Any CPU
 		MsSqlReads|Any CPU = MsSqlReads|Any CPU
-		ShdrModel|Any CPU = ShdrModel|Any CPU
+		MtConnectAgentModel|Any CPU = MtConnectAgentModel|Any CPU
+		MtConnectShdrModel|Any CPU = MtConnectShdrModel|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -22,7 +23,9 @@ Global
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.PostgresReads|Any CPU.Build.0 = PostgresReads|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MsSqlReads|Any CPU.ActiveCfg = MsSqlReads|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MsSqlReads|Any CPU.Build.0 = MsSqlReads|Any CPU
-		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.ShdrModel|Any CPU.ActiveCfg = ShdrModel|Any CPU
-		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.ShdrModel|Any CPU.Build.0 = ShdrModel|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MtConnectAgentModel|Any CPU.ActiveCfg = MtConnectAgentModel|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MtConnectAgentModel|Any CPU.Build.0 = MtConnectAgentModel|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MtConnectShdrModel|Any CPU.ActiveCfg = MtConnectShdrModel|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MtConnectShdrModel|Any CPU.Build.0 = MtConnectShdrModel|Any CPU
 	EndGlobalSection
 EndGlobal

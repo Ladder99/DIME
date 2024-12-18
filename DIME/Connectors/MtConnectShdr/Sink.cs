@@ -88,10 +88,12 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
                 message.ConnectorItemRef.Meta is not null &&
                 message.ConnectorItemRef.Meta.ContainsKey("mtconnect"))
             {
-                string mtconnectPath = message.ConnectorItemRef.Meta["mtconnect"].ToString();
-                string mtconnectSource = message.Path;
-
-                var (wasModified, device, dataItem) = Builder.Build(_devices, mtconnectPath, message.Path);
+                var (wasModified, device, dataItem) = 
+                    Builder.Build(
+                        _devices, 
+                        message.ConnectorItemRef.Meta["mtconnect"].ToString(),
+                        message.Path);
+                
                 if (wasModified) _writeFile = true;
 
                 switch (dataItem.Category)

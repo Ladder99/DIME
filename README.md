@@ -29,6 +29,7 @@ cp DIME/DIME/Configs/Examples/Basic/* volumes/dime/configs
 cp DIME/DIME/Lua/* volumes/dime/lua
 
 docker run \
+   -p 5000:5000 \
    -p 7878:7878 \
    -p 8080:8080 \
    -p 8081:8081 \
@@ -1219,6 +1220,7 @@ cp DIME/DIME/Configs/Examples/Basic/* volumes/dime/configs
 cp DIME/DIME/Lua/* volumes/dime/lua
 
 docker run \
+   -p 5000:5000 \
    -p 7878:7878 \
    -p 8080:8080 \
    -p 8081:8081 \
