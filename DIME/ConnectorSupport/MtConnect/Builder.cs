@@ -1,14 +1,16 @@
 using MTConnect.Devices;
 
-namespace DIME.Connectors.MtConnectShdr.DeviceBuilder;
+namespace DIME.ConnectorSupport.MtConnect.DeviceBuilder;
 
 static class Builder
 {
-    public static Device Build(Dictionary<string, Device> devices, string mtConnectPath, string mtConnectSource)
+    public static (bool, Device, IDataItem) Build(Dictionary<string, Device> devices, string mtConnectPath, string mtConnectSource)
     {
-        System.Console.WriteLine($"\r\nProcessing Path: {mtConnectPath}");
+        //System.Console.WriteLine($"\r\nProcessing Path: {mtConnectPath}");
     
         var parts = new PathParts(mtConnectPath);
+        bool wasModified = false;
+        IDataItem dataItem = null;
 
         Device device = null;
         IComponent nextComponent = null;
@@ -17,7 +19,7 @@ static class Builder
         {
             var part = parts[i];
             
-            System.Console.WriteLine($"\tProcessing Part: {part.Name}");
+            //System.Console.WriteLine($"\tProcessing Part: {part.Name}");
             
             if(i == 0) // Device expected
             {
@@ -30,19 +32,21 @@ static class Builder
                     
                     part.Attributes.TryAdd("Id", Guid.NewGuid().ToString());
                     part.Attributes.TryAdd("Name", string.Empty);
-                    part.Attributes.TryAdd("Type", part.Name);
+                    part.Attributes.TryAdd("Type", part.Name.ToUpper());
                     
                     foreach (var attribute in part.Attributes)
                     {
-                        System.Console.WriteLine($"\t\tProcessing Attribute: {attribute.Key}={attribute.Value}");
+                        //System.Console.WriteLine($"\t\tProcessing Attribute: {attribute.Key}={attribute.Value}");
                         SetPropertyFromAttribute(device, attribute.Key, attribute.Value);
                     }
+                    
+                    wasModified = true;
                 }
                 nextComponent = device;
             }
             else if (i == parts.Count - 1) // DataItem expected
             {
-                var dataItem = nextComponent.GetDataItemByType($"{part.Name}", SearchType.Child);
+                dataItem = nextComponent.GetDataItemByType($"{part.Name}", SearchType.Child);
                 if (dataItem is null)
                 {
                     dataItem = DataItem.Create($"{part.Name}");
@@ -57,7 +61,7 @@ static class Builder
                     
                     foreach (var attribute in part.Attributes)
                     {
-                        System.Console.WriteLine($"\t\tProcessing Attribute: {attribute.Key}={attribute.Value}");
+                        //System.Console.WriteLine($"\t\tProcessing Attribute: {attribute.Key}={attribute.Value}");
                         SetPropertyFromAttribute(dataItem, attribute.Key, attribute.Value);
                     }
                     
@@ -69,6 +73,8 @@ static class Builder
                     {
                         ((Device)nextComponent).AddDataItem(dataItem);
                     }
+                    
+                    wasModified = true;
                 }
             }
             else // Component expected
@@ -84,7 +90,7 @@ static class Builder
 
                     foreach (var attribute in part.Attributes)
                     {
-                        System.Console.WriteLine($"\t\tProcessing Attribute: {attribute.Key}={attribute.Value}");
+                        //System.Console.WriteLine($"\t\tProcessing Attribute: {attribute.Key}={attribute.Value}");
                         SetPropertyFromAttribute(childComponent, attribute.Key, attribute.Value);
                     }
 
@@ -96,12 +102,14 @@ static class Builder
                     {
                         ((Device)nextComponent).AddComponent(childComponent);
                     }
+                    
+                    wasModified = true;
                 }
                 nextComponent = childComponent;
             }
         }
 
-        return device;
+        return (wasModified, device, dataItem);
     }
     
     private static bool SetPropertyFromAttribute(object obj, string propertyName, object attributeValue)

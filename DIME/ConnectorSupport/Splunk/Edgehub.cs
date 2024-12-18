@@ -9,7 +9,7 @@ using pb = global::Google.Protobuf;
 using pbc = global::Google.Protobuf.Collections;
 using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
-namespace DIME.Connectors.SplunkEhSdk {
+namespace DIME.ConnectorSupport.Splunk {
 
   /// <summary>Holder for reflection information generated from Connectors/SplunkEhSdk/edgehub.proto</summary>
   public static partial class EdgehubReflection {
@@ -71,16 +71,16 @@ namespace DIME.Connectors.SplunkEhSdk {
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Google.Protobuf.WellKnownTypes.TimestampReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.EmptyReflection.Descriptor, global::Google.Protobuf.WellKnownTypes.StructReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.Connectors.SplunkEhSdk.GetDiscoveryResponse), global::DIME.Connectors.SplunkEhSdk.GetDiscoveryResponse.Parser, new[]{ "DiscoveryInfo" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.Connectors.SplunkEhSdk.DiscoveryInfo), global::DIME.Connectors.SplunkEhSdk.DiscoveryInfo.Parser, new[]{ "TopicName", "Type", "AdditionalInformation" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.Connectors.SplunkEhSdk.GetReadingRequest), global::DIME.Connectors.SplunkEhSdk.GetReadingRequest.Parser, new[]{ "TopicName" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.Connectors.SplunkEhSdk.GetReadingResponse), global::DIME.Connectors.SplunkEhSdk.GetReadingResponse.Parser, new[]{ "TopicName", "Timestamp", "Fields" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.Connectors.SplunkEhSdk.SendEventDataRequest), global::DIME.Connectors.SplunkEhSdk.SendEventDataRequest.Parser, new[]{ "Id", "CreateTime", "Fields" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.Connectors.SplunkEhSdk.SendEventDataResponse), global::DIME.Connectors.SplunkEhSdk.SendEventDataResponse.Parser, new[]{ "Id", "Error" }, new[]{ "Error" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.Connectors.SplunkEhSdk.SendMetricDataRequest), global::DIME.Connectors.SplunkEhSdk.SendMetricDataRequest.Parser, new[]{ "Id", "CreateTime", "Dimensions", "Metrics", "AdditionalDetails" }, new[]{ "AdditionalDetails" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.Connectors.SplunkEhSdk.SendMetricDataResponse), global::DIME.Connectors.SplunkEhSdk.SendMetricDataResponse.Parser, new[]{ "Id", "Error" }, new[]{ "Error" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.Connectors.SplunkEhSdk.Metric), global::DIME.Connectors.SplunkEhSdk.Metric.Parser, new[]{ "Name", "Value", "Unit" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.Connectors.SplunkEhSdk.Error), global::DIME.Connectors.SplunkEhSdk.Error.Parser, new[]{ "Message" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.ConnectorSupport.Splunk.GetDiscoveryResponse), global::DIME.ConnectorSupport.Splunk.GetDiscoveryResponse.Parser, new[]{ "DiscoveryInfo" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.ConnectorSupport.Splunk.DiscoveryInfo), global::DIME.ConnectorSupport.Splunk.DiscoveryInfo.Parser, new[]{ "TopicName", "Type", "AdditionalInformation" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.ConnectorSupport.Splunk.GetReadingRequest), global::DIME.ConnectorSupport.Splunk.GetReadingRequest.Parser, new[]{ "TopicName" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.ConnectorSupport.Splunk.GetReadingResponse), global::DIME.ConnectorSupport.Splunk.GetReadingResponse.Parser, new[]{ "TopicName", "Timestamp", "Fields" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.ConnectorSupport.Splunk.SendEventDataRequest), global::DIME.ConnectorSupport.Splunk.SendEventDataRequest.Parser, new[]{ "Id", "CreateTime", "Fields" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.ConnectorSupport.Splunk.SendEventDataResponse), global::DIME.ConnectorSupport.Splunk.SendEventDataResponse.Parser, new[]{ "Id", "Error" }, new[]{ "Error" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.ConnectorSupport.Splunk.SendMetricDataRequest), global::DIME.ConnectorSupport.Splunk.SendMetricDataRequest.Parser, new[]{ "Id", "CreateTime", "Dimensions", "Metrics", "AdditionalDetails" }, new[]{ "AdditionalDetails" }, null, null, new pbr::GeneratedClrTypeInfo[] { null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.ConnectorSupport.Splunk.SendMetricDataResponse), global::DIME.ConnectorSupport.Splunk.SendMetricDataResponse.Parser, new[]{ "Id", "Error" }, new[]{ "Error" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.ConnectorSupport.Splunk.Metric), global::DIME.ConnectorSupport.Splunk.Metric.Parser, new[]{ "Name", "Value", "Unit" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::DIME.ConnectorSupport.Splunk.Error), global::DIME.ConnectorSupport.Splunk.Error.Parser, new[]{ "Message" }, null, null, null, null)
           }));
     }
     #endregion
@@ -105,7 +105,7 @@ namespace DIME.Connectors.SplunkEhSdk {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DIME.Connectors.SplunkEhSdk.EdgehubReflection.Descriptor.MessageTypes[0]; }
+      get { return global::DIME.ConnectorSupport.Splunk.EdgehubReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -137,12 +137,12 @@ namespace DIME.Connectors.SplunkEhSdk {
 
     /// <summary>Field number for the "discovery_info" field.</summary>
     public const int DiscoveryInfoFieldNumber = 1;
-    private static readonly pb::FieldCodec<global::DIME.Connectors.SplunkEhSdk.DiscoveryInfo> _repeated_discoveryInfo_codec
-        = pb::FieldCodec.ForMessage(10, global::DIME.Connectors.SplunkEhSdk.DiscoveryInfo.Parser);
-    private readonly pbc::RepeatedField<global::DIME.Connectors.SplunkEhSdk.DiscoveryInfo> discoveryInfo_ = new pbc::RepeatedField<global::DIME.Connectors.SplunkEhSdk.DiscoveryInfo>();
+    private static readonly pb::FieldCodec<global::DIME.ConnectorSupport.Splunk.DiscoveryInfo> _repeated_discoveryInfo_codec
+        = pb::FieldCodec.ForMessage(10, global::DIME.ConnectorSupport.Splunk.DiscoveryInfo.Parser);
+    private readonly pbc::RepeatedField<global::DIME.ConnectorSupport.Splunk.DiscoveryInfo> discoveryInfo_ = new pbc::RepeatedField<global::DIME.ConnectorSupport.Splunk.DiscoveryInfo>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::DIME.Connectors.SplunkEhSdk.DiscoveryInfo> DiscoveryInfo {
+    public pbc::RepeatedField<global::DIME.ConnectorSupport.Splunk.DiscoveryInfo> DiscoveryInfo {
       get { return discoveryInfo_; }
     }
 
@@ -292,7 +292,7 @@ namespace DIME.Connectors.SplunkEhSdk {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DIME.Connectors.SplunkEhSdk.EdgehubReflection.Descriptor.MessageTypes[1]; }
+      get { return global::DIME.ConnectorSupport.Splunk.EdgehubReflection.Descriptor.MessageTypes[1]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -576,7 +576,7 @@ namespace DIME.Connectors.SplunkEhSdk {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DIME.Connectors.SplunkEhSdk.EdgehubReflection.Descriptor.MessageTypes[2]; }
+      get { return global::DIME.ConnectorSupport.Splunk.EdgehubReflection.Descriptor.MessageTypes[2]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -774,7 +774,7 @@ namespace DIME.Connectors.SplunkEhSdk {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DIME.Connectors.SplunkEhSdk.EdgehubReflection.Descriptor.MessageTypes[3]; }
+      get { return global::DIME.ConnectorSupport.Splunk.EdgehubReflection.Descriptor.MessageTypes[3]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1067,7 +1067,7 @@ namespace DIME.Connectors.SplunkEhSdk {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DIME.Connectors.SplunkEhSdk.EdgehubReflection.Descriptor.MessageTypes[4]; }
+      get { return global::DIME.ConnectorSupport.Splunk.EdgehubReflection.Descriptor.MessageTypes[4]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1337,7 +1337,7 @@ namespace DIME.Connectors.SplunkEhSdk {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DIME.Connectors.SplunkEhSdk.EdgehubReflection.Descriptor.MessageTypes[5]; }
+      get { return global::DIME.ConnectorSupport.Splunk.EdgehubReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1382,10 +1382,10 @@ namespace DIME.Connectors.SplunkEhSdk {
 
     /// <summary>Field number for the "error" field.</summary>
     public const int ErrorFieldNumber = 2;
-    private global::DIME.Connectors.SplunkEhSdk.Error error_;
+    private global::DIME.ConnectorSupport.Splunk.Error error_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::DIME.Connectors.SplunkEhSdk.Error Error {
+    public global::DIME.ConnectorSupport.Splunk.Error Error {
       get { return error_; }
       set {
         error_ = value;
@@ -1495,7 +1495,7 @@ namespace DIME.Connectors.SplunkEhSdk {
       }
       if (other.error_ != null) {
         if (error_ == null) {
-          Error = new global::DIME.Connectors.SplunkEhSdk.Error();
+          Error = new global::DIME.ConnectorSupport.Splunk.Error();
         }
         Error.MergeFrom(other.Error);
       }
@@ -1524,7 +1524,7 @@ namespace DIME.Connectors.SplunkEhSdk {
           }
           case 18: {
             if (error_ == null) {
-              Error = new global::DIME.Connectors.SplunkEhSdk.Error();
+              Error = new global::DIME.ConnectorSupport.Splunk.Error();
             }
             input.ReadMessage(Error);
             break;
@@ -1554,7 +1554,7 @@ namespace DIME.Connectors.SplunkEhSdk {
           }
           case 18: {
             if (error_ == null) {
-              Error = new global::DIME.Connectors.SplunkEhSdk.Error();
+              Error = new global::DIME.ConnectorSupport.Splunk.Error();
             }
             input.ReadMessage(Error);
             break;
@@ -1584,7 +1584,7 @@ namespace DIME.Connectors.SplunkEhSdk {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DIME.Connectors.SplunkEhSdk.EdgehubReflection.Descriptor.MessageTypes[6]; }
+      get { return global::DIME.ConnectorSupport.Splunk.EdgehubReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1655,12 +1655,12 @@ namespace DIME.Connectors.SplunkEhSdk {
 
     /// <summary>Field number for the "metrics" field.</summary>
     public const int MetricsFieldNumber = 4;
-    private static readonly pb::FieldCodec<global::DIME.Connectors.SplunkEhSdk.Metric> _repeated_metrics_codec
-        = pb::FieldCodec.ForMessage(34, global::DIME.Connectors.SplunkEhSdk.Metric.Parser);
-    private readonly pbc::RepeatedField<global::DIME.Connectors.SplunkEhSdk.Metric> metrics_ = new pbc::RepeatedField<global::DIME.Connectors.SplunkEhSdk.Metric>();
+    private static readonly pb::FieldCodec<global::DIME.ConnectorSupport.Splunk.Metric> _repeated_metrics_codec
+        = pb::FieldCodec.ForMessage(34, global::DIME.ConnectorSupport.Splunk.Metric.Parser);
+    private readonly pbc::RepeatedField<global::DIME.ConnectorSupport.Splunk.Metric> metrics_ = new pbc::RepeatedField<global::DIME.ConnectorSupport.Splunk.Metric>();
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public pbc::RepeatedField<global::DIME.Connectors.SplunkEhSdk.Metric> Metrics {
+    public pbc::RepeatedField<global::DIME.ConnectorSupport.Splunk.Metric> Metrics {
       get { return metrics_; }
     }
 
@@ -1931,7 +1931,7 @@ namespace DIME.Connectors.SplunkEhSdk {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DIME.Connectors.SplunkEhSdk.EdgehubReflection.Descriptor.MessageTypes[7]; }
+      get { return global::DIME.ConnectorSupport.Splunk.EdgehubReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1976,10 +1976,10 @@ namespace DIME.Connectors.SplunkEhSdk {
 
     /// <summary>Field number for the "error" field.</summary>
     public const int ErrorFieldNumber = 2;
-    private global::DIME.Connectors.SplunkEhSdk.Error error_;
+    private global::DIME.ConnectorSupport.Splunk.Error error_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public global::DIME.Connectors.SplunkEhSdk.Error Error {
+    public global::DIME.ConnectorSupport.Splunk.Error Error {
       get { return error_; }
       set {
         error_ = value;
@@ -2089,7 +2089,7 @@ namespace DIME.Connectors.SplunkEhSdk {
       }
       if (other.error_ != null) {
         if (error_ == null) {
-          Error = new global::DIME.Connectors.SplunkEhSdk.Error();
+          Error = new global::DIME.ConnectorSupport.Splunk.Error();
         }
         Error.MergeFrom(other.Error);
       }
@@ -2118,7 +2118,7 @@ namespace DIME.Connectors.SplunkEhSdk {
           }
           case 18: {
             if (error_ == null) {
-              Error = new global::DIME.Connectors.SplunkEhSdk.Error();
+              Error = new global::DIME.ConnectorSupport.Splunk.Error();
             }
             input.ReadMessage(Error);
             break;
@@ -2148,7 +2148,7 @@ namespace DIME.Connectors.SplunkEhSdk {
           }
           case 18: {
             if (error_ == null) {
-              Error = new global::DIME.Connectors.SplunkEhSdk.Error();
+              Error = new global::DIME.ConnectorSupport.Splunk.Error();
             }
             input.ReadMessage(Error);
             break;
@@ -2175,7 +2175,7 @@ namespace DIME.Connectors.SplunkEhSdk {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DIME.Connectors.SplunkEhSdk.EdgehubReflection.Descriptor.MessageTypes[8]; }
+      get { return global::DIME.ConnectorSupport.Splunk.EdgehubReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2450,7 +2450,7 @@ namespace DIME.Connectors.SplunkEhSdk {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DIME.Connectors.SplunkEhSdk.EdgehubReflection.Descriptor.MessageTypes[9]; }
+      get { return global::DIME.ConnectorSupport.Splunk.EdgehubReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

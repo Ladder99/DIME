@@ -1,7 +1,8 @@
 using DIME.Configuration.MtConnectShdr;
+using DIME.ConnectorSupport.MtConnect.DeviceBuilder;
 using MTConnect.Adapters;
 using MTConnect.Devices;
-using MTConnect.Devices.DataItems;
+using MTConnect.Observations;
 using MTConnect.Shdr;
 
 namespace DIME.Connectors.MtConnectShdr;
@@ -10,6 +11,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
 {
     private ShdrQueueAdapter _client = null;
     private Dictionary<string, Device> _devices = null;
+    private bool _writeFile = false;
     
     public Sink(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
@@ -89,10 +91,53 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
                 string mtconnectPath = message.ConnectorItemRef.Meta["mtconnect"].ToString();
                 string mtconnectSource = message.Path;
 
-                DeviceBuilder.Builder.Build(_devices, mtconnectPath, message.Path);
+                var (wasModified, device, dataItem) = Builder.Build(_devices, mtconnectPath, message.Path);
+                if (wasModified) _writeFile = true;
+
+                switch (dataItem.Category)
+                {
+                    case DataItemCategory.SAMPLE:
+                        _client.AddDataItem(
+                            new ShdrDataItem(
+                                message.Path, 
+                                message.Data, 
+                                message.Timestamp));
+                        break;
+                    
+                    case DataItemCategory.CONDITION:
+                        _client.AddCondition(
+                            new ShdrCondition(
+                                message.Path, 
+                                (ConditionLevel)Enum.Parse(typeof(ConditionLevel), message.Data.ToString().ToUpper()), 
+                                message.Timestamp));
+                        break;
+                    
+                    case DataItemCategory.EVENT:
+                        switch (dataItem.Type.ToUpper())
+                        {
+                            case "MESSAGE":
+                                _client.AddMessage(
+                                    new ShdrMessage(
+                                        message.Path,
+                                        message.Data.ToString(),
+                                        message.Timestamp));
+                                break;
+                            
+                            default:
+                                _client.AddDataItem(
+                                    new ShdrDataItem(
+                                        message.Path, 
+                                        message.Data, 
+                                        message.Timestamp));
+                                break;
+                        }
+                        break;
+                }
             }
-            
-            _client.AddDataItem(new ShdrDataItem(message.Path, message.Data, message.Timestamp));
+            else
+            {
+                _client.AddDataItem(new ShdrDataItem(message.Path, message.Data, message.Timestamp));
+            }
         }
 
         _client.SendBuffer();
@@ -102,14 +147,20 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
 
     public override bool AfterUpdate()
     {
-        Directory.CreateDirectory("./Output/MTConnect");
-        
-        foreach (var device in _devices)
+        if (_writeFile)
         {
-            var xmlBytes = MTConnect.Devices.Xml.XmlDevice.ToXml(device.Value);
-            var xmlString = System.Text.Encoding.UTF8.GetString(xmlBytes);
-            File.WriteAllText($"./Output/MTConnect/device-{device.Key}.xml", xmlString);
+            Directory.CreateDirectory("./Output/MTConnect");
+        
+            foreach (var device in _devices)
+            {
+                var xmlBytes = MTConnect.Devices.Xml.XmlDevice.ToXml(device.Value);
+                var xmlString = System.Text.Encoding.UTF8.GetString(xmlBytes);
+                File.WriteAllText($"./Output/MTConnect/device-{device.Key}.xml", xmlString);
+            }
+            
+            _writeFile = false;
         }
+        
         
         return base.AfterUpdate();
     }

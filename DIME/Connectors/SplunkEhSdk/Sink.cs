@@ -1,11 +1,9 @@
 using System.Security.Cryptography;
 using System.Text;
 using DIME.Configuration.SplunkEhSdk;
-using Google.Protobuf.Collections;
+using DIME.ConnectorSupport.Splunk;
 using Grpc.Net.Client;
-using Microsoft.VisualBasic;
 using Newtonsoft.Json;
-using ProtoBuf.WellKnownTypes;
 using Timestamp = Google.Protobuf.WellKnownTypes.Timestamp;
 
 namespace DIME.Connectors.SplunkEhSdk;

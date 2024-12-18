@@ -2,7 +2,7 @@ using System.Text;
 using LibUA;
 using LibUA.Core;
 
-namespace DIME.Connectors.OpcUa;
+namespace DIME.ConnectorSupport.OpcUa;
 
 public class OpcUaClient
     {

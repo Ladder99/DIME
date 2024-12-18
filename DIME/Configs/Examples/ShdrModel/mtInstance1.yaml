@@ -13,7 +13,7 @@ mtInstance1: &mtInstance1
       rbe: !!bool true
       script: |
         local n = cache('./$SYSTEM/IsConnected', nil);
-        return n==true and 'Available' or 'Unavailable';
+        return n and 'Available' or 'Unavailable';
       meta:
         mtconnect: Device[Name=device1]/Availability[Category=Event]
     - name: Execution
@@ -29,7 +29,7 @@ mtInstance1: &mtInstance1
       rbe: !!bool true
       script: |
         local n = math.random(0, 1);
-        return n==1 and 'Faulted' or 'Normal';
+        return n==1 and 'Fault' or 'Normal';
       meta:
         mtconnect: Device[Name=device1]/Controller/Path/System[Category=Condition]
     - name: Position

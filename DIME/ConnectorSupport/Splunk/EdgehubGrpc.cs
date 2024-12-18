@@ -7,7 +7,7 @@
 
 using grpc = global::Grpc.Core;
 
-namespace DIME.Connectors.SplunkEhSdk {
+namespace DIME.ConnectorSupport.Splunk {
   /// <summary>
   /// Hub Version: 1.8 release
   /// </summary>
@@ -51,22 +51,22 @@ namespace DIME.Connectors.SplunkEhSdk {
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     static readonly grpc::Marshaller<global::Google.Protobuf.WellKnownTypes.Empty> __Marshaller_google_protobuf_Empty = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::Google.Protobuf.WellKnownTypes.Empty.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::DIME.Connectors.SplunkEhSdk.GetDiscoveryResponse> __Marshaller_edgehub_sdk_GetDiscoveryResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DIME.Connectors.SplunkEhSdk.GetDiscoveryResponse.Parser));
+    static readonly grpc::Marshaller<global::DIME.ConnectorSupport.Splunk.GetDiscoveryResponse> __Marshaller_edgehub_sdk_GetDiscoveryResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DIME.ConnectorSupport.Splunk.GetDiscoveryResponse.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::DIME.Connectors.SplunkEhSdk.GetReadingRequest> __Marshaller_edgehub_sdk_GetReadingRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DIME.Connectors.SplunkEhSdk.GetReadingRequest.Parser));
+    static readonly grpc::Marshaller<global::DIME.ConnectorSupport.Splunk.GetReadingRequest> __Marshaller_edgehub_sdk_GetReadingRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DIME.ConnectorSupport.Splunk.GetReadingRequest.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::DIME.Connectors.SplunkEhSdk.GetReadingResponse> __Marshaller_edgehub_sdk_GetReadingResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DIME.Connectors.SplunkEhSdk.GetReadingResponse.Parser));
+    static readonly grpc::Marshaller<global::DIME.ConnectorSupport.Splunk.GetReadingResponse> __Marshaller_edgehub_sdk_GetReadingResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DIME.ConnectorSupport.Splunk.GetReadingResponse.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::DIME.Connectors.SplunkEhSdk.SendEventDataRequest> __Marshaller_edgehub_sdk_SendEventDataRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DIME.Connectors.SplunkEhSdk.SendEventDataRequest.Parser));
+    static readonly grpc::Marshaller<global::DIME.ConnectorSupport.Splunk.SendEventDataRequest> __Marshaller_edgehub_sdk_SendEventDataRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DIME.ConnectorSupport.Splunk.SendEventDataRequest.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::DIME.Connectors.SplunkEhSdk.SendEventDataResponse> __Marshaller_edgehub_sdk_SendEventDataResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DIME.Connectors.SplunkEhSdk.SendEventDataResponse.Parser));
+    static readonly grpc::Marshaller<global::DIME.ConnectorSupport.Splunk.SendEventDataResponse> __Marshaller_edgehub_sdk_SendEventDataResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DIME.ConnectorSupport.Splunk.SendEventDataResponse.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::DIME.Connectors.SplunkEhSdk.SendMetricDataRequest> __Marshaller_edgehub_sdk_SendMetricDataRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DIME.Connectors.SplunkEhSdk.SendMetricDataRequest.Parser));
+    static readonly grpc::Marshaller<global::DIME.ConnectorSupport.Splunk.SendMetricDataRequest> __Marshaller_edgehub_sdk_SendMetricDataRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DIME.ConnectorSupport.Splunk.SendMetricDataRequest.Parser));
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Marshaller<global::DIME.Connectors.SplunkEhSdk.SendMetricDataResponse> __Marshaller_edgehub_sdk_SendMetricDataResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DIME.Connectors.SplunkEhSdk.SendMetricDataResponse.Parser));
+    static readonly grpc::Marshaller<global::DIME.ConnectorSupport.Splunk.SendMetricDataResponse> __Marshaller_edgehub_sdk_SendMetricDataResponse = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::DIME.ConnectorSupport.Splunk.SendMetricDataResponse.Parser));
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::Google.Protobuf.WellKnownTypes.Empty, global::DIME.Connectors.SplunkEhSdk.GetDiscoveryResponse> __Method_GetDiscovery = new grpc::Method<global::Google.Protobuf.WellKnownTypes.Empty, global::DIME.Connectors.SplunkEhSdk.GetDiscoveryResponse>(
+    static readonly grpc::Method<global::Google.Protobuf.WellKnownTypes.Empty, global::DIME.ConnectorSupport.Splunk.GetDiscoveryResponse> __Method_GetDiscovery = new grpc::Method<global::Google.Protobuf.WellKnownTypes.Empty, global::DIME.ConnectorSupport.Splunk.GetDiscoveryResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetDiscovery",
@@ -74,7 +74,7 @@ namespace DIME.Connectors.SplunkEhSdk {
         __Marshaller_edgehub_sdk_GetDiscoveryResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::DIME.Connectors.SplunkEhSdk.GetReadingRequest, global::DIME.Connectors.SplunkEhSdk.GetReadingResponse> __Method_GetReading = new grpc::Method<global::DIME.Connectors.SplunkEhSdk.GetReadingRequest, global::DIME.Connectors.SplunkEhSdk.GetReadingResponse>(
+    static readonly grpc::Method<global::DIME.ConnectorSupport.Splunk.GetReadingRequest, global::DIME.ConnectorSupport.Splunk.GetReadingResponse> __Method_GetReading = new grpc::Method<global::DIME.ConnectorSupport.Splunk.GetReadingRequest, global::DIME.ConnectorSupport.Splunk.GetReadingResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "GetReading",
@@ -82,7 +82,7 @@ namespace DIME.Connectors.SplunkEhSdk {
         __Marshaller_edgehub_sdk_GetReadingResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::DIME.Connectors.SplunkEhSdk.GetReadingRequest, global::DIME.Connectors.SplunkEhSdk.GetReadingResponse> __Method_GetReadingStreamResponse = new grpc::Method<global::DIME.Connectors.SplunkEhSdk.GetReadingRequest, global::DIME.Connectors.SplunkEhSdk.GetReadingResponse>(
+    static readonly grpc::Method<global::DIME.ConnectorSupport.Splunk.GetReadingRequest, global::DIME.ConnectorSupport.Splunk.GetReadingResponse> __Method_GetReadingStreamResponse = new grpc::Method<global::DIME.ConnectorSupport.Splunk.GetReadingRequest, global::DIME.ConnectorSupport.Splunk.GetReadingResponse>(
         grpc::MethodType.ServerStreaming,
         __ServiceName,
         "GetReadingStreamResponse",
@@ -90,7 +90,7 @@ namespace DIME.Connectors.SplunkEhSdk {
         __Marshaller_edgehub_sdk_GetReadingResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::DIME.Connectors.SplunkEhSdk.SendEventDataRequest, global::DIME.Connectors.SplunkEhSdk.SendEventDataResponse> __Method_SendEventData = new grpc::Method<global::DIME.Connectors.SplunkEhSdk.SendEventDataRequest, global::DIME.Connectors.SplunkEhSdk.SendEventDataResponse>(
+    static readonly grpc::Method<global::DIME.ConnectorSupport.Splunk.SendEventDataRequest, global::DIME.ConnectorSupport.Splunk.SendEventDataResponse> __Method_SendEventData = new grpc::Method<global::DIME.ConnectorSupport.Splunk.SendEventDataRequest, global::DIME.ConnectorSupport.Splunk.SendEventDataResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "SendEventData",
@@ -98,7 +98,7 @@ namespace DIME.Connectors.SplunkEhSdk {
         __Marshaller_edgehub_sdk_SendEventDataResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::DIME.Connectors.SplunkEhSdk.SendEventDataRequest, global::DIME.Connectors.SplunkEhSdk.SendEventDataResponse> __Method_SendEventDataStream = new grpc::Method<global::DIME.Connectors.SplunkEhSdk.SendEventDataRequest, global::DIME.Connectors.SplunkEhSdk.SendEventDataResponse>(
+    static readonly grpc::Method<global::DIME.ConnectorSupport.Splunk.SendEventDataRequest, global::DIME.ConnectorSupport.Splunk.SendEventDataResponse> __Method_SendEventDataStream = new grpc::Method<global::DIME.ConnectorSupport.Splunk.SendEventDataRequest, global::DIME.ConnectorSupport.Splunk.SendEventDataResponse>(
         grpc::MethodType.DuplexStreaming,
         __ServiceName,
         "SendEventDataStream",
@@ -106,7 +106,7 @@ namespace DIME.Connectors.SplunkEhSdk {
         __Marshaller_edgehub_sdk_SendEventDataResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::DIME.Connectors.SplunkEhSdk.SendMetricDataRequest, global::DIME.Connectors.SplunkEhSdk.SendMetricDataResponse> __Method_SendMetricData = new grpc::Method<global::DIME.Connectors.SplunkEhSdk.SendMetricDataRequest, global::DIME.Connectors.SplunkEhSdk.SendMetricDataResponse>(
+    static readonly grpc::Method<global::DIME.ConnectorSupport.Splunk.SendMetricDataRequest, global::DIME.ConnectorSupport.Splunk.SendMetricDataResponse> __Method_SendMetricData = new grpc::Method<global::DIME.ConnectorSupport.Splunk.SendMetricDataRequest, global::DIME.ConnectorSupport.Splunk.SendMetricDataResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
         "SendMetricData",
@@ -114,7 +114,7 @@ namespace DIME.Connectors.SplunkEhSdk {
         __Marshaller_edgehub_sdk_SendMetricDataResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::DIME.Connectors.SplunkEhSdk.SendMetricDataRequest, global::DIME.Connectors.SplunkEhSdk.SendMetricDataResponse> __Method_SendMetricDataStream = new grpc::Method<global::DIME.Connectors.SplunkEhSdk.SendMetricDataRequest, global::DIME.Connectors.SplunkEhSdk.SendMetricDataResponse>(
+    static readonly grpc::Method<global::DIME.ConnectorSupport.Splunk.SendMetricDataRequest, global::DIME.ConnectorSupport.Splunk.SendMetricDataResponse> __Method_SendMetricDataStream = new grpc::Method<global::DIME.ConnectorSupport.Splunk.SendMetricDataRequest, global::DIME.ConnectorSupport.Splunk.SendMetricDataResponse>(
         grpc::MethodType.DuplexStreaming,
         __ServiceName,
         "SendMetricDataStream",
@@ -124,7 +124,7 @@ namespace DIME.Connectors.SplunkEhSdk {
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
-      get { return global::DIME.Connectors.SplunkEhSdk.EdgehubReflection.Descriptor.Services[0]; }
+      get { return global::DIME.ConnectorSupport.Splunk.EdgehubReflection.Descriptor.Services[0]; }
     }
 
     /// <summary>Client for EdgeHubService</summary>
@@ -155,112 +155,112 @@ namespace DIME.Connectors.SplunkEhSdk {
       }
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::DIME.Connectors.SplunkEhSdk.GetDiscoveryResponse GetDiscovery(global::Google.Protobuf.WellKnownTypes.Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::DIME.ConnectorSupport.Splunk.GetDiscoveryResponse GetDiscovery(global::Google.Protobuf.WellKnownTypes.Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetDiscovery(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::DIME.Connectors.SplunkEhSdk.GetDiscoveryResponse GetDiscovery(global::Google.Protobuf.WellKnownTypes.Empty request, grpc::CallOptions options)
+      public virtual global::DIME.ConnectorSupport.Splunk.GetDiscoveryResponse GetDiscovery(global::Google.Protobuf.WellKnownTypes.Empty request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetDiscovery, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::DIME.Connectors.SplunkEhSdk.GetDiscoveryResponse> GetDiscoveryAsync(global::Google.Protobuf.WellKnownTypes.Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::DIME.ConnectorSupport.Splunk.GetDiscoveryResponse> GetDiscoveryAsync(global::Google.Protobuf.WellKnownTypes.Empty request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetDiscoveryAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::DIME.Connectors.SplunkEhSdk.GetDiscoveryResponse> GetDiscoveryAsync(global::Google.Protobuf.WellKnownTypes.Empty request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::DIME.ConnectorSupport.Splunk.GetDiscoveryResponse> GetDiscoveryAsync(global::Google.Protobuf.WellKnownTypes.Empty request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetDiscovery, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::DIME.Connectors.SplunkEhSdk.GetReadingResponse GetReading(global::DIME.Connectors.SplunkEhSdk.GetReadingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::DIME.ConnectorSupport.Splunk.GetReadingResponse GetReading(global::DIME.ConnectorSupport.Splunk.GetReadingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetReading(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::DIME.Connectors.SplunkEhSdk.GetReadingResponse GetReading(global::DIME.Connectors.SplunkEhSdk.GetReadingRequest request, grpc::CallOptions options)
+      public virtual global::DIME.ConnectorSupport.Splunk.GetReadingResponse GetReading(global::DIME.ConnectorSupport.Splunk.GetReadingRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_GetReading, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::DIME.Connectors.SplunkEhSdk.GetReadingResponse> GetReadingAsync(global::DIME.Connectors.SplunkEhSdk.GetReadingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::DIME.ConnectorSupport.Splunk.GetReadingResponse> GetReadingAsync(global::DIME.ConnectorSupport.Splunk.GetReadingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetReadingAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::DIME.Connectors.SplunkEhSdk.GetReadingResponse> GetReadingAsync(global::DIME.Connectors.SplunkEhSdk.GetReadingRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::DIME.ConnectorSupport.Splunk.GetReadingResponse> GetReadingAsync(global::DIME.ConnectorSupport.Splunk.GetReadingRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_GetReading, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncServerStreamingCall<global::DIME.Connectors.SplunkEhSdk.GetReadingResponse> GetReadingStreamResponse(global::DIME.Connectors.SplunkEhSdk.GetReadingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncServerStreamingCall<global::DIME.ConnectorSupport.Splunk.GetReadingResponse> GetReadingStreamResponse(global::DIME.ConnectorSupport.Splunk.GetReadingRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return GetReadingStreamResponse(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncServerStreamingCall<global::DIME.Connectors.SplunkEhSdk.GetReadingResponse> GetReadingStreamResponse(global::DIME.Connectors.SplunkEhSdk.GetReadingRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncServerStreamingCall<global::DIME.ConnectorSupport.Splunk.GetReadingResponse> GetReadingStreamResponse(global::DIME.ConnectorSupport.Splunk.GetReadingRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncServerStreamingCall(__Method_GetReadingStreamResponse, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::DIME.Connectors.SplunkEhSdk.SendEventDataResponse SendEventData(global::DIME.Connectors.SplunkEhSdk.SendEventDataRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::DIME.ConnectorSupport.Splunk.SendEventDataResponse SendEventData(global::DIME.ConnectorSupport.Splunk.SendEventDataRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SendEventData(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::DIME.Connectors.SplunkEhSdk.SendEventDataResponse SendEventData(global::DIME.Connectors.SplunkEhSdk.SendEventDataRequest request, grpc::CallOptions options)
+      public virtual global::DIME.ConnectorSupport.Splunk.SendEventDataResponse SendEventData(global::DIME.ConnectorSupport.Splunk.SendEventDataRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_SendEventData, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::DIME.Connectors.SplunkEhSdk.SendEventDataResponse> SendEventDataAsync(global::DIME.Connectors.SplunkEhSdk.SendEventDataRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::DIME.ConnectorSupport.Splunk.SendEventDataResponse> SendEventDataAsync(global::DIME.ConnectorSupport.Splunk.SendEventDataRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SendEventDataAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::DIME.Connectors.SplunkEhSdk.SendEventDataResponse> SendEventDataAsync(global::DIME.Connectors.SplunkEhSdk.SendEventDataRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::DIME.ConnectorSupport.Splunk.SendEventDataResponse> SendEventDataAsync(global::DIME.ConnectorSupport.Splunk.SendEventDataRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_SendEventData, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncDuplexStreamingCall<global::DIME.Connectors.SplunkEhSdk.SendEventDataRequest, global::DIME.Connectors.SplunkEhSdk.SendEventDataResponse> SendEventDataStream(grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncDuplexStreamingCall<global::DIME.ConnectorSupport.Splunk.SendEventDataRequest, global::DIME.ConnectorSupport.Splunk.SendEventDataResponse> SendEventDataStream(grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SendEventDataStream(new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncDuplexStreamingCall<global::DIME.Connectors.SplunkEhSdk.SendEventDataRequest, global::DIME.Connectors.SplunkEhSdk.SendEventDataResponse> SendEventDataStream(grpc::CallOptions options)
+      public virtual grpc::AsyncDuplexStreamingCall<global::DIME.ConnectorSupport.Splunk.SendEventDataRequest, global::DIME.ConnectorSupport.Splunk.SendEventDataResponse> SendEventDataStream(grpc::CallOptions options)
       {
         return CallInvoker.AsyncDuplexStreamingCall(__Method_SendEventDataStream, null, options);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::DIME.Connectors.SplunkEhSdk.SendMetricDataResponse SendMetricData(global::DIME.Connectors.SplunkEhSdk.SendMetricDataRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual global::DIME.ConnectorSupport.Splunk.SendMetricDataResponse SendMetricData(global::DIME.ConnectorSupport.Splunk.SendMetricDataRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SendMetricData(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::DIME.Connectors.SplunkEhSdk.SendMetricDataResponse SendMetricData(global::DIME.Connectors.SplunkEhSdk.SendMetricDataRequest request, grpc::CallOptions options)
+      public virtual global::DIME.ConnectorSupport.Splunk.SendMetricDataResponse SendMetricData(global::DIME.ConnectorSupport.Splunk.SendMetricDataRequest request, grpc::CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_SendMetricData, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::DIME.Connectors.SplunkEhSdk.SendMetricDataResponse> SendMetricDataAsync(global::DIME.Connectors.SplunkEhSdk.SendMetricDataRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncUnaryCall<global::DIME.ConnectorSupport.Splunk.SendMetricDataResponse> SendMetricDataAsync(global::DIME.ConnectorSupport.Splunk.SendMetricDataRequest request, grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SendMetricDataAsync(request, new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncUnaryCall<global::DIME.Connectors.SplunkEhSdk.SendMetricDataResponse> SendMetricDataAsync(global::DIME.Connectors.SplunkEhSdk.SendMetricDataRequest request, grpc::CallOptions options)
+      public virtual grpc::AsyncUnaryCall<global::DIME.ConnectorSupport.Splunk.SendMetricDataResponse> SendMetricDataAsync(global::DIME.ConnectorSupport.Splunk.SendMetricDataRequest request, grpc::CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_SendMetricData, null, options, request);
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncDuplexStreamingCall<global::DIME.Connectors.SplunkEhSdk.SendMetricDataRequest, global::DIME.Connectors.SplunkEhSdk.SendMetricDataResponse> SendMetricDataStream(grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
+      public virtual grpc::AsyncDuplexStreamingCall<global::DIME.ConnectorSupport.Splunk.SendMetricDataRequest, global::DIME.ConnectorSupport.Splunk.SendMetricDataResponse> SendMetricDataStream(grpc::Metadata headers = null, global::System.DateTime? deadline = null, global::System.Threading.CancellationToken cancellationToken = default(global::System.Threading.CancellationToken))
       {
         return SendMetricDataStream(new grpc::CallOptions(headers, deadline, cancellationToken));
       }
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual grpc::AsyncDuplexStreamingCall<global::DIME.Connectors.SplunkEhSdk.SendMetricDataRequest, global::DIME.Connectors.SplunkEhSdk.SendMetricDataResponse> SendMetricDataStream(grpc::CallOptions options)
+      public virtual grpc::AsyncDuplexStreamingCall<global::DIME.ConnectorSupport.Splunk.SendMetricDataRequest, global::DIME.ConnectorSupport.Splunk.SendMetricDataResponse> SendMetricDataStream(grpc::CallOptions options)
       {
         return CallInvoker.AsyncDuplexStreamingCall(__Method_SendMetricDataStream, null, options);
       }

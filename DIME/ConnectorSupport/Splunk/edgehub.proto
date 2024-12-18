@@ -1,5 +1,5 @@
 syntax = "proto3";
-option csharp_namespace = "DIME.Connectors.SplunkEhSdk";
+option csharp_namespace = "DIME.ConnectorSupport.Splunk";
 
 package edgehub.sdk;
 

@@ -1,5 +1,5 @@
 using DIME.Configuration.OpcUa;
-using TrakHound.Configurations;
+using DIME.ConnectorSupport.OpcUa;
 
 namespace DIME.Connectors.OpcUa;
 

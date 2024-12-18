@@ -1,4 +1,4 @@
-namespace DIME.Connectors.MtConnectShdr.DeviceBuilder;
+namespace DIME.ConnectorSupport.MtConnect.DeviceBuilder;
 
 public class PathParts : List<PathPart>
 {
