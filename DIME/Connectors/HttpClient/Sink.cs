@@ -1,5 +1,6 @@
 using System.Text;
 using DIME.Configuration.HttpClient;
+using Newtonsoft.Json;
 
 namespace DIME.Connectors.HttpClient;
 
@@ -27,21 +28,31 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     protected override bool WriteImplementation()
     {
         var client = new System.Net.Http.HttpClient();
-        //client.DefaultRequestHeaders.Add("Authorization", $"some value");
+        var contentType = "text/plain";
+
+        foreach (var header in Configuration.Headers)
+        {
+            if (header.Key.ToLower() != "content-type")
+            {
+                client.DefaultRequestHeaders.Add(header.Key, header.Value);
+            }
+            else
+            {
+                contentType = header.Value;
+            }
+            
+        }
         
         foreach (var message in Outbox)
         {
             var transformedMessage = TransformMessage(message);
-            StringContent content = new StringContent(transformedMessage.ToString(), Encoding.UTF8, "application/json");
-            
+            var stringContent = transformedMessage is MessageBoxMessage ? JsonConvert.SerializeObject(transformedMessage) : transformedMessage.ToString();
             var response = client
-                .PostAsync($"{Configuration.Uri}", content)
+                .PostAsync($"{Configuration.Uri}", new StringContent(stringContent, Encoding.UTF8, contentType))
                 .GetAwaiter().GetResult();
             response.EnsureSuccessStatusCode();
         }
         
-        Dictionary<string,string> d = new Dictionary<string, string>();
-
         return true;
     }
 

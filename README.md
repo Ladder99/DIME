@@ -300,18 +300,19 @@ sources:
 
 ### HTTP Client
 
-| Name              | Type         | Description                        |
-|-------------------|--------------|------------------------------------|
-| name              | string       | unique connector name              |
-| enabled           | bool         | is connector enabled               |
-| scan_interval     | int          | scanning frequency in milliseconds |
-| rbe               | bool         | report by exception                |
-| init_script       | string       | startup lua script                 |
-| deinit_script     | string       | shutdown lua script                |
-| enter_script      | string       | before loop script                 |
-| exit_script       | string       | after loop script                  |
-| connector         | string       | connector type, `HttpClient`       |
-| uri               | string       | base uri                           |
+| Name          | Type         | Description                        |
+|---------------|--------------|------------------------------------|
+| name          | string       | unique connector name              |
+| enabled       | bool         | is connector enabled               |
+| scan_interval | int          | scanning frequency in milliseconds |
+| rbe           | bool         | report by exception                |
+| init_script   | string       | startup lua script                 |
+| deinit_script | string       | shutdown lua script                |
+| enter_script  | string       | before loop script                 |
+| exit_script   | string       | after loop script                  |
+| connector     | string       | connector type, `HttpClient`       |
+| uri           | string       | base uri                           |
+| headers       | object array | request headers                    |
 
 #### Sink Example
 
@@ -319,6 +320,9 @@ sources:
   - name: httpClientSink1
     connector: HttpClient
     uri: https://webhook.site/0e10dc3d-6bec-45fa-952d-dba785bc3109
+    headers:
+      Content-Type: text/plain;
+      Authorization: None
 ```
 
 ### HTTP Server

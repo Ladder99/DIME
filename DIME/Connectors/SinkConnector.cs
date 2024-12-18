@@ -155,7 +155,7 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
     
     protected object TransformMessage(MessageBoxMessage message)
     {
-        var transformExists = message.ConnectorItemRef is not null &&
+        var transformExists = message.ConnectorItemRef is not null && 
                               message.ConnectorItemRef.SinkMeta is not null &&
                               message.ConnectorItemRef.SinkMeta.ContainsKey("transform");
 

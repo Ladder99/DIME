@@ -3,4 +3,9 @@ httpClientSink1: &httpClientSink1
   enabled: !!bool true
   scan_interval: !!int 1000
   connector: HTTPClient
-  uri: https://webhook.site/0e10dc3d-6bec-45fa-952d-dba785bc3109
+  uri: https://webhook-test.com/a8f1397c82e25e675b2caacdf0d9611b
+  headers: 
+    Content-Type: text/plain
+    Authorization: None
+  exclude_filter:
+    - press1/$SYSTEM
