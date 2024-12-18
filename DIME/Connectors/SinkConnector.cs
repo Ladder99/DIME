@@ -1,5 +1,7 @@
 using System.Collections.Concurrent;
 using DIME.Configuration;
+using Scriban;
+using Scriban.Runtime;
 
 namespace DIME.Connectors;
 
@@ -149,5 +151,46 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         Logger.Trace($"[{Configuration.Name}] SinkConnector:AfterUpdate::EXIT");
         
         return true;
+    }
+    
+    protected object TransformMessage(MessageBoxMessage message)
+    {
+        var transformExists = message.ConnectorItemRef is not null &&
+                              message.ConnectorItemRef.Meta is not null &&
+                              message.ConnectorItemRef.Meta.ContainsKey("transform");
+
+        if (!transformExists)
+        {
+            return message;
+        }
+        else
+        {
+            var transformDict = message.ConnectorItemRef.Meta["transform"] as Dictionary<object,object>;
+            var transformType = transformDict?["type"] as string;
+            var transformTemplate = transformDict?["template"] as string;
+
+            switch (transformType.ToLower())
+            {
+                case "liquid":
+                    var template1 = Template.ParseLiquid(transformTemplate);
+                    return template1.Render(
+                        new { Connector = this, Configuration = Configuration, Message = message }, 
+                        member => member.Name);
+                case "scriban":
+                    var template2 = Template.Parse(transformTemplate);
+                    return template2.Render(
+                        new { Connector = this, Configuration = Configuration, Message = message }, 
+                        member => member.Name);
+                case "script":
+                    var so = new ScriptObject();
+                    so.SetValue("Connector", this, true);
+                    so.SetValue("Configuration", Configuration, true);
+                    so.SetValue("Message", message, true);
+                    var tc = new TemplateContext(so) { MemberRenamer = member => member.Name };
+                    return Template.Evaluate(transformTemplate, tc);
+                default:
+                    return message;
+            }
+        }
     }
 }

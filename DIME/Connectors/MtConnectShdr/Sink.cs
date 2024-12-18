@@ -151,13 +151,13 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
     {
         if (_writeFile)
         {
-            Directory.CreateDirectory("./Output/MTConnect");
+            Directory.CreateDirectory(Configuration.OutputFolder);
         
             foreach (var device in _devices)
             {
                 var xmlBytes = MTConnect.Devices.Xml.XmlDevice.ToXml(device.Value);
                 var xmlString = System.Text.Encoding.UTF8.GetString(xmlBytes);
-                File.WriteAllText($"./Output/MTConnect/device-{device.Key}.xml", xmlString);
+                File.WriteAllText($"{Configuration.OutputFolder}/device-{device.Key}.xml", xmlString);
             }
             
             _writeFile = false;

@@ -27,7 +27,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool WriteImplementation()
     {
-        var client = new HttpClient();
+        var client = new System.Net.Http.HttpClient();
         client.DefaultRequestHeaders.Add("Authorization", $"Splunk {Configuration.Token}");
         
         foreach (var message in Outbox)

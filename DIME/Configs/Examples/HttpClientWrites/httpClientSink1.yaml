@@ -1,0 +1,6 @@
+httpClientSink1: &httpClientSink1
+  name: httpClientSink1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: HTTPClient
+  uri: https://webhook.site/0e10dc3d-6bec-45fa-952d-dba785bc3109

@@ -17,7 +17,7 @@
         <TargetFramework>net8.0</TargetFramework>
 	  <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
 	  <SelfContained>true</SelfContained>
-	  <Configurations>Debug;Release;MqttMotors;PostgresReads;MsSqlReads;MtConnectAgentModel;MtConnectShdrModel</Configurations>
+	  <Configurations>Debug;Release;MqttMotors;PostgresReads;MsSqlReads;MtConnectAgentModel;MtConnectShdrModel;HttpClientWrites</Configurations>
 	  <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
@@ -42,6 +42,7 @@
       <PackageReference Include="NLua" Version="1.7.3" />
       <PackageReference Include="NModbus" Version="3.0.81" />
       <PackageReference Include="Npgsql" Version="9.0.2" />
+      <PackageReference Include="Scriban" Version="5.12.1" />
       <PackageReference Include="SIPSorcery.WebSocketSharp" Version="0.0.1" />
       <PackageReference Include="SparkplugNet" Version="1.3.10" />
       <PackageReference Include="StackExchange.Redis" Version="2.8.22" />

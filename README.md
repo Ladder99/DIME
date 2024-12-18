@@ -125,6 +125,7 @@ sources:
 |---------------------------------------|
 | ActiveMQ                              |
 | [Console](#console)                   |
+| HTTP Client                           |
 | [HTTP Server](#http-server)           |
 | [Influx LP](#influx-lp)               |
 | IoTDB                                 |

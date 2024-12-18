@@ -1,0 +1,54 @@
+mtInstance1: &mtInstance1
+  name: press1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: Script
+  rbe: !!bool true
+  init_script: |
+    -- https://github.com/rxi/json.lua
+    json = require('json');
+  items:
+    - name: Execution
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        local n = math.random(0, 1);
+        set("Execution", n==1 and 'Active' or 'Ready');
+        return nil;
+    - name: SystemCondition
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        local n = math.random(0, 1);
+        set("SystemCondition", n==1 and 'Fault' or 'Normal');
+        return nil;
+    - name: Position
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        set("Position", math.random(-100, 100));
+        return nil;
+    - name: ModelInstance
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        return {
+          type = "press",
+          name = configuration().Name,
+          available = cache("./$SYSTEM/IsConnected", false),
+          execution = cache("./Execution", false),
+          system = cache("./SystemCondition", "NORMAL"),
+          position = cache("./Position", 0)
+        }
+      meta:
+        transform:
+          type: scriban
+          # -- liquid --
+          #template: >-
+          #  {{Message.Data["type"]}},name={{Message.Data["name"]}} {%for o in Message.Data%}{{o.Key}}={{o.Value}}{%unless forloop.last%},{%endunless%}{%endfor%} {{Message.Timestamp}}
+          # -- scriban --
+          #template: >-
+          #  {{Message.Data["type"]}},name={{Message.Data["name"]}} {{for o in Message.Data}}{{o.Key}}={{o.Value}}{{if !for.last}},{{end}}{{end}} {{Message.Timestamp}}
+          # -- script --
+          #template: >-
+          #  Message.Data["name"]

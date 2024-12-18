@@ -6,4 +6,5 @@ public sealed class ConnectorConfiguration : Configuration.ConnectorConfiguratio
     public string DeviceKey { get; set; }
     public int HeartbeatMs { get; set; }
     public bool FilterDuplicates { get; set; }
+    public string OutputFolder { get; set; }
 }
