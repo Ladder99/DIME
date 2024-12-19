@@ -21,7 +21,7 @@ Documentation
 | Source                                                                    |
 |---------------------------------------------------------------------------|
 | Active MQ                                                                 |
-| [ASC CPC](4.-Connector-Reference#asc-cpc)                                                       |
+| [ASC CPC](../../wiki/4.-Connector-Reference#asc-cpc)                      |
 | BACnet IP                                                                 |
 | Beckhoff ADS                                                              |
 | Brother CNC                                                               |
