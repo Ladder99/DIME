@@ -8,3 +8,5 @@ shdrSink1: &shdrSink1
   heartbeat_interval: !!int 10000
   filter_duplicates: !!bool true
   output_folder: ./Output/MTConnect
+  exclude_filter:
+    - press1/$SYSTEM
