@@ -1,0 +1,14 @@
+mqttSource1: &mqttSource1
+  name: mqttSource1
+  connector: MQTT
+  address: wss.sharc.tech
+  port: !!int 1883
+  itemized_read: true
+  items:
+    - name: subscribe1
+      enabled: !!bool true
+      address: sharc/+/evt/#
+    - name: ffe4Sensor
+      address: sharc/08d1f953ffe4/evt/io/s1
+    - name: ffe4SensorAndDelta
+      address: sharc/08d1f953ffe4/evt/io/s1
