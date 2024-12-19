@@ -46,14 +46,16 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     { 
         foreach (var message in Outbox)
         {
-            var msg = JsonConvert.SerializeObject(message);
+            var transformedMessage = TransformMessage(message);
+            var stringContent = transformedMessage is MessageBoxMessage ? JsonConvert.SerializeObject(transformedMessage) : transformedMessage.ToString();
+
             var sessions = _client.WebSocketServices["/"].Sessions.Sessions;
             
             foreach (var session in sessions)
             {
                 if (session.ConnectionState == WebSocketState.Open)
                 {
-                    session.Context.WebSocket.Send(msg);
+                    session.Context.WebSocket.Send(stringContent);
                 }
             }
         }

@@ -45,10 +45,14 @@ mtInstance1: &mtInstance1
           type: scriban
           # -- liquid --
           #template: >-
-          #  {{Message.Data["type"]}},name={{Message.Data["name"]}} {%for o in Message.Data%}{{o.Key}}={{o.Value}}{%unless forloop.last%},{%endunless%}{%endfor%} {{Message.Timestamp}}
+          #  {{Message.Data["type"]}},name={{Message.Data["name"]}}
+          #  {%for o in Message.Data%}{{o.Key}}={{o.Value}}{%unless forloop.last%},{%endunless%}{%endfor%}
+          #  {{Message.Timestamp}}
           # -- scriban --
           template: >-
-            {{Message.Data["type"]}},name={{Message.Data["name"]}} {{for o in Message.Data}}{{o.Key}}={{o.Value}}{{if !for.last}},{{end}}{{end}} {{Message.Timestamp}}
+            {{-Message.Data["type"]}},name={{Message.Data["name"]}}
+            {{for o in Message.Data}}{{o.Key}}={{o.Value}}{{if !for.last}},{{end}}{{end}}
+            {{Message.Timestamp}}
           # -- script --
           #template: >-
           #  Message.Data["name"]
