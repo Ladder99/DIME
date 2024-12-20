@@ -37,7 +37,7 @@ ascCpcSource1: &ascCpcSource1
       address: .Autoclave.Scripts.MotorHours.CoolPumpAOn\Value
       script: ~
       sink:
-        mtconnect: Slow[name=crunk]/Controller/Path/Hours[Category=Sample]
+        mtconnect: Device[Name=autoclave1]/Controller/Path/Hours[Category=Sample]
     - name: UserOperator
       enabled: !!bool true
       rbe: !!bool true

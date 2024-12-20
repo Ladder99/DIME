@@ -81,22 +81,6 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
                             Outbox.Where(message =>
                                 !Configuration.ExcludeFilter.Any(prefix =>
                                     message.Path.StartsWith(prefix))));
-                        
-                        /*var newOutbox = new ConcurrentBag<MessageBoxMessage>();
-                        foreach (var message in Outbox)
-                        {
-                            foreach (var filter in Configuration.ExcludeFilter)
-                            {
-                                if (!message.Path.StartsWith(filter))
-                                {
-                                    newOutbox.Add(message);
-                                }
-                                else
-                                {
-                                    var a = 1;
-                                }
-                            }
-                        }*/
                     }
                 }
 
