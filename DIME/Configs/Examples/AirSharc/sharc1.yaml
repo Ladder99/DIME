@@ -1,0 +1,85 @@
+sharc1: &sharc1
+  name: sharc1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: MQTT
+  rbe: !!bool true
+  itemized_read: !!bool true
+  address: wss.sharc.tech
+  port: !!int 1883
+  qos: !!int 0
+  init_script: |
+    -- https://github.com/rxi/json.lua
+    json = require('json');
+  deinit_script: ~
+  enter_script: ~
+  exit_script: ~
+  items:
+    - name: HighConcentrationCondition
+      address: sharc/DEADBEEFAIR1/evt/io/hc
+      script: |
+        set(this.Name, json.decode(result).v.v);
+        return nil;
+    - name: DustAccumulationCondition
+      address: sharc/DEADBEEFAIR1/evt/io/da
+      script: |
+        set(this.Name, json.decode(result).v.v);
+        return nil;
+    - name: FanSpeedCondition
+      address: sharc/DEADBEEFAIR1/evt/io/fs
+      script: |
+        set(this.Name, json.decode(result).v.v);
+        return nil;
+    - name: FanStatusCondition
+      address: sharc/DEADBEEFAIR1/evt/io/fan
+      script: |
+        set(this.Name, json.decode(result).v.v);
+        return nil;
+    - name: Temperature
+      address: sharc/DEADBEEFAIR1/evt/io/temp
+      script: |
+        set(this.Name, json.decode(result).v.v);
+        return nil;
+    - name: Humidity
+      address: sharc/DEADBEEFAIR1/evt/io/hum
+      script: |
+        set(this.Name, json.decode(result).v.v);
+        return nil;
+    - name: TVOC
+      address: sharc/DEADBEEFAIR1/evt/io/tvoc
+      script: |
+        set(this.Name, json.decode(result).v.v);
+        return nil;
+    - name: eCO2
+      address: sharc/DEADBEEFAIR1/evt/io/eco2
+      script: |
+        set(this.Name, json.decode(result).v.v);
+        return nil;
+    - name: IAQ
+      address: sharc/DEADBEEFAIR1/evt/io/iaq
+      script: |
+        set(this.Name, json.decode(result).v.v);
+        return nil;
+    - name: Instance
+      address: ~
+      script: |
+        local instance = {
+          high_concentration_condition = cache("HighConcentrationCondition", 0),
+          dust_accumulation_condition = cache("DustAccumulationCondition", 0),
+          fan_speed_condition = cache("FanSpeedCondition", 0),
+          fan_condition = cache("FanCondition", 0),
+          temperature = cache("Temperature", 0),
+          humidity = cache("Humidity", 0),
+          tvoc = cache("TVOC", 0),
+          eco2 = cache("eCO2", 0),
+          iaq = cache("IAQ", 0),
+        }
+        --print(json.encode(instance));
+        return instance;
+      sink:
+        transform:
+          type: script
+          template: >-
+            Message.Data['path'] = Message.Path;
+            Message.Data['ts'] = Message.Timestamp;
+            Message.Data;

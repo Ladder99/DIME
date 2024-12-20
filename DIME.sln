@@ -14,6 +14,7 @@ Global
 		HttpClientWrites|Any CPU = HttpClientWrites|Any CPU
 		WikiEx1|Any CPU = WikiEx1|Any CPU
 		AscCpcReads|Any CPU = AscCpcReads|Any CPU
+		AirSharc|Any CPU = AirSharc|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -36,5 +37,7 @@ Global
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.WikiEx1|Any CPU.Build.0 = WikiEx1|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.AscCpcReads|Any CPU.ActiveCfg = AscCpcReads|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.AscCpcReads|Any CPU.Build.0 = AscCpcReads|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.AirSharc|Any CPU.ActiveCfg = AirSharc|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.AirSharc|Any CPU.Build.0 = AirSharc|Any CPU
 	EndGlobalSection
 EndGlobal

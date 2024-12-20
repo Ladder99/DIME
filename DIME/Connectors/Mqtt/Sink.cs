@@ -1,4 +1,6 @@
+using System.CodeDom;
 using DIME.Configuration.Mqtt;
+using IronPython.Modules;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Protocol;
@@ -46,7 +48,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
         {
             var msgBuilder = new MqttApplicationMessageBuilder()
                 .WithTopic($"{Configuration.BaseTopic}/{message.Path}")
-                .WithPayload(JsonConvert.SerializeObject(message))
+                .WithPayload(TransformAndSerializeMessage(message))
                 .WithQualityOfServiceLevel((MqttQualityOfServiceLevel)Configuration.QoS);
 
             if (Configuration.RetainPublish)

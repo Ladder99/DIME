@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using DIME.Configuration;
+using Newtonsoft.Json;
 using Scriban;
 using Scriban.Runtime;
 
@@ -135,6 +136,12 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         Logger.Trace($"[{Configuration.Name}] SinkConnector:AfterUpdate::EXIT");
         
         return true;
+    }
+
+    protected string TransformAndSerializeMessage(MessageBoxMessage message)
+    {
+        var outMessage = TransformMessage(message);
+        return (outMessage.GetType() == typeof(string) ? outMessage : JsonConvert.SerializeObject(outMessage)).ToString();
     }
     
     protected object TransformMessage(MessageBoxMessage message)
