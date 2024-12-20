@@ -1,0 +1,62 @@
+ascCpcSource1: &ascCpcSource1
+  name: ascCpcSource1
+  enabled: !!bool true
+  scan_interval: !!int 2500
+  connector: AscCPC
+  rbe: !!bool true
+  address: 192.168.111.12
+  port: !!int 9999
+  bypass_ping: !!bool true
+  init_script: ~
+  items:
+    - name: Temperature
+      enabled: !!bool true
+      rbe: !!bool true
+      address: .Autoclave.Inputs.AIRTC\Value
+      script: ~
+    - name: Pressure
+      enabled: !!bool true
+      rbe: !!bool true
+      address: .Autoclave.Inputs.PRESS\Value
+      script: ~
+    - name: PumpHours
+      enabled: !!bool true
+      rbe: !!bool true
+      address: .Autoclave.Scripts.MotorHours.CoolPumpAOn\Value
+      script: ~
+    - name: UserOperator
+      enabled: !!bool true
+      rbe: !!bool true
+      address: .Autoclave.Variables.OperatorName\Value
+      script: ~
+    - name: Program
+      enabled: !!bool true
+      rbe: !!bool true
+      address: .Autoclave.RecipeProcessor.Recipe.RecipeData\Description
+      script: ~
+    - name: ControlPowerConditionTriggered
+      enabled: !!bool true
+      rbe: !!bool true
+      address: .Autoclave.Alarms.ControlPower\Condition
+      script: |
+        set('cptrig', result);
+        return nil;
+    - name: ControlPowerAlarmActive
+      enabled: !!bool true
+      rbe: !!bool true
+      address: .Autoclave.Alarms.ControlPower\AlarmActive
+      script: |
+        set('cpalm', result);
+        return nil;
+    - name: ControlPowerCondition
+      enabled: !!bool true
+      rbe: !!bool true
+      address: ~
+      script: |
+        emit("one", 1);
+        emit("./two", 2);
+        emit("ascCpcSource1/three", 3);
+        emit("someOtherPrefix/four", 4);
+        local cptrig = cache('cptrig', false);
+        local cpalm = cache('cpalm', false);
+        return cpalm and 'Fault' or (cptrig and 'Warning' or 'Normal');

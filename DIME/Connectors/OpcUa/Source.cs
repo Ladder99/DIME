@@ -45,9 +45,7 @@ public class Source: PollingSourceConnector<ConnectorConfiguration, ConnectorIte
     
     protected override object ReadFromDevice(ConnectorItem item)
     {
-        
         var result = _client.Read(item.Namespace, item.Address);
-
         return result.Value;
     }
     

@@ -48,7 +48,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
 
         try
         {
-            ScriptRunner["this"] = connector;
+            ScriptRunner.SetContext(null, connector);
             var scriptResult = ScriptRunner.DoString(script);
             response = scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
         }
@@ -70,8 +70,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         
         try
         {
-            ScriptRunner["result"] = intermediateResult;
-            ScriptRunner["this"] = item;
+            ScriptRunner.SetContext(intermediateResult, item);
             var scriptResult = ScriptRunner.DoString(item);
             response = scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
             

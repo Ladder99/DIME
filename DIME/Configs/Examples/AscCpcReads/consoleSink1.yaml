@@ -1,0 +1,7 @@
+consoleSink1: &consoleSink1
+  name: consoleSink1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: Console
+  exclude_filter:
+    - ascCpcSource1/$SYSTEM

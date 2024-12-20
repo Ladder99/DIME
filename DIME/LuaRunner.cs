@@ -29,6 +29,7 @@ public class LuaRunner
             _state.RegisterFunction("set", this, GetType().GetMethod("SetUserCache", BindingFlags.NonPublic | BindingFlags.Instance));
             _state.RegisterFunction("configuration", this, GetType().GetMethod("GetConnectorConfiguration", BindingFlags.NonPublic | BindingFlags.Instance));
             _state.RegisterFunction("connector", this, GetType().GetMethod("GetConnector", BindingFlags.NonPublic | BindingFlags.Instance));
+            _state.RegisterFunction("emit", this, GetType().GetMethod("EmitSample", BindingFlags.NonPublic | BindingFlags.Instance));
             return true;
         }
         catch (Exception e)
@@ -41,6 +42,12 @@ public class LuaRunner
     public object this[string key]
     {
         set => _state[key] = value;
+    }
+
+    public void SetContext(object result, object @this)
+    {
+        _state["result"] = result;
+        _state["this"] = @this;
     }
 
     public object[] DoString(string chunk)
@@ -95,10 +102,8 @@ public class LuaRunner
         return objects;
     }
 
-    private MessageBoxMessage GetPrimaryCacheMessage(string path, bool skipTagValue)
+    private (string, string) MakeCachePath(string path)
     {
-        MessageBoxMessage value = null;
-        
         var pathSlugs = path.Split('/');
 
         if (pathSlugs.Length == 1)
@@ -113,27 +118,36 @@ public class LuaRunner
             pathSlugs[0] = _connector.Configuration.Name;
             path = string.Join("/", pathSlugs);
         }
+
+        return (pathSlugs[0], path);
+    }
+    
+    private MessageBoxMessage GetPrimaryCacheMessage(string path, bool skipTagValue)
+    {
+        MessageBoxMessage value = null;
+        
+        var (connectorName, fullPath) = MakeCachePath(path);
         
         try
         {
             var runner = _connector.Runner.Runners
-                .First(x => x.Connector.Configuration.Name == pathSlugs[0]);
+                .First(x => x.Connector.Configuration.Name == connectorName);
             
             var connector = runner.Connector as ISourceConnector;
             
             try
             {
-                value = connector.Samples.Last(x => x.Path == path);
+                value = connector.Samples.Last(x => x.Path == fullPath);
             }
             catch (InvalidOperationException e1)
             {
-                if (!connector.Current.TryGetValue(path, out value))
+                if (!connector.Current.TryGetValue(fullPath, out value))
                 {
-                    if (!connector.UserCache.TryGetValue(path, out value))
+                    if (!connector.UserCache.TryGetValue(fullPath, out value))
                     {
                         if (!skipTagValue)
                         {
-                            connector.TagValues.TryGetValue(path, out value);
+                            connector.TagValues.TryGetValue(fullPath, out value);
                         }
                     }
                 }
@@ -173,30 +187,6 @@ public class LuaRunner
         return value;
     }
      
-    /*
-    private object? GetUserCache(string path, object? defaultValue = null)
-    {
-        var pathSlugs = path.Split('/');
-        if (pathSlugs[0] == ".")
-        {
-            pathSlugs[0] = _connector.Configuration.Name;
-            path = string.Join("/", pathSlugs);
-        }
-
-        try
-        {
-            var runner = _connector.Runner.Runners
-                .First(x => x.Connector.Configuration.Name == pathSlugs[0]);
-            var connector = runner.Connector as ISourceConnector;
-            return connector.UserCache.TryGetValue(path, out var cacheItem) ? cacheItem.Data : defaultValue;
-        }
-        catch (InvalidOperationException e)
-        {
-            return defaultValue;
-        }
-    }
-    */
-
     private object? GetConnectorConfiguration()
     {
         return _connector.Configuration;
@@ -205,5 +195,23 @@ public class LuaRunner
     private object? GetConnector()
     {
         return _connector;
+    }
+
+    private object? EmitSample(string path, object? value)
+    {
+        var item = _state["this"] as ConnectorItem;
+        if (item is null) return null;
+        
+        var (connectorName, fullPath) = MakeCachePath(path);
+        
+        _connector.Samples.Add(new MessageBoxMessage()
+        {
+            Path = $"{fullPath}",
+            Data = value,
+            Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
+            ConnectorItemRef = item
+        });
+
+        return value;
     }
 }
