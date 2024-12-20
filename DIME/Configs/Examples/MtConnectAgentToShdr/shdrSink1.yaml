@@ -4,6 +4,8 @@ shdrSink1: &shdrSink1
   scan_interval: !!int 1000
   connector: MTConnectSHDR
   port: !!int 7878
-  device_key: ~
+  device_key: buster123
   heartbeat_interval: !!int 10000
   filter_duplicates: !!bool true
+  exclude_filter:
+    - mtConnectSource1/$SYSTEM
