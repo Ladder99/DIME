@@ -4,9 +4,11 @@ namespace DIME.ConnectorSupport.MtConnect.DeviceBuilder;
 
 static class Builder
 {
+    static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+    
     public static (bool, Device, IDataItem) Build(Dictionary<string, Device> devices, string mtConnectPath, string mtConnectSource)
     {
-        //System.Console.WriteLine($"\r\nProcessing Path: {mtConnectPath}");
+        Logger.Debug($"Processing Path: {mtConnectPath}");
     
         var parts = new PathParts(mtConnectPath);
         bool wasModified = false;
@@ -19,11 +21,13 @@ static class Builder
         {
             var part = parts[i];
             
-            //System.Console.WriteLine($"\tProcessing Part: {part.Name}");
+            Logger.Debug($"\tProcessing Part: {part.Name}");
             
             if(i == 0) // Device expected
             {
+                if (part.Name != "Device") Logger.Warn($"\tExpecting 'Device' but found '{part.Name}'");
                 part.Attributes.TryGetValue("Name", out var deviceName);
+                if (deviceName is null) deviceName = "undefined";
                 var deviceExists = devices.TryGetValue(deviceName, out device);
                 if (!deviceExists)
                 {
@@ -32,12 +36,15 @@ static class Builder
                     
                     part.Attributes.TryAdd("Id", Guid.NewGuid().ToString());
                     part.Attributes.TryAdd("Name", string.Empty);
-                    part.Attributes.TryAdd("Type", part.Name.ToUpper());
+                    part.Attributes.TryAdd("Type", part.Name);
                     
                     foreach (var attribute in part.Attributes)
                     {
-                        //System.Console.WriteLine($"\t\tProcessing Attribute: {attribute.Key}={attribute.Value}");
-                        SetPropertyFromAttribute(device, attribute.Key, attribute.Value);
+                        Logger.Debug($"\t\tProcessing Attribute: {attribute.Key}={attribute.Value}");
+                        if (!SetPropertyFromAttribute(device, attribute.Key, attribute.Value))
+                        {
+                            Logger.Warn($"\t\tFailed to set property '{attribute.Key}'={attribute.Value}");
+                        }
                     }
                     
                     wasModified = true;
@@ -50,7 +57,6 @@ static class Builder
                 if (dataItem is null)
                 {
                     dataItem = DataItem.Create($"{part.Name}");
-                    //((DataItem)dataItem).Device = device;
                     ((DataItem)dataItem).Source = new Source()
                     {
                         Value = mtConnectSource
@@ -62,8 +68,11 @@ static class Builder
                     
                     foreach (var attribute in part.Attributes)
                     {
-                        //System.Console.WriteLine($"\t\tProcessing Attribute: {attribute.Key}={attribute.Value}");
-                        SetPropertyFromAttribute(dataItem, attribute.Key, attribute.Value);
+                        Logger.Debug($"\t\tProcessing Attribute: {attribute.Key}={attribute.Value}");
+                        if(!SetPropertyFromAttribute(dataItem, attribute.Key, attribute.Value))
+                        {
+                            Logger.Warn($"\t\tFailed to set property '{attribute.Key}'={attribute.Value}");
+                        }
                     }
                     
                     try
@@ -91,8 +100,11 @@ static class Builder
 
                     foreach (var attribute in part.Attributes)
                     {
-                        //System.Console.WriteLine($"\t\tProcessing Attribute: {attribute.Key}={attribute.Value}");
-                        SetPropertyFromAttribute(childComponent, attribute.Key, attribute.Value);
+                        Logger.Debug($"\t\tProcessing Attribute: {attribute.Key}={attribute.Value}");
+                        if(!SetPropertyFromAttribute(childComponent, attribute.Key, attribute.Value))
+                        {
+                            Logger.Warn($"\t\tFailed to set property '{attribute.Key}'={attribute.Value}");
+                        }
                     }
 
                     try
@@ -116,6 +128,7 @@ static class Builder
     private static bool SetPropertyFromAttribute(object obj, string propertyName, object attributeValue)
     {
         var property = obj.GetType().GetProperty(propertyName);
+        if (property is null) return false;
         if (property.PropertyType == typeof(DataItemCategory))
         {
             property.SetValue(obj, Enum.Parse(typeof(DataItemCategory), attributeValue.ToString().ToUpper()));

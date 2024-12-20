@@ -4,5 +4,6 @@ app:
   ws_server_uri: ws://127.0.0.1:9998/
 sinks:
   - *consoleSink1
+  - *shdrSink1
 sources:
   - *ascCpcSource1

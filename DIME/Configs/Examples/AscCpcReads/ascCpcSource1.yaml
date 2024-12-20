@@ -1,5 +1,5 @@
 ascCpcSource1: &ascCpcSource1
-  name: ascCpcSource1
+  name: autoclave1
   enabled: !!bool true
   scan_interval: !!int 2500
   connector: AscCPC
@@ -9,21 +9,35 @@ ascCpcSource1: &ascCpcSource1
   bypass_ping: !!bool true
   init_script: ~
   items:
+    - name: Availability
+      enabled: !!bool true
+      rbe: !!bool true
+      script: |
+        local n = cache('./$SYSTEM/IsConnected', nil);
+        return n and 'Available' or 'Unavailable';
+      #sink:
+      #  mtconnect: Device[Name=autoclave1]/Availability[Category=Event]
     - name: Temperature
       enabled: !!bool true
       rbe: !!bool true
       address: .Autoclave.Inputs.AIRTC\Value
       script: ~
+      #sink:
+      #  mtconnect: Device[Name=autoclave1]/Controller/Path/Temperature[Category=Sample]
     - name: Pressure
       enabled: !!bool true
       rbe: !!bool true
       address: .Autoclave.Inputs.PRESS\Value
       script: ~
+      #sink:
+      #  mtconnect: Device[Name=autoclave1]/Controller/Path/Pressure[Category=Sample]
     - name: PumpHours
       enabled: !!bool true
       rbe: !!bool true
       address: .Autoclave.Scripts.MotorHours.CoolPumpAOn\Value
       script: ~
+      sink:
+        mtconnect: Slow[name=crunk]/Controller/Path/Hours[Category=Sample]
     - name: UserOperator
       enabled: !!bool true
       rbe: !!bool true
@@ -53,10 +67,6 @@ ascCpcSource1: &ascCpcSource1
       rbe: !!bool true
       address: ~
       script: |
-        emit("one", 1);
-        emit("./two", 2);
-        emit("ascCpcSource1/three", 3);
-        emit("someOtherPrefix/four", 4);
         local cptrig = cache('cptrig', false);
         local cpalm = cache('cpalm', false);
         return cpalm and 'Fault' or (cptrig and 'Warning' or 'Normal');
