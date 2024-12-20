@@ -15,6 +15,8 @@ Global
 		WikiEx1|Any CPU = WikiEx1|Any CPU
 		AscCpcReads|Any CPU = AscCpcReads|Any CPU
 		AirSharc|Any CPU = AirSharc|Any CPU
+		MtConnectAgentToSplunkHec|Any CPU = MtConnectAgentToSplunkHec|Any CPU
+		MtConnectAgentToShdr|Any CPU = MtConnectAgentToShdr|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -39,5 +41,9 @@ Global
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.AscCpcReads|Any CPU.Build.0 = AscCpcReads|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.AirSharc|Any CPU.ActiveCfg = AirSharc|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.AirSharc|Any CPU.Build.0 = AirSharc|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MtConnectAgentToSplunkHec|Any CPU.ActiveCfg = MtConnectAgentToSplunkHec|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MtConnectAgentToSplunkHec|Any CPU.Build.0 = MtConnectAgentToSplunkHec|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MtConnectAgentToShdr|Any CPU.ActiveCfg = MtConnectAgentToShdr|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MtConnectAgentToShdr|Any CPU.Build.0 = MtConnectAgentToShdr|Any CPU
 	EndGlobalSection
 EndGlobal

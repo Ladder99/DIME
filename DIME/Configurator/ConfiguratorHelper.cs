@@ -23,6 +23,8 @@ public static class ConfigurationHelper<TConfig, TItem>
         instance.Items = new List<TItem>();
         instance.ExcludeFilter = new List<string>();
         instance.IncludeFilter = new List<string>();
+        instance.SinkMeta = section.ContainsKey("sink") ? section["sink"] as Dictionary<object, object> : new Dictionary<object, object>();
+        instance.StripPathPrefix = section.ContainsKey("strip_path_prefix") ? Convert.ToBoolean(section["strip_path_prefix"]) : false;
         
         if (section.ContainsKey("exclude_filter") && section["exclude_filter"] as List<object> is not null)
         {

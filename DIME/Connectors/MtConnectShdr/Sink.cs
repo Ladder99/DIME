@@ -138,7 +138,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
             }
             else
             {
-                _client.AddDataItem(new ShdrDataItem(message.Path, message.Data, message.Timestamp));
+                _client.AddDataItem(new ShdrDataItem(message.Path, TransformAndSerializeMessage(message), message.Timestamp));
             }
         }
 

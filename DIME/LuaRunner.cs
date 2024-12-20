@@ -102,7 +102,7 @@ public class LuaRunner
         return objects;
     }
 
-    private (string, string) MakeCachePath(string path)
+    private (string, string, string) MakeCachePath(string path)
     {
         var pathSlugs = path.Split('/');
 
@@ -119,14 +119,14 @@ public class LuaRunner
             path = string.Join("/", pathSlugs);
         }
 
-        return (pathSlugs[0], path);
+        return (pathSlugs[0], path, string.Join("/", pathSlugs.Skip(1)));
     }
     
     private MessageBoxMessage GetPrimaryCacheMessage(string path, bool skipTagValue)
     {
         MessageBoxMessage value = null;
         
-        var (connectorName, fullPath) = MakeCachePath(path);
+        var (connectorName, fullPath, shortPath) = MakeCachePath(path);
         
         try
         {
@@ -135,19 +135,21 @@ public class LuaRunner
             
             var connector = runner.Connector as ISourceConnector;
             
+            var actualPath = connector.Configuration.StripPathPrefix ? shortPath : fullPath;
+            
             try
             {
-                value = connector.Samples.Last(x => x.Path == fullPath);
+                value = connector.Samples.Last(x => x.Path == actualPath);
             }
             catch (InvalidOperationException e1)
             {
-                if (!connector.Current.TryGetValue(fullPath, out value))
+                if (!connector.Current.TryGetValue(actualPath, out value))
                 {
-                    if (!connector.UserCache.TryGetValue(fullPath, out value))
+                    if (!connector.UserCache.TryGetValue(actualPath, out value))
                     {
                         if (!skipTagValue)
                         {
-                            connector.TagValues.TryGetValue(fullPath, out value);
+                            connector.TagValues.TryGetValue(actualPath, out value);
                         }
                     }
                 }
@@ -202,11 +204,11 @@ public class LuaRunner
         var item = _state["this"] as ConnectorItem;
         if (item is null) return null;
         
-        var (connectorName, fullPath) = MakeCachePath(path);
+        var (connectorName, fullPath, shortPath) = MakeCachePath(path);
         
         _connector.Samples.Add(new MessageBoxMessage()
         {
-            Path = $"{fullPath}",
+            Path = _connector.Configuration.StripPathPrefix ? shortPath : fullPath,
             Data = value,
             Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
             ConnectorItemRef = item

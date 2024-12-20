@@ -138,6 +138,13 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         return true;
     }
 
+    protected bool IsSystemPath(string itemPath)
+    {
+        var pathParts = itemPath.Split('/');
+        if (pathParts.Length < 2) return false;
+        return pathParts[1] == "$SYSTEM";
+    }
+    
     protected string TransformAndSerializeMessage(MessageBoxMessage message)
     {
         var outMessage = TransformMessage(message);
@@ -146,17 +153,24 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
     
     protected object TransformMessage(MessageBoxMessage message)
     {
-        var transformExists = message.ConnectorItemRef is not null && 
+        var itemTransformExists = message.ConnectorItemRef is not null && 
                               message.ConnectorItemRef.SinkMeta is not null &&
                               message.ConnectorItemRef.SinkMeta.ContainsKey("transform");
+        
+        var connectorTransformExists = message.ConnectorItemRef is not null && 
+                                  message.ConnectorItemRef.Configuration is not null &&
+                                  message.ConnectorItemRef.Configuration.SinkMeta is not null &&
+                                  message.ConnectorItemRef.Configuration.SinkMeta.ContainsKey("transform");
 
-        if (!transformExists)
+        if (!itemTransformExists && !connectorTransformExists || IsSystemPath(message.Path))
         {
             return message;
         }
         else
         {
-            var transformDict = message.ConnectorItemRef.SinkMeta["transform"] as Dictionary<object,object>;
+            var transformDict = itemTransformExists 
+                ? message.ConnectorItemRef.SinkMeta["transform"] as Dictionary<object,object>
+                : message.ConnectorItemRef.Configuration.SinkMeta["transform"] as Dictionary<object,object>;
             var transformType = transformDict?["type"] as string;
             var transformTemplate = transformDict?["template"] as string;
 

@@ -45,7 +45,7 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
             
             TagValues[$"{Configuration.Name}/{item.Name}"] = new MessageBoxMessage()
             {
-                Path = $"{Configuration.Name}/{item.Name}",
+                Path = Configuration.StripPathPrefix ? item.Name : $"{Configuration.Name}/{item.Name}",
                 Data = readResult,
                 Timestamp = DateTime.Now.ToEpochMilliseconds(),
                 ConnectorItemRef = item
@@ -78,7 +78,7 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
             {
                 Samples.Add(new MessageBoxMessage()
                 {
-                    Path = $"{Configuration.Name}/{item.Name}",
+                    Path = Configuration.StripPathPrefix ? item.Name : $"{Configuration.Name}/{item.Name}",
                     Data = response,
                     Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
                     ConnectorItemRef = item

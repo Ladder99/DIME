@@ -29,7 +29,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
         foreach (var message in Outbox)
         {
             System.Console.ForegroundColor = ConsoleColor.Cyan;
-            System.Console.WriteLine($"[{Configuration.Name}] {JsonConvert.SerializeObject(message)}");
+            System.Console.WriteLine($"[{Configuration.Name}] Path: {message.Path}, Message: {TransformAndSerializeMessage(message)}");
             System.Console.ResetColor();
         }
         

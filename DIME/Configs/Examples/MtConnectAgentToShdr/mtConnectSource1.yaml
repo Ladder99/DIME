@@ -1,0 +1,16 @@
+mtConnectSource1: &mtConnectSource1
+  name: mtConnectSource1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: MTConnectAgent
+  rbe: !!bool true
+  itemized_read: !!bool false
+  address: mtconnect.mazakcorp.com
+  port: !!int 5719
+  init_script: ~
+  strip_path_prefix: !!bool true
+  sink:
+    transform:
+      type: script
+      template: >-
+        Message.Data[0].Value

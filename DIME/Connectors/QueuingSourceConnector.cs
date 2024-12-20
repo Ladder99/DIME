@@ -78,7 +78,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
 
                             TagValues[$"{Configuration.Name}/{item.Name}"] = new MessageBoxMessage()
                             {
-                                Path = $"{Configuration.Name}/{item.Name}",
+                                Path = Configuration.StripPathPrefix ? item.Name : $"{Configuration.Name}/{item.Name}",
                                 Data = readResult,
                                 Timestamp = DateTime.Now.ToEpochMilliseconds(),
                                 ConnectorItemRef = item
@@ -96,7 +96,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                             {
                                 Samples.Add(new MessageBoxMessage()
                                 {
-                                    Path = $"{Configuration.Name}/{item.Name}",
+                                    Path = Configuration.StripPathPrefix ? item.Name : $"{Configuration.Name}/{item.Name}",
                                     Data = result,
                                     Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
                                     ConnectorItemRef = item
@@ -119,7 +119,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                         {
                             Samples.Add(new MessageBoxMessage()
                             {
-                                Path = $"{Configuration.Name}/{item.Name}",
+                                Path = Configuration.StripPathPrefix ? item.Name : $"{Configuration.Name}/{item.Name}",
                                 Data = result,
                                 Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
                                 ConnectorItemRef = item
@@ -156,7 +156,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                         
                         TagValues[$"{Configuration.Name}/{item.Name}"] = new MessageBoxMessage()
                         {
-                            Path = $"{Configuration.Name}/{item.Name}",
+                            Path = Configuration.StripPathPrefix ? item.Name : $"{Configuration.Name}/{item.Name}",
                             Data = message.Value,
                             Timestamp = DateTime.Now.ToEpochMilliseconds(),
                             ConnectorItemRef = item
@@ -168,7 +168,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                         {
                             Samples.Add(new MessageBoxMessage()
                             {
-                                Path = $"{Configuration.Name}/{message.Key}",
+                                Path = Configuration.StripPathPrefix ? message.Key : $"{Configuration.Name}/{message.Key}",
                                 Data = result,
                                 Timestamp = message.Timestamp,
                                 ConnectorItemRef = item
@@ -179,7 +179,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                     {
                         Samples.Add(new MessageBoxMessage()
                         {
-                            Path = $"{Configuration.Name}/{message.Key}",
+                            Path = Configuration.StripPathPrefix ? message.Key : $"{Configuration.Name}/{message.Key}",
                             Data = message.Value,
                             Timestamp = message.Timestamp,
                             ConnectorItemRef = new ConnectorItem()

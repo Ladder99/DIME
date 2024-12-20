@@ -16,5 +16,7 @@ public abstract class ConnectorConfiguration<TItem> : IConnectorConfiguration
     public string LoopExitScript { get; set; }
     public List<string> ExcludeFilter { get; set; }
     public List<string> IncludeFilter { get; set; }
+    public Dictionary<object, object> SinkMeta { get; set; }
+    public bool StripPathPrefix { get; set; }
     public List<TItem> Items { get; set; }
 }

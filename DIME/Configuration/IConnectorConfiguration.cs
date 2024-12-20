@@ -13,4 +13,6 @@ public interface IConnectorConfiguration
     public string LoopExitScript { get; }
     public List<string> ExcludeFilter { get; }
     public List<string> IncludeFilter { get; }
+    public Dictionary<object, object> SinkMeta { get; }
+    public bool StripPathPrefix { get; }
 }

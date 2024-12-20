@@ -7,6 +7,3 @@ shdrSink1: &shdrSink1
   device_key: ~
   heartbeat_interval: !!int 10000
   filter_duplicates: !!bool true
-  output_folder: ./Output/MTConnect
-  exclude_filter:
-    - mtInstance1/$SYSTEM
