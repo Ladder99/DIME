@@ -64,6 +64,7 @@ sharc1: &sharc1
       address: ~
       script: |
         local instance = {
+          available = cache("./$SYSTEM/IsConnected", false),
           high_concentration_condition = cache("HighConcentrationCondition", 0),
           dust_accumulation_condition = cache("DustAccumulationCondition", 0),
           fan_speed_condition = cache("FanSpeedCondition", 0),

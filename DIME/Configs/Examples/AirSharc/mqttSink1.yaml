@@ -8,3 +8,5 @@ mqttSink1: &mqttSink1
   base_topic: airsharcs
   qos: !!int 0
   retain: !!bool true
+  exclude_filter:
+    - sharc1/$SYSTEM
