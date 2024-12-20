@@ -14,7 +14,7 @@
         <PackageProjectUrl>https://github.com/Ladder99/DIME</PackageProjectUrl>
         <RepositoryUrl>https://github.com/Ladder99/DIME</RepositoryUrl>
         <PackageId>MRIIOT.DIME</PackageId>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
 	  <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
 	  <SelfContained>true</SelfContained>
 	  <Configurations>Debug;Release;MqttMotors;PostgresReads;MsSqlReads;MtConnectAgentModel;MtConnectShdrModel;HttpClientWrites;WikiEx1;AscCpcReads;AirSharc</Configurations>

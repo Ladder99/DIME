@@ -1,6 +1,6 @@
 # https://github.com/NuGet/Home/issues/12227#issuecomment-1854370261
 
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
 ARG TARGETARCH
 WORKDIR /app
 
@@ -16,7 +16,7 @@ RUN dotnet publish \
     --no-restore \
     -p:Platform=$TARGETARCH
 
-FROM mcr.microsoft.com/dotnet/runtime:8.0
+FROM mcr.microsoft.com/dotnet/runtime:9.0
 WORKDIR /app
 COPY --from=build-env /app/out .
 
