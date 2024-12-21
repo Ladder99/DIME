@@ -1,0 +1,12 @@
+mtConnectSink1: &mtConnectSink1
+  name: mtConnectSink1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: MTConnectAgent
+  port: !!int 5000
+  device_uuid: 123
+  device_id: device1
+  device_name: device1
+  device_manufacturer: acme
+  device_model: 123
+  device_serial_number: 123

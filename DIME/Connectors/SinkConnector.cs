@@ -147,8 +147,16 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
     
     protected string TransformAndSerializeMessage(MessageBoxMessage message)
     {
-        var outMessage = TransformMessage(message);
-        return (outMessage.GetType() == typeof(string) ? outMessage : JsonConvert.SerializeObject(outMessage)).ToString();
+        try
+        {
+            var outMessage = TransformMessage(message);
+            return (outMessage.GetType() == typeof(string) ? outMessage : JsonConvert.SerializeObject(outMessage)).ToString();
+        }
+        catch (Exception e)
+        {
+            return JsonConvert.SerializeObject(message);
+        }
+        
     }
     
     protected object TransformMessage(MessageBoxMessage message)

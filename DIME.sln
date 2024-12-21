@@ -17,6 +17,7 @@ Global
 		AirSharc|Any CPU = AirSharc|Any CPU
 		MtConnectAgentToSplunkHec|Any CPU = MtConnectAgentToSplunkHec|Any CPU
 		MtConnectAgentToShdr|Any CPU = MtConnectAgentToShdr|Any CPU
+		MtConnectAgentToAgent|Any CPU = MtConnectAgentToAgent|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -45,5 +46,7 @@ Global
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MtConnectAgentToSplunkHec|Any CPU.Build.0 = MtConnectAgentToSplunkHec|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MtConnectAgentToShdr|Any CPU.ActiveCfg = MtConnectAgentToShdr|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MtConnectAgentToShdr|Any CPU.Build.0 = MtConnectAgentToShdr|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MtConnectAgentToAgent|Any CPU.ActiveCfg = MtConnectAgentToAgent|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MtConnectAgentToAgent|Any CPU.Build.0 = MtConnectAgentToAgent|Any CPU
 	EndGlobalSection
 EndGlobal
