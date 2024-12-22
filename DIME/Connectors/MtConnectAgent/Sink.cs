@@ -108,7 +108,7 @@ public class Module : MTConnectInputAgentModule
                     Agent.AddDevice(device);
                 }
 
-                AddValueObservation(dataItem, message.Data, message.Timestamp);
+                AddValueObservation(dataItem, _connector.Configuration.UseSinkTransform ? _connector.TransformAndSerializeMessage(message) : message.Data, message.Timestamp);
             }
         }
         

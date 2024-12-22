@@ -141,7 +141,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
             var tempMessage = new MessageBoxMessage()
             {
                 Path = message.Path,
-                Data = message.Data,
+                Data = Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : message.Data,
                 Timestamp = message.Timestamp,
                 ConnectorItemRef = message.ConnectorItemRef
             };

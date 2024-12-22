@@ -15,4 +15,5 @@ public interface IConnectorConfiguration
     public List<string> IncludeFilter { get; }
     public Dictionary<object, object> SinkMeta { get; }
     public bool StripPathPrefix { get; }
+    public bool UseSinkTransform { get; }
 }

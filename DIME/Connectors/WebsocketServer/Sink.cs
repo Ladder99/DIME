@@ -52,7 +52,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
             {
                 if (session.ConnectionState == WebSocketState.Open)
                 {
-                    session.Context.WebSocket.Send(TransformAndSerializeMessage(message));
+                    session.Context.WebSocket.Send(Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : JsonConvert.SerializeObject(message));
                 }
             }
         }

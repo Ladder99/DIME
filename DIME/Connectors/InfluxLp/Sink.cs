@@ -35,7 +35,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
         foreach (var message in Outbox)
         {
             var point = PointData.Measurement(message.Path)
-                .Field("value", message.Data)
+                .Field("value", Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : message.Data)
                 .Timestamp(message.Timestamp, WritePrecision.Ms);
 
             writeApi.WritePoint(point, Configuration.BucketName, Configuration.OrgId);

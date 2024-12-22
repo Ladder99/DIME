@@ -145,7 +145,7 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         return pathParts[1] == "$SYSTEM";
     }
     
-    protected string TransformAndSerializeMessage(MessageBoxMessage message)
+    public string TransformAndSerializeMessage(MessageBoxMessage message)
     {
         try
         {
@@ -154,9 +154,11 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         }
         catch (Exception e)
         {
+            //System.Console.WriteLine(JsonConvert.SerializeObject(message));
+            //if (message.Data is null) return null;
+            //return message.Data.GetType() == typeof(string) ? message.Data.ToString() : JsonConvert.SerializeObject(message.Data);
             return JsonConvert.SerializeObject(message);
         }
-        
     }
     
     protected object TransformMessage(MessageBoxMessage message)

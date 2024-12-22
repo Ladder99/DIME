@@ -46,7 +46,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
                     @event = new
                     {
                         key = message.Path,
-                        value = message.Data
+                        value = Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : message.Data
                     }
                 };
                 
@@ -65,7 +65,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
                     fields = new
                     {
                         metric_name = message.Path,
-                        _value = message.Data
+                        _value = Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : message.Data
                     }
                 };
                 

@@ -38,7 +38,9 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
             
             foreach (var message in Outbox)
             {
-                if (message.Data is null)
+                var messageData = Configuration.UseSinkTransform ? TransformMessage(message) : message.Data;
+                
+                if (messageData is null)
                 {
                     continue;
                 }
@@ -46,19 +48,19 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
                 var id = new Guid(md5Hasher.ComputeHash(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message)))).ToString();
 
                 float data = 0f;
-                var isNumeric = IsNumericDatatype(message.Data);
-                var isString = IsStringDatatype(message.Data);
+                var isNumeric = IsNumericDatatype(messageData);
+                var isString = IsStringDatatype(messageData);
                 var sendAsEvent = !Configuration.NumbersToMetrics;
 
                 if (Configuration.NumbersToMetrics)
                 {
                     if (isNumeric)
                     {
-                        data = Convert.ToSingle(message.Data);
+                        data = Convert.ToSingle(messageData);
                     }
                     else if (isString)
                     {
-                        if (!Single.TryParse(message.Data.ToString(), out data))
+                        if (!Single.TryParse(messageData.ToString(), out data))
                         {
                             sendAsEvent = true;
                         }
@@ -102,7 +104,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
                         {
                             { "connector", message.ConnectorItemRef?.Configuration.Name },
                             { "path", message.Path },
-                            { "data", JsonConvert.SerializeObject(message.Data) },
+                            { "data", Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : JsonConvert.SerializeObject(message.Data) },
                             { "timestamp", message.Timestamp.ToString() }
                         }
                     };

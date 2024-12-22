@@ -18,5 +18,6 @@ public abstract class ConnectorConfiguration<TItem> : IConnectorConfiguration
     public List<string> IncludeFilter { get; set; }
     public Dictionary<object, object> SinkMeta { get; set; }
     public bool StripPathPrefix { get; set; }
+    public bool UseSinkTransform { get; set; }
     public List<TItem> Items { get; set; }
 }

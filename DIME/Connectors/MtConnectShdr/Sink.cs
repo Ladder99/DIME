@@ -102,7 +102,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
                         _client.AddDataItem(
                             new ShdrDataItem(
                                 message.Path, 
-                                message.Data, 
+                                Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : message.Data, 
                                 message.Timestamp));
                         break;
                     
@@ -110,7 +110,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
                         _client.AddCondition(
                             new ShdrCondition(
                                 message.Path, 
-                                (ConditionLevel)Enum.Parse(typeof(ConditionLevel), message.Data.ToString().ToUpper()), 
+                                (ConditionLevel)Enum.Parse(typeof(ConditionLevel), Configuration.UseSinkTransform ? TransformAndSerializeMessage(message).ToUpper() : message.Data.ToString().ToUpper()), 
                                 message.Timestamp));
                         break;
                     
@@ -121,7 +121,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
                                 _client.AddMessage(
                                     new ShdrMessage(
                                         message.Path,
-                                        message.Data.ToString(),
+                                        Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : message.Data.ToString(),
                                         message.Timestamp));
                                 break;
                             
@@ -129,7 +129,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
                                 _client.AddDataItem(
                                     new ShdrDataItem(
                                         message.Path, 
-                                        message.Data, 
+                                        Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : message.Data, 
                                         message.Timestamp));
                                 break;
                         }
@@ -138,7 +138,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
             }
             else
             {
-                _client.AddDataItem(new ShdrDataItem(message.Path, TransformAndSerializeMessage(message), message.Timestamp));
+                _client.AddDataItem(new ShdrDataItem(message.Path, Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : message.Data, message.Timestamp));
             }
         }
 

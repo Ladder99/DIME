@@ -3,10 +3,13 @@ splunkHecSink1: &splunkHecSink1
   enabled: !!bool true
   scan_interval: !!int 1000
   connector: SplunkHEC
-  address: localhost
+  address: dev1.splunk.com
   port: 8088
   use_ssl: false
-  token: abc123
+  token: a8fcd4c2-46a8-44b5-9456-12f46302ebf4
   event_or_metric: event
   source: source1
   source_type: _json
+  use_sink_transform: !!bool true
+  exclude_filter:
+    - mtConnectSource1/$SYSTEM

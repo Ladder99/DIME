@@ -48,7 +48,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
         {
             var msgBuilder = new MqttApplicationMessageBuilder()
                 .WithTopic($"{Configuration.BaseTopic}/{message.Path}")
-                .WithPayload(TransformAndSerializeMessage(message))
+                .WithPayload(Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : JsonConvert.SerializeObject(message))
                 .WithQualityOfServiceLevel((MqttQualityOfServiceLevel)Configuration.QoS);
 
             if (Configuration.RetainPublish)

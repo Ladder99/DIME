@@ -51,7 +51,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
             {
                 if (!string.IsNullOrEmpty(message.Path) && message.Data != null)
                 {
-                    var value = message.Data.ToString(); // Need to take into account Arrays
+                    var value = Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) :  message.Data.ToString(); // Need to take into account Arrays
 
                     if (_filter.Filter(message.Path, value))
                     {

@@ -46,7 +46,11 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
         foreach (var message in Outbox)
         {
            var response = client
-                .PostAsync($"{Configuration.Uri}", new StringContent(TransformAndSerializeMessage(message), Encoding.UTF8, contentType))
+                .PostAsync($"{Configuration.Uri}", 
+                    new StringContent(
+                        Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : JsonConvert.SerializeObject(message),  
+                        Encoding.UTF8, 
+                        contentType))
                 .GetAwaiter().GetResult();
             response.EnsureSuccessStatusCode();
         }

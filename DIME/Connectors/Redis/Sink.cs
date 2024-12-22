@@ -34,7 +34,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     {
         foreach (var message in Outbox)
         {
-            _database.StringSet(message.Path, JsonConvert.SerializeObject(message));
+            _database.StringSet(message.Path, Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : JsonConvert.SerializeObject(message));
         }
 
         return true;
