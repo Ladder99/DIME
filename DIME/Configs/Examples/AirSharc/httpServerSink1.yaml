@@ -5,3 +5,6 @@ httpServerSink1: &httpServerSink1
   connector: HTTPServer
   uri: http://localhost:8080/
   #uri: http://*:8080/
+  use_sink_transform: !!bool false
+  exclude_filter:
+    - sharc1/$SYSTEM
