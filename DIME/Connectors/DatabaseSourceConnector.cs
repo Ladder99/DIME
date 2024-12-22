@@ -32,8 +32,8 @@ public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<T
         foreach (var item in Configuration.Items.Where(x => x.Enabled))
         {
             object response = null;
-            object readResult = "n/a";
-            object scriptResult = "n/a";
+            object readResult = null;
+            object scriptResult = null;
             
             if (!string.IsNullOrEmpty(item.Address))
             {
@@ -43,13 +43,7 @@ public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<T
                 readResult = response;
             }
             
-            TagValues[$"{Configuration.Name}/{item.Name}"] = new MessageBoxMessage()
-            {
-                Path = $"{Configuration.Name}/{item.Name}",
-                Data = readResult,
-                Timestamp = DateTime.Now.ToEpochMilliseconds(),
-                ConnectorItemRef = item
-            };
+            AddMessageToTagValues(item, readResult);
             
             ExecuteScriptSumStopwatch.Start();
             if (ItemOrConfigurationHasItemScript(item))
@@ -61,13 +55,7 @@ public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<T
 
             if (response is not null)
             {
-                Samples.Add(new MessageBoxMessage()
-                {
-                    Path = $"{Configuration.Name}/{item.Name}",
-                    Data = response,
-                    Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
-                    ConnectorItemRef = item
-                });
+                AddMessageToTagValues(item, response);
             }
             
             Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +

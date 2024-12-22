@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using DIME.Configuration;
 using Newtonsoft.Json;
 
@@ -33,8 +32,8 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
         foreach (var item in Configuration.Items.Where(x => x.Enabled))
         {
             object response = null;
-            object readResult = "n/a";
-            object scriptResult = "n/a";
+            object readResult = null;
+            object scriptResult = null;
             
             ReadFromDeviceSumStopwatch.Start();
             if (!string.IsNullOrEmpty(item.Address))
@@ -42,18 +41,9 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
                 response = ReadFromDevice(item);
                 readResult = response;
             }
-            
-            TagValues[$"{Configuration.Name}/{item.Name}"] = new MessageBoxMessage()
-            {
-                Path = Configuration.StripPathPrefix ? item.Name : $"{Configuration.Name}/{item.Name}",
-                Data = readResult,
-                Timestamp = DateTime.Now.ToEpochMilliseconds(),
-                ConnectorItemRef = item
-            };
-            
+            AddMessageToTagValues(item, readResult);
             ReadFromDeviceSumStopwatch.Stop();
 
-            //Console.WriteLine($"SCRIPT: {item.Script}");
             ExecuteScriptSumStopwatch.Start();
             if (ItemOrConfigurationHasItemScript(item))
             {
@@ -61,28 +51,10 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
                 scriptResult = response;
             }
             ExecuteScriptSumStopwatch.Stop();
-
-            /*
-            try
-            {
-                Console.WriteLine($"RESULT: {scriptResult}");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-            */
             
             if (response is not null)
             {
-                Samples.Add(new MessageBoxMessage()
-                {
-                    Path = Configuration.StripPathPrefix ? item.Name : $"{Configuration.Name}/{item.Name}",
-                    Data = response,
-                    Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
-                    ConnectorItemRef = item
-                });
+                AddMessageToSamples(item, response);
             }
             
             Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +

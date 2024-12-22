@@ -76,13 +76,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                             object readResult = result;
                             object scriptResult = null;
 
-                            TagValues[$"{Configuration.Name}/{item.Name}"] = new MessageBoxMessage()
-                            {
-                                Path = Configuration.StripPathPrefix ? item.Name : $"{Configuration.Name}/{item.Name}",
-                                Data = readResult,
-                                Timestamp = DateTime.Now.ToEpochMilliseconds(),
-                                ConnectorItemRef = item
-                            };
+                            AddMessageToTagValues(item, readResult);
                             
                             ExecuteScriptSumStopwatch.Start();
                             if (ItemOrConfigurationHasItemScript(item))
@@ -94,13 +88,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
 
                             if (result is not null)
                             {
-                                Samples.Add(new MessageBoxMessage()
-                                {
-                                    Path = Configuration.StripPathPrefix ? item.Name : $"{Configuration.Name}/{item.Name}",
-                                    Data = result,
-                                    Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
-                                    ConnectorItemRef = item
-                                });
+                                AddMessageToSamples(item, result);
                             }
                             
                             Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
@@ -117,13 +105,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                         
                         if (result is not null)
                         {
-                            Samples.Add(new MessageBoxMessage()
-                            {
-                                Path = Configuration.StripPathPrefix ? item.Name : $"{Configuration.Name}/{item.Name}",
-                                Data = result,
-                                Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
-                                ConnectorItemRef = item
-                            });
+                            AddMessageToSamples(item, result);
                         }
                         
                         Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
@@ -152,15 +134,9 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                     try
                     {
                         var item = Configuration.Items
-                            .First(x => x.Enabled && x.Address == message.Key);// && !string.IsNullOrEmpty(x.Script));
+                            .First(x => x.Enabled && x.Address == message.Key);
                         
-                        TagValues[$"{Configuration.Name}/{item.Name}"] = new MessageBoxMessage()
-                        {
-                            Path = Configuration.StripPathPrefix ? item.Name : $"{Configuration.Name}/{item.Name}",
-                            Data = message.Value,
-                            Timestamp = DateTime.Now.ToEpochMilliseconds(),
-                            ConnectorItemRef = item
-                        };
+                        AddMessageToTagValues(item, message.Value);
 
                         var result = message.Value;
                         object readResult = result;
@@ -174,13 +150,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
 
                         if (result is not null)
                         {
-                            Samples.Add(new MessageBoxMessage()
-                            {
-                                Path = Configuration.StripPathPrefix ? message.Key : $"{Configuration.Name}/{message.Key}",
-                                Data = result,
-                                Timestamp = message.Timestamp,
-                                ConnectorItemRef = item
-                            });
+                            AddMessageToSamples(item, result);
                         }
                         
                         Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
@@ -190,16 +160,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                     }
                     catch (InvalidOperationException e)
                     {
-                        Samples.Add(new MessageBoxMessage()
-                        {
-                            Path = Configuration.StripPathPrefix ? message.Key : $"{Configuration.Name}/{message.Key}",
-                            Data = message.Value,
-                            Timestamp = message.Timestamp,
-                            ConnectorItemRef = new ConnectorItem()
-                            {
-                                Configuration = Configuration
-                            }
-                        });
+                        AddMessageToSamples(message.Key, message.Value, message.Timestamp);
                     }
                 }
 

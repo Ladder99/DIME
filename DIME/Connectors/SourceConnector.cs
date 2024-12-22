@@ -388,4 +388,40 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     {
         return !string.IsNullOrEmpty(item.Script) || !string.IsNullOrEmpty(Configuration.LoopItemScript);
     }
+
+    protected void AddMessageToTagValues(ConnectorItem item, object value)
+    {
+        TagValues[$"{Configuration.Name}/{item.Name}"] = new MessageBoxMessage()
+        {
+            Path = Configuration.StripPathPrefix ? item.Name : $"{Configuration.Name}/{item.Name}",
+            Data = value,
+            Timestamp = DateTime.Now.ToEpochMilliseconds(),
+            ConnectorItemRef = item
+        };
+    }
+    
+    protected void AddMessageToSamples(ConnectorItem item, object value)
+    {
+        Samples.Add(new MessageBoxMessage()
+        {
+            Path = Configuration.StripPathPrefix ? item.Name : $"{Configuration.Name}/{item.Name}",
+            Data = value,
+            Timestamp = DateTime.UtcNow.ToEpochMilliseconds(),
+            ConnectorItemRef = item
+        });
+    }
+
+    protected void AddMessageToSamples(string key, object value, long timestamp)
+    {
+        Samples.Add(new MessageBoxMessage()
+        {
+            Path = Configuration.StripPathPrefix ? key : $"{Configuration.Name}/{key}",
+            Data = value,
+            Timestamp = timestamp,
+            ConnectorItemRef = new ConnectorItem()
+            {
+                Configuration = Configuration
+            }
+        });
+    }
 }
