@@ -18,6 +18,7 @@ public static class ConfigurationHelper<TConfig, TItem>
         instance.DeinitScript = section.ContainsKey("deinit_script") ? Convert.ToString(section["deinit_script"]) : null;
         instance.LoopEnterScript = section.ContainsKey("enter_script") ? Convert.ToString(section["enter_script"]) : null;
         instance.LoopExitScript = section.ContainsKey("exit_script") ? Convert.ToString(section["exit_script"]) : null;
+        instance.LoopItemScript = section.ContainsKey("item_script") ? Convert.ToString(section["item_script"]) : null;
         instance.ItemizedRead = section.ContainsKey("itemized_read") ? Convert.ToBoolean(section["itemized_read"]) : false;
         instance.ConnectorType = connectorType;
         instance.Items = new List<TItem>();

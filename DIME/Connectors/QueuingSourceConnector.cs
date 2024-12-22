@@ -74,7 +74,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                         {
                             object result = message.Value;
                             object readResult = result;
-                            object scriptResult = "n/a";
+                            object scriptResult = null;
 
                             TagValues[$"{Configuration.Name}/{item.Name}"] = new MessageBoxMessage()
                             {
@@ -85,7 +85,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                             };
                             
                             ExecuteScriptSumStopwatch.Start();
-                            if (item.Script is not null)
+                            if (ItemOrConfigurationHasItemScript(item))
                             {
                                 result = ExecuteScript(message.Value, item);
                                 scriptResult = result;
@@ -109,10 +109,10 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                                          $"Sample={(result == null ? "DROPPED" : "ADDED")}");
                         }
                     }
-                    else if (!string.IsNullOrEmpty(item.Script))
+                    else if (ItemOrConfigurationHasItemScript(item))
                     {
                         ExecuteScriptSumStopwatch.Start();
-                        var result = ExecuteScript(item.Script, item);
+                        var result = ExecuteScript(null, item);
                         ExecuteScriptSumStopwatch.Stop();
                         
                         if (result is not null)
@@ -152,7 +152,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                     try
                     {
                         var item = Configuration.Items
-                            .First(x => x.Enabled && x.Address == message.Key && !string.IsNullOrEmpty(x.Script));
+                            .First(x => x.Enabled && x.Address == message.Key);// && !string.IsNullOrEmpty(x.Script));
                         
                         TagValues[$"{Configuration.Name}/{item.Name}"] = new MessageBoxMessage()
                         {
@@ -161,8 +161,16 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                             Timestamp = DateTime.Now.ToEpochMilliseconds(),
                             ConnectorItemRef = item
                         };
-                        
-                        var result = ExecuteScript(message.Value, item);
+
+                        var result = message.Value;
+                        object readResult = result;
+                        object scriptResult = null;
+
+                        if (ItemOrConfigurationHasItemScript(item))
+                        {
+                            result = ExecuteScript(message.Value, item);
+                            scriptResult = result;
+                        }
 
                         if (result is not null)
                         {
@@ -174,6 +182,11 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                                 ConnectorItemRef = item
                             });
                         }
+                        
+                        Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
+                                     $"Read={(readResult==null ? "<null>" : JsonConvert.SerializeObject(readResult))}, " +
+                                     $"Script={(scriptResult==null ? "<null>" : JsonConvert.SerializeObject(scriptResult))}, " +
+                                     $"Sample={(result == null ? "DROPPED" : "ADDED")}");
                     }
                     catch (InvalidOperationException e)
                     {

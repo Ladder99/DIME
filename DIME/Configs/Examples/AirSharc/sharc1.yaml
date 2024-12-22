@@ -14,52 +14,57 @@ sharc1: &sharc1
   deinit_script: ~
   enter_script: ~
   exit_script: ~
+  item_script: |
+    set(this.Name, json.decode(result).v.v);
+    return nil;
   items:
     - name: HighConcentrationCondition
       address: sharc/DEADBEEFAIR1/evt/io/hc
-      script: |
-        set(this.Name, json.decode(result).v.v);
-        return nil;
+      #script: |
+      #  set(this.Name, json.decode(result).v.v);
+      #  return nil;
+      #script: |
+      #  return json.decode(result).v.v;
     - name: DustAccumulationCondition
       address: sharc/DEADBEEFAIR1/evt/io/da
-      script: |
-        set(this.Name, json.decode(result).v.v);
-        return nil;
+      #script: |
+      #  set(this.Name, json.decode(result).v.v);
+      #  return nil;
     - name: FanSpeedCondition
       address: sharc/DEADBEEFAIR1/evt/io/fs
-      script: |
-        set(this.Name, json.decode(result).v.v);
-        return nil;
+      #script: |
+      #  set(this.Name, json.decode(result).v.v);
+      #  return nil;
     - name: FanStatusCondition
       address: sharc/DEADBEEFAIR1/evt/io/fan
-      script: |
-        set(this.Name, json.decode(result).v.v);
-        return nil;
+      #script: |
+      #  set(this.Name, json.decode(result).v.v);
+      #  return nil;
     - name: Temperature
       address: sharc/DEADBEEFAIR1/evt/io/temp
-      script: |
-        set(this.Name, json.decode(result).v.v);
-        return nil;
+      #script: |
+      #  set(this.Name, json.decode(result).v.v);
+      #  return nil;
     - name: Humidity
       address: sharc/DEADBEEFAIR1/evt/io/hum
-      script: |
-        set(this.Name, json.decode(result).v.v);
-        return nil;
+      #script: |
+      #  set(this.Name, json.decode(result).v.v);
+      #  return nil;
     - name: TVOC
       address: sharc/DEADBEEFAIR1/evt/io/tvoc
-      script: |
-        set(this.Name, json.decode(result).v.v);
-        return nil;
+      #script: |
+      #  set(this.Name, json.decode(result).v.v);
+      #  return nil;
     - name: eCO2
       address: sharc/DEADBEEFAIR1/evt/io/eco2
-      script: |
-        set(this.Name, json.decode(result).v.v);
-        return nil;
+      #script: |
+      #  set(this.Name, json.decode(result).v.v);
+      # return nil;
     - name: IAQ
       address: sharc/DEADBEEFAIR1/evt/io/iaq
-      script: |
-        set(this.Name, json.decode(result).v.v);
-        return nil;
+      #script: |
+      #  set(this.Name, json.decode(result).v.v);
+      #  return nil;
     - name: Instance
       address: ~
       script: |

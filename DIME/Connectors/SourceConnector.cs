@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using DIME.Configuration;
 using Newtonsoft.Json;
+using YamlDotNet.Core;
 
 namespace DIME.Connectors;
 
@@ -71,10 +72,10 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         try
         {
             ScriptRunner.SetContext(intermediateResult, item);
-            var scriptResult = ScriptRunner.DoString(item);
+            var scriptResult = string.IsNullOrEmpty(item.Script) && !string.IsNullOrEmpty(item.Configuration.LoopItemScript)
+                ? ScriptRunner.DoString(item.Configuration.LoopItemScript)
+                : ScriptRunner.DoString(item);
             response = scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
-            
-            
         }
         catch (Exception e)
         {
@@ -381,5 +382,10 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
 
             OnInboxSent?.Invoke(Inbox, Current, Samples);
         }
+    }
+
+    protected bool ItemOrConfigurationHasItemScript(ConnectorItem item)
+    {
+        return !string.IsNullOrEmpty(item.Script) || !string.IsNullOrEmpty(Configuration.LoopItemScript);
     }
 }

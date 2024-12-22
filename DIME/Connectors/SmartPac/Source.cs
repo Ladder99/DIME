@@ -78,7 +78,7 @@ public class Source: SourceConnector<ConnectorConfiguration, ConnectorItem>
             object readResult = "n/a";
             object scriptResult = "n/a";
             
-            if (!string.IsNullOrEmpty(item.Script))
+            if (ItemOrConfigurationHasItemScript(item))
             {
                 response = ExecuteScript(networkResponse, item);
                 scriptResult = response;

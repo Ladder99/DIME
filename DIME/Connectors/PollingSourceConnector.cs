@@ -55,7 +55,7 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
 
             //Console.WriteLine($"SCRIPT: {item.Script}");
             ExecuteScriptSumStopwatch.Start();
-            if (!string.IsNullOrEmpty(item.Script))
+            if (ItemOrConfigurationHasItemScript(item))
             {
                 response = ExecuteScript(response, item);
                 scriptResult = response;

@@ -5,8 +5,9 @@ mqttSink1: &mqttSink1
   connector: MQTT
   address: wss.sharc.tech
   port: !!int 1883
-  base_topic: airsharcs
+  base_topic: airsharcs2
   qos: !!int 0
   retain: !!bool true
+  use_sink_transform: !!bool false
   exclude_filter:
     - sharc1/$SYSTEM

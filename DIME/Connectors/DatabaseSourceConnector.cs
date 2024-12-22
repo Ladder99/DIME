@@ -52,7 +52,7 @@ public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<T
             };
             
             ExecuteScriptSumStopwatch.Start();
-            if (!string.IsNullOrEmpty(item.Script))
+            if (ItemOrConfigurationHasItemScript(item))
             {
                 response = ExecuteScript(response, item);
                 scriptResult = response;
