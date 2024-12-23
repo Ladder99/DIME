@@ -22,7 +22,7 @@ Reshape and move data from enterprise and industrial sources to message queues, 
 | Fanuc Focas [[external driver]](https://github.com/Ladder99/fanuc-driver)  |
 | Filesystem                                                                 |
 | [Haas SHDR](../../wiki/4.-Connector-Reference#haas-shdr)                   |
-| [HTTP Client](../../wiki/4.-Connector-Reference#http-client)               |
+| HTTP Client                                                                |
 | [HTTP Server](../../wiki/4.-Connector-Reference#http-server)               |
 | [Modbus/TCP](../../wiki/4.-Connector-Reference#modbus-tcp)                 |
 | [MQTT](../../wiki/4.-Connector-Reference#mqtt)                             |
@@ -42,25 +42,25 @@ Reshape and move data from enterprise and industrial sources to message queues, 
 
 </td><td valign="top">
 
-| Sink                                                                   |
-|------------------------------------------------------------------------|
-| ActiveMQ                                                               |
-| [Console](../../wiki/4.-Connector-Reference#console)                   |
-| HTTP Client                                                            |
-| [HTTP Server](../../wiki/4.-Connector-Reference#http-server)           |
-| [Influx LP](../../wiki/4.-Connector-Reference#influx-lp)               |
-| IoTDB                                                                  |
-| [MQTT](../../wiki/4.-Connector-Reference#mqtt)                         |
-| MS SQL Server                                                          |
-| MTConnect Agent                                                        |
-| [MTConnect SHDR](../../wiki/4.-Connector-Reference#mtconnect-shdr)     |
-| Postgres                                                               |
-| [Redis](../../wiki/4.-Connector-Reference#redis)                       |
-| [Splunk EH SDK](../../wiki/4.-Connector-Reference#splunk-eh-sdk)       |
-| [Splunk HEC](../../wiki/4.-Connector-Reference#splunk-hec)             |
-| [SparkplugB](../../wiki/4.-Connector-Reference#sparkplugb)             |
-| [TrakHound HTTP](../../wiki/4.-Connector-Reference#trakhound-http)     |
-| [Websocket Server](../../wiki/4.-Connector-Reference#websocket-server) |
-| Zenoh                                                                  |
+| Sink                                                                     |
+|--------------------------------------------------------------------------|
+| ActiveMQ                                                                 |
+| [Console](../../wiki/4.-Connector-Reference#console)                     |
+| [HTTP Client](../../wiki/4.-Connector-Reference#http-client)             |
+| [HTTP Server](../../wiki/4.-Connector-Reference#http-server)             |
+| [Influx LP](../../wiki/4.-Connector-Reference#influx-lp)                 |
+| IoTDB                                                                    |
+| [MQTT](../../wiki/4.-Connector-Reference#mqtt)                           |
+| MS SQL Server                                                            |
+| MTConnect Agent                                                          |
+| [MTConnect SHDR](../../wiki/4.-Connector-Reference#mtconnect-shdr)       |
+| Postgres                                                                 |
+| [Redis](../../wiki/4.-Connector-Reference#redis)                         |
+| [Splunk EH SDK](../../wiki/4.-Connector-Reference#splunk-eh-sdk)         |
+| [Splunk HEC](../../wiki/4.-Connector-Reference#splunk-hec)               |
+| [SparkplugB](../../wiki/4.-Connector-Reference#sparkplugb)               |
+| [TrakHound HTTP](../../wiki/4.-Connector-Reference#trakhound-http)       |
+| [Websocket Server](../../wiki/4.-Connector-Reference#websocket-server)   |
+| Zenoh                                                                    |
 
 </td></tr></table>
