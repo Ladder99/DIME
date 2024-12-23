@@ -1,0 +1,10 @@
+app:
+  ring_buffer: !!int 4096
+  http_server_uri: http://127.0.0.1:9999/
+  ws_server_uri: ws://127.0.0.1:9998/
+sinks:
+  - *console
+  - *ignition
+sources:
+  - *sharcs
+  - *rockwell

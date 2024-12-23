@@ -22,7 +22,7 @@ public class LuaRunner
         {
             _state = new NLua.Lua();
             _state.LoadCLRPackage();
-            _state.DoString("package.path = package.path .. ';./Lua/?.lua'");
+            _state.DoString("package.path = package.path .. ';./Lua/?.lua;./Lua/?/?.lua'");
             _state["result"] = null;
             _state["this"] = null;
             _state.RegisterFunction("cache_ts", this, GetType().GetMethod("GetPrimaryCacheWithTimestamp", BindingFlags.NonPublic | BindingFlags.Instance));
@@ -205,7 +205,14 @@ public class LuaRunner
     private object? EmitSample(string path, object? value)
     {
         var item = _state["this"] as ConnectorItem;
-        if (item is null) return null;
+        if (item is null) // TODO: non-itemized read queue source has no item
+        {
+            item = new ConnectorItem()
+            {
+                Configuration = _connector.Configuration,
+                ReportByException = true
+            };
+        }
         
         var (connectorName, fullPath, shortPath) = MakeCachePath(path);
         

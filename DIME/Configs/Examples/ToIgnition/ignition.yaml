@@ -1,0 +1,15 @@
+ignition: &ignition
+  name: ignition
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: SparkplugB
+  address: localhost
+  port: !!int 1883
+  username: user
+  password: password
+  host_id: Acme
+  group_id: Chicago
+  node_id: Factory1
+  device_id: DIME1
+  reconnect_interval: !!int 15000
+  birth_delay: !!int 10000

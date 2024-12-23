@@ -169,11 +169,14 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                         if (ConfigurationHasItemScript())
                         {
                             ExecuteScriptSumStopwatch.Start();
-                            result = ExecuteScript(message.Value, this, Configuration.LoopItemScript);
+                            result = ExecuteScript(message.Value, message, Configuration.LoopItemScript);
                             ExecuteScriptSumStopwatch.Stop();
                         }
-                        
-                        AddMessageToSamples(message.Key, result, message.Timestamp);
+
+                        if (result is not null)
+                        {
+                            AddMessageToSamples(message.Key, result, message.Timestamp);
+                        }
                     }
                 }
 

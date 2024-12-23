@@ -1,0 +1,8 @@
+console: &console
+  name: console
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: Console
+  #use_sink_transform: !!bool true
+  #exclude_filter:
+  #  - sharcs/$SYSTEM
