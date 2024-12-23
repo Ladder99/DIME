@@ -87,6 +87,28 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
         return response;
     }
     
+    protected object ExecuteScript(object intermediateResult, object thisContext, string script)
+    {
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:ExecuteScript::ENTER");
+
+        object response = null;
+        
+        try
+        {
+            ScriptRunner.SetContext(intermediateResult, thisContext);
+            var scriptResult = ScriptRunner.DoString(script);
+            response = scriptResult.Length == 1 ? scriptResult[0] : scriptResult;
+        }
+        catch (Exception e)
+        {
+            response = null;
+        }
+        
+        Logger.Trace($"[{Configuration.Name}] SourceConnector:ExecuteScript::EXIT");
+        
+        return response;
+    }
+    
     public override bool BeforeUpdate()
     {
         Logger.Trace($"[{Configuration.Name}] SourceConnector:BeforeUpdate::ENTER");
@@ -387,6 +409,11 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     protected bool ItemOrConfigurationHasItemScript(ConnectorItem item)
     {
         return !string.IsNullOrEmpty(item.Script) || !string.IsNullOrEmpty(Configuration.LoopItemScript);
+    }
+    
+    protected bool ConfigurationHasItemScript()
+    {
+        return !string.IsNullOrEmpty(Configuration.LoopItemScript);
     }
 
     protected void AddMessageToTagValues(ConnectorItem item, object value)

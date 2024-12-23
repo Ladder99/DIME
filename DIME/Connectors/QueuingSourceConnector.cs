@@ -50,7 +50,9 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
         
         if (!string.IsNullOrEmpty(Configuration.LoopEnterScript))
         {
+            ExecuteScriptSumStopwatch.Start();
             ExecuteScript(Configuration.LoopEnterScript, this);
+            ExecuteScriptSumStopwatch.Stop();
         }
         
         if (Configuration.ItemizedRead)
@@ -78,13 +80,13 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
 
                             AddMessageToTagValues(item, readResult);
                             
-                            ExecuteScriptSumStopwatch.Start();
                             if (ItemOrConfigurationHasItemScript(item))
                             {
+                                ExecuteScriptSumStopwatch.Start();
                                 result = ExecuteScript(message.Value, item);
                                 scriptResult = result;
+                                ExecuteScriptSumStopwatch.Stop();
                             }
-                            ExecuteScriptSumStopwatch.Stop();
 
                             if (result is not null)
                             {
@@ -144,8 +146,10 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
 
                         if (ItemOrConfigurationHasItemScript(item))
                         {
+                            ExecuteScriptSumStopwatch.Start();
                             result = ExecuteScript(message.Value, item);
                             scriptResult = result;
+                            ExecuteScriptSumStopwatch.Stop();
                         }
 
                         if (result is not null)
@@ -160,7 +164,16 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                     }
                     catch (InvalidOperationException e)
                     {
-                        AddMessageToSamples(message.Key, message.Value, message.Timestamp);
+                        var result = message.Value;
+
+                        if (ConfigurationHasItemScript())
+                        {
+                            ExecuteScriptSumStopwatch.Start();
+                            result = ExecuteScript(message.Value, this, Configuration.LoopItemScript);
+                            ExecuteScriptSumStopwatch.Stop();
+                        }
+                        
+                        AddMessageToSamples(message.Key, result, message.Timestamp);
                     }
                 }
 
@@ -170,7 +183,9 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
 
         if (!string.IsNullOrEmpty(Configuration.LoopExitScript))
         {
+            ExecuteScriptSumStopwatch.Start();
             ExecuteScript(Configuration.LoopExitScript, this);
+            ExecuteScriptSumStopwatch.Stop();
         }
         
         EntireReadLoopStopwatch.Stop();

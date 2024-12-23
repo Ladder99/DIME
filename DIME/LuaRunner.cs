@@ -1,6 +1,7 @@
 using System.Reflection;
 using DIME.Configuration;
 using DIME.Connectors;
+using Newtonsoft.Json;
 using NLua;
 using YamlDotNet.Serialization;
 
@@ -30,6 +31,8 @@ public class LuaRunner
             _state.RegisterFunction("configuration", this, GetType().GetMethod("GetConnectorConfiguration", BindingFlags.NonPublic | BindingFlags.Instance));
             _state.RegisterFunction("connector", this, GetType().GetMethod("GetConnector", BindingFlags.NonPublic | BindingFlags.Instance));
             _state.RegisterFunction("emit", this, GetType().GetMethod("EmitSample", BindingFlags.NonPublic | BindingFlags.Instance));
+            _state.RegisterFunction("from_json", this, GetType().GetMethod("FromJson", BindingFlags.NonPublic | BindingFlags.Instance));
+            _state.RegisterFunction("to_json", this, GetType().GetMethod("ToJson", BindingFlags.NonPublic | BindingFlags.Instance));
             return true;
         }
         catch (Exception e)
@@ -215,5 +218,15 @@ public class LuaRunner
         });
 
         return value;
+    }
+
+    private object? FromJson(string json)
+    {
+        return JsonConvert.DeserializeObject(json);
+    }
+    
+    private string ToJson(string json)
+    {
+        return JsonConvert.SerializeObject(json);
     }
 }

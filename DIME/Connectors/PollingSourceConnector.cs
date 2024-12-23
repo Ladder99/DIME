@@ -26,7 +26,9 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
          */
         if (!string.IsNullOrEmpty(Configuration.LoopEnterScript))
         {
+            ExecuteScriptSumStopwatch.Start();
             ExecuteScript(Configuration.LoopEnterScript, this);
+            ExecuteScriptSumStopwatch.Stop();
         }
         
         foreach (var item in Configuration.Items.Where(x => x.Enabled))
@@ -35,22 +37,23 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
             object readResult = null;
             object scriptResult = null;
             
-            ReadFromDeviceSumStopwatch.Start();
             if (!string.IsNullOrEmpty(item.Address))
             {
+                ReadFromDeviceSumStopwatch.Start();
                 response = ReadFromDevice(item);
                 readResult = response;
+                ReadFromDeviceSumStopwatch.Stop();
             }
+            
             AddMessageToTagValues(item, readResult);
-            ReadFromDeviceSumStopwatch.Stop();
-
-            ExecuteScriptSumStopwatch.Start();
+            
             if (ItemOrConfigurationHasItemScript(item))
             {
+                ExecuteScriptSumStopwatch.Start();
                 response = ExecuteScript(response, item);
                 scriptResult = response;
+                ExecuteScriptSumStopwatch.Stop();
             }
-            ExecuteScriptSumStopwatch.Stop();
             
             if (response is not null)
             {
@@ -65,7 +68,9 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
         
         if (!string.IsNullOrEmpty(Configuration.LoopExitScript))
         {
+            ExecuteScriptSumStopwatch.Start();
             ExecuteScript(Configuration.LoopExitScript, this);
+            ExecuteScriptSumStopwatch.Stop();
         }
         
         EntireReadLoopStopwatch.Stop();
@@ -86,5 +91,4 @@ public abstract class PollingSourceConnector<TConfig, TItem>: SourceConnector<TC
         EntireReadLoopStopwatch.Reset();
         return true;
     }
-
 }

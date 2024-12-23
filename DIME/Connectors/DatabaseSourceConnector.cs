@@ -22,7 +22,9 @@ public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<T
         
         if (!string.IsNullOrEmpty(Configuration.LoopEnterScript))
         {
+            ExecuteScriptSumStopwatch.Start();
             ExecuteScript(Configuration.LoopEnterScript, this);
+            ExecuteScriptSumStopwatch.Stop();
         }
         
         ReadFromDeviceSumStopwatch.Start();
@@ -37,21 +39,23 @@ public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<T
             
             if (!string.IsNullOrEmpty(item.Address))
             {
+                ReadFromDeviceSumStopwatch.Start();
                 response = dataTable.AsEnumerable()
                     .Select(row => row.Field<object>(item.Address))
                     .ToArray();
                 readResult = response;
+                ReadFromDeviceSumStopwatch.Stop();
             }
             
             AddMessageToTagValues(item, readResult);
-            
-            ExecuteScriptSumStopwatch.Start();
+
             if (ItemOrConfigurationHasItemScript(item))
             {
+                ExecuteScriptSumStopwatch.Start();
                 response = ExecuteScript(response, item);
                 scriptResult = response;
+                ExecuteScriptSumStopwatch.Stop();
             }
-            ExecuteScriptSumStopwatch.Stop();
 
             if (response is not null)
             {
@@ -66,7 +70,9 @@ public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<T
         
         if (!string.IsNullOrEmpty(Configuration.LoopExitScript))
         {
+            ExecuteScriptSumStopwatch.Start();
             ExecuteScript(Configuration.LoopExitScript, this);
+            ExecuteScriptSumStopwatch.Stop();
         }
         
         EntireReadLoopStopwatch.Stop();

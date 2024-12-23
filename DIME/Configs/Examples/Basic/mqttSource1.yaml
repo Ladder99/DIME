@@ -10,8 +10,8 @@ mqttSource1: &mqttSource1
   qos: !!int 0
   init_script: |
     print("hello world from lua");
-    -- https://github.com/rxi/json.lua
-    json = require('json');
+  item_script: |
+    return from_json(result).v;
   items:
     - name: AllSharcs
       enabled: !!bool true
