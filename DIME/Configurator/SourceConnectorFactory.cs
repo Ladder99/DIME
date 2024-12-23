@@ -34,6 +34,9 @@ public static class SourceConnectorFactory
             case "mtconnectagent":
                 connector = MtConnectAgent.Source.Create(section, disruptor);
                 break;
+            case "opcda":
+                connector = OpcDa.Source.Create(section, disruptor);
+                break;
             case "opcua":
                 connector = OpcUa.Source.Create(section, disruptor);
                 break;

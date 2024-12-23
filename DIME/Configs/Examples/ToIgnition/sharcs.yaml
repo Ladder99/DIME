@@ -17,25 +17,32 @@ sharcs: &sharcs
     local path_slugs = stringx.split(this.Key, '/');
     local sharc_serial = path_slugs[2];
     local sharc_event = path_slugs[4];
-    local payload = from_json(result).v;
+    --local payload = from_json(result).v;
+    local payload = json.decode(result).v;
     if sharc_event == "avail" then
       --print(inspect(getmetatable(payload.Value)))
-      emit("./" .. sharc_serial .. "/availabile", tostring(payload)=="True: 1" and true or false);
+      emit("./" .. sharc_serial .. "/availabile", payload==true and true or false);
     elseif sharc_event == "net" then
       emit("./" .. sharc_serial .. "/network/interface", payload.type);
-      emit("./" .. sharc_serial .. "/network/ip_address", payload.ip);
+      emit("./" .. sharc_serial .. "/network/ip", payload.ip);
       emit("./" .. sharc_serial .. "/network/subnet_mask", payload.mask);
+      emit("./" .. sharc_serial .. "/network/gateway", payload.gw);
+      emit("./" .. sharc_serial .. "/network/mac", payload.mac);
     elseif sharc_event == "io" then
       local sensor = path_slugs[5];
       local value = nil;
+      local uom = nil;
       if payload[sensor] then
         value = payload[sensor].v;
+        uom = payload[sensor].u;
       else
         value = payload.v;
+        uom = payload.u;
       end
       --print(sharc_serial .. "/" .. sensor);
       --print(value);
-      emit("./" .. sharc_serial .. "/signal/" .. sensor, value);
+      emit("./" .. sharc_serial .. "/" .. sensor .. "/value", value);
+      emit("./" .. sharc_serial .. "/" .. sensor .. "/uom", uom);
     end
     return null;
   items:

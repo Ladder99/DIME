@@ -7,5 +7,6 @@ shdrSink1: &shdrSink1
   device_key: buster123
   heartbeat_interval: !!int 10000
   filter_duplicates: !!bool true
+  use_sink_transform: !!bool true
   exclude_filter:
     - mtConnectSource1/$SYSTEM

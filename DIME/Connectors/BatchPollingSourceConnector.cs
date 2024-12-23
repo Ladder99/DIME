@@ -1,23 +1,24 @@
-using System.Data;
 using DIME.Configuration;
 using Newtonsoft.Json;
 
 namespace DIME.Connectors;
 
-public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<TConfig, TItem>
-    where TConfig : DatabaseConnectorConfiguration<TItem>
+public abstract class BatchPollingSourceConnector<TConfig, TItem>: SourceConnector<TConfig, TItem>
+    where TConfig : ConnectorConfiguration<TItem>
     where TItem : ConnectorItem
 {
-    public DatabaseSourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
+    public BatchPollingSourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
-        Logger.Trace($"[{Configuration.Name}] DatabaseSourceConnector:.ctor");
+        Logger.Trace($"[{Configuration.Name}] BatchPollingSourceConnector:.ctor");
     }
 
-    protected abstract DataTable ReadFromDevice();
+    protected abstract bool ReadBatchFromDevice();
+
+    protected abstract object ReadItemFromBatch(string address);
     
     protected override bool ReadImplementation()
     {
-        Logger.Trace($"[{Configuration.Name}] DatabaseSourceConnector:ReadImplementation::ENTER");
+        Logger.Trace($"[{Configuration.Name}] BatchPollingSourceConnector:ReadImplementation::ENTER");
         EntireReadLoopStopwatch.Start();
         
         if (!string.IsNullOrEmpty(Configuration.LoopEnterScript))
@@ -28,7 +29,7 @@ public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<T
         }
         
         ReadFromDeviceSumStopwatch.Start();
-        var dataTable = ReadFromDevice();
+        ReadBatchFromDevice();
         ReadFromDeviceSumStopwatch.Stop();
         
         foreach (var item in Configuration.Items.Where(x => x.Enabled))
@@ -40,9 +41,7 @@ public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<T
             if (!string.IsNullOrEmpty(item.Address))
             {
                 ReadFromDeviceSumStopwatch.Start();
-                response = dataTable.AsEnumerable()
-                    .Select(row => row.Field<object>(item.Address))
-                    .ToArray();
+                response = ReadItemFromBatch(item.Address);
                 readResult = response;
                 ReadFromDeviceSumStopwatch.Stop();
             }
@@ -76,7 +75,7 @@ public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<T
         }
         
         EntireReadLoopStopwatch.Stop();
-        Logger.Trace($"[{Configuration.Name}] DatabaseSourceConnector:ReadImplementation::EXIT");
+        Logger.Trace($"[{Configuration.Name}] BatchPollingSourceConnector:ReadImplementation::EXIT");
         
         Logger.Debug($"[{Configuration.Name}] Loop Perf. " +
                     $"DeviceRead: {ReadFromDeviceSumStopwatch.ElapsedMilliseconds}ms, " +

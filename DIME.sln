@@ -20,6 +20,7 @@ Global
 		MtConnectAgentToAgent|Any CPU = MtConnectAgentToAgent|Any CPU
 		Basic|Any CPU = Basic|Any CPU
 		ToIgnition|Any CPU = ToIgnition|Any CPU
+		OpcDaReads|Any CPU = OpcDaReads|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -54,5 +55,7 @@ Global
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.Basic|Any CPU.Build.0 = Basic|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.ToIgnition|Any CPU.ActiveCfg = ToIgnition|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.ToIgnition|Any CPU.Build.0 = ToIgnition|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.OpcDaReads|Any CPU.ActiveCfg = OpcDaReads|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.OpcDaReads|Any CPU.Build.0 = OpcDaReads|Any CPU
 	EndGlobalSection
 EndGlobal

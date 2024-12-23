@@ -1,0 +1,14 @@
+opcDaSource1: &opcDaSource1
+  name: opcDaSource1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: OpcDA
+  rbe: !!bool true
+  address: Kepware.KEPServerEX.V6
+  init_script: ~
+  items:
+    - name: DateTime
+      enabled: !!bool true
+      rbe: !!bool true
+      address: _System._DateTime
+      script: ~
