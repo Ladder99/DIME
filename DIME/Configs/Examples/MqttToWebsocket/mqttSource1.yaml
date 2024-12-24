@@ -11,6 +11,8 @@ mqttSource1: &mqttSource1
   init_script: |
     -- https://github.com/rxi/json.lua
     json = require('json');
+  item_script: |
+    return from_json(result);
   items:
     - name: AllSharcs
       enabled: !!bool true

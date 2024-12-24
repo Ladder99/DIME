@@ -63,11 +63,11 @@ public class Source: BatchPollingSourceConnector<ConnectorConfiguration, Connect
         return true;
     }
 
-    protected override object ReadItemFromBatch(string address)
+    protected override object ReadItemFromBatch(Configuration.ConnectorItem item)
     {
         try
         {
-            return _values.First(x => x.Item.ItemId == address).Value;
+            return _values.First(x => x.Item.ItemId == item.Address).Value;
         }
         catch (InvalidOperationException e)
         {

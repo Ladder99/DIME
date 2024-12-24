@@ -14,7 +14,7 @@ public abstract class BatchPollingSourceConnector<TConfig, TItem>: SourceConnect
 
     protected abstract bool ReadBatchFromDevice();
 
-    protected abstract object ReadItemFromBatch(string address);
+    protected abstract object ReadItemFromBatch(ConnectorItem item);
     
     protected override bool ReadImplementation()
     {
@@ -41,7 +41,7 @@ public abstract class BatchPollingSourceConnector<TConfig, TItem>: SourceConnect
             if (!string.IsNullOrEmpty(item.Address))
             {
                 ReadFromDeviceSumStopwatch.Start();
-                response = ReadItemFromBatch(item.Address);
+                response = ReadItemFromBatch(item);
                 readResult = response;
                 ReadFromDeviceSumStopwatch.Stop();
             }
