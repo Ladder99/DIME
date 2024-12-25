@@ -63,7 +63,10 @@ chariot: &chariot
         --for k, client in pairs(response.clients) do
         --  emit("./clients/" .. client.clientId, client);
         --end
+        clients = {}
         for client in luanet.each(response.clients) do
           emit("./clients/" .. client.clientId:ToString(), client);
+          table.insert(clients, client.clientId:ToString());
         end
+        emit("./clients", clients);
         return nil;
