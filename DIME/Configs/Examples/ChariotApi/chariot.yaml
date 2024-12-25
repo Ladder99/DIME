@@ -42,7 +42,8 @@ chariot: &chariot
         goto retry;
       else
         local content = response.Content:ReadAsStringAsync().Result;
-        return json.decode(content);
+        --return json.decode(content);
+        return from_json(content);
       end
       ::fail::
       return nil;
@@ -51,9 +52,18 @@ chariot: &chariot
     - name: System
       script: |
         response = http_get("system");
-        return response;
-        
+        return response;   
     - name: Server
       script: |
         response = http_get("server");
         return response;
+    - name: Clients
+      script: |
+        response = http_get("server/clients");
+        --for k, client in pairs(response.clients) do
+        --  emit("./clients/" .. client.clientId, client);
+        --end
+        for client in luanet.each(response.clients) do
+          emit("./clients/" .. client.clientId:ToString(), client);
+        end
+        return nil;
