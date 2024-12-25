@@ -1,0 +1,47 @@
+chariot: &chariot
+  name: chariot
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: Script
+  rbe: !!bool true
+  init_script: |
+    json = require('json');
+    import('System');
+    import('System.Net.Http');
+    uri = "http://localhost:8080/";
+    token = "undefined";
+  
+    get_token = function()
+      local client = HttpClient();
+      local request = HttpRequestMessage(HttpMethod.Post, uri .. "login");
+      request.Headers:Add("Authorization", "Basic YWRtaW46cGFzc3dvcmQ=");
+      request.Headers:Add("Accept", "application/json;api-version=1.0");
+      local response = client:Send(request);
+      local content = response.Content:ReadAsStringAsync().Result;
+      token = json.decode(content).access_token;
+    end
+    
+    http_get = function(path)
+      ::retry::
+      local client = HttpClient();
+      local request = HttpRequestMessage(HttpMethod.Get, uri .. path);
+      request.Headers:Add("Authorization", "Bearer " .. token);
+      request.Headers:Add("Accept", "application/json;api-version=1.0");
+      local response = client:Send(request);
+      if Convert.ToInt32(response.StatusCode) == 401 then
+        get_token();
+        goto retry;
+      end
+      local content = response.Content:ReadAsStringAsync().Result;
+      return json.decode(content);
+    end
+  items:
+    - name: System
+      script: |
+        response = http_get("system");
+        return response;
+        
+    - name: Server
+      script: |
+        response = http_get("server");
+        return response;

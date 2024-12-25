@@ -1,0 +1,13 @@
+mqttSink: &mqttSink
+  name: mqttSink
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: MQTT
+  address: wss.sharc.tech
+  port: !!int 1883
+  base_topic: DimeTutorial
+  qos: !!int 0
+  retain: !!bool true
+  use_sink_transform: !!bool true
+  exclude_filter:
+    - rockwell/$SYSTEM

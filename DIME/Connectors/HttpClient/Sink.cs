@@ -1,6 +1,7 @@
 using System.Text;
 using DIME.Configuration.HttpClient;
 using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace DIME.Connectors.HttpClient;
 

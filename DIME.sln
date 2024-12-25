@@ -23,6 +23,8 @@ Global
 		OpcDaReads|Any CPU = OpcDaReads|Any CPU
 		OpcUaReads|Any CPU = OpcUaReads|Any CPU
 		MqttToWebsocket|Any CPU = MqttToWebsocket|Any CPU
+		Tutorial-Part1|Any CPU = Tutorial-Part1|Any CPU
+		ChariotApi|Any CPU = ChariotApi|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -63,5 +65,9 @@ Global
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.OpcUaReads|Any CPU.Build.0 = OpcUaReads|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MqttToWebsocket|Any CPU.ActiveCfg = MqttToWebsocket|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MqttToWebsocket|Any CPU.Build.0 = MqttToWebsocket|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.Tutorial-Part1|Any CPU.ActiveCfg = Tutorial-Part1|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.Tutorial-Part1|Any CPU.Build.0 = Tutorial-Part1|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.ChariotApi|Any CPU.ActiveCfg = ChariotApi|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.ChariotApi|Any CPU.Build.0 = ChariotApi|Any CPU
 	EndGlobalSection
 EndGlobal

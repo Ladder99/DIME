@@ -1,0 +1,18 @@
+ignitionSink: &ignitionSink
+  name: ignition
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: SparkplugB
+  address: localhost
+  port: !!int 1883
+  username: user
+  password: password
+  host_id: Acme
+  group_id: Chicago
+  node_id: Factory1
+  device_id: DIMETutorial
+  reconnect_interval: !!int 15000
+  birth_delay: !!int 10000
+  use_sink_transform: !!bool true
+  include_filter:
+    - rockwell

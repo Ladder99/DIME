@@ -1,7 +1,7 @@
 rockwell: &rockwell
   name: rockwell
   enabled: !!bool true
-  scan_interval: !!int 500
+  scan_interval: !!int 1500
   connector: EthernetIP
   rbe: !!bool true
   type: !!int 5
