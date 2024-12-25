@@ -1,0 +1,9 @@
+httpServerSink: &httpServerSink
+  name: httpServerSink
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: HTTPServer
+  uri: http://localhost:8081/
+  #uri: http://*:8081/
+  exclude_filter:
+    - chariot/$SYSTEM
