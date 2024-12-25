@@ -63,7 +63,7 @@ public class FilesystemYamlConfigurationProvider: IConfigurationProvider
         {
             try
             {
-                yaml += File.ReadAllText(configFile);
+                yaml += File.ReadAllText(configFile) + "\r\n";
             }
             catch (Exception e)
             {
