@@ -33,6 +33,7 @@ public class LuaRunner
             _state.RegisterFunction("emit", this, GetType().GetMethod("EmitSample", BindingFlags.NonPublic | BindingFlags.Instance));
             _state.RegisterFunction("from_json", this, GetType().GetMethod("FromJson", BindingFlags.NonPublic | BindingFlags.Instance));
             _state.RegisterFunction("to_json", this, GetType().GetMethod("ToJson", BindingFlags.NonPublic | BindingFlags.Instance));
+            _state.RegisterFunction("env", this, GetType().GetMethod("GetEnvironmentVariable", BindingFlags.NonPublic | BindingFlags.Instance));
             return true;
         }
         catch (Exception e)
@@ -235,5 +236,10 @@ public class LuaRunner
     private string ToJson(string json)
     {
         return JsonConvert.SerializeObject(json);
+    }
+
+    private string GetEnvironmentVariable(string variableName, string defaultValue)
+    {
+        return Environment.GetEnvironmentVariable(variableName) is not null ? Environment.GetEnvironmentVariable(variableName) : defaultValue;
     }
 }

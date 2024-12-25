@@ -14,26 +14,38 @@ chariot: &chariot
     get_token = function()
       local client = HttpClient();
       local request = HttpRequestMessage(HttpMethod.Post, uri .. "login");
-      request.Headers:Add("Authorization", "Basic YWRtaW46cGFzc3dvcmQ=");
-      request.Headers:Add("Accept", "application/json;api-version=1.0");
-      local response = client:Send(request);
-      local content = response.Content:ReadAsStringAsync().Result;
-      token = json.decode(content).access_token;
-    end
-    
-    http_get = function(path)
-      ::retry::
-      local client = HttpClient();
-      local request = HttpRequestMessage(HttpMethod.Get, uri .. path);
-      request.Headers:Add("Authorization", "Bearer " .. token);
+      request.Headers:Add("Authorization", "Basic " .. env("chariotlogin", "undefined"));
       request.Headers:Add("Accept", "application/json;api-version=1.0");
       local response = client:Send(request);
       if Convert.ToInt32(response.StatusCode) == 401 then
+        print("bad login");
+      else
+        local content = response.Content:ReadAsStringAsync().Result;
+        token = json.decode(content).access_token;
+      end
+    end
+    
+    http_get = function(path)
+      local tries = 0;
+      ::retry::
+      local client = HttpClient();
+      local request = HttpRequestMessage(HttpMethod.Get, uri .. path);
+      request.Headers:Add("Accept", "application/json;api-version=1.0");
+      request.Headers:Add("Authorization", "Bearer " .. token);
+      local response = client:Send(request);
+      if Convert.ToInt32(response.StatusCode) == 401 then
+        if tries == 3 then
+          goto fail;
+        end
+        tries = tries + 1;
         get_token();
         goto retry;
+      else
+        local content = response.Content:ReadAsStringAsync().Result;
+        return json.decode(content);
       end
-      local content = response.Content:ReadAsStringAsync().Result;
-      return json.decode(content);
+      ::fail::
+      return nil;
     end
   items:
     - name: System
