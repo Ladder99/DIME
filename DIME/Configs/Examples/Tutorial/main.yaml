@@ -8,3 +8,4 @@ sinks:
   - *ignitionSink
 sources:
   - *rockwell
+  - *sharcs

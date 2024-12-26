@@ -13,6 +13,7 @@ ignitionSink: &ignitionSink
   device_id: DIMETutorial
   reconnect_interval: !!int 15000
   birth_delay: !!int 10000
-  use_sink_transform: !!bool true
+  #use_sink_transform: !!bool true
   include_filter:
     - rockwell
+    - sharcs

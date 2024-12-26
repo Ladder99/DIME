@@ -9,18 +9,14 @@ sharcs: &sharcs
   port: !!int 1883
   qos: !!int 0
   init_script: |
-    print("hello world from lua");
-    inspect = require('inspect');
     json = require('json');
     stringx = require('pl.stringx');
   item_script: |
     local path_slugs = stringx.split(this.Key, '/');
     local sharc_serial = path_slugs[2];
     local sharc_event = path_slugs[4];
-    --local payload = from_json(result).v;
     local payload = json.decode(result).v;
     if sharc_event == "avail" then
-      --print(inspect(getmetatable(payload.Value)))
       emit("./" .. sharc_serial .. "/availabile", payload==true and true or false);
     elseif sharc_event == "net" then
       emit("./" .. sharc_serial .. "/network/interface", payload.type);
@@ -28,21 +24,6 @@ sharcs: &sharcs
       emit("./" .. sharc_serial .. "/network/subnet_mask", payload.mask);
       emit("./" .. sharc_serial .. "/network/gateway", payload.gw);
       emit("./" .. sharc_serial .. "/network/mac", payload.mac);
-    elseif sharc_event == "io" then
-      local sensor = path_slugs[5];
-      local value = nil;
-      local uom = nil;
-      if payload[sensor] then
-        value = payload[sensor].v;
-        uom = payload[sensor].u;
-      else
-        value = payload.v;
-        uom = payload.u;
-      end
-      --print(sharc_serial .. "/" .. sensor);
-      --print(value);
-      emit("./" .. sharc_serial .. "/" .. sensor .. "/value", value);
-      emit("./" .. sharc_serial .. "/" .. sensor .. "/uom", uom);
     end
     return nil;
   items:
