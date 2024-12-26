@@ -233,7 +233,7 @@ public class LuaRunner
         return JsonConvert.DeserializeObject(json);
     }
     
-    private string ToJson(string json)
+    private string ToJson(object json)
     {
         return JsonConvert.SerializeObject(json);
     }

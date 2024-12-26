@@ -5,7 +5,7 @@ Reshape and move data from enterprise and industrial sources to message queues, 
 <i>Data integration made easy!</i>™  
 ![DIME DataOps Diagram](dime_dataops_diagram.png)
 
-[Video Introduction](https://www.youtube.com/watch?v=P5Gc5bKdiy4) | [Getting Started](https://github.com/Ladder99/DIME/wiki/1.-Getting-Started)
+[Video Introduction](https://www.youtube.com/watch?v=P5Gc5bKdiy4) | [Getting Started](https://github.com/Ladder99/DIME/wiki/01.-Getting-Started)
 
 ## Connectors
 
