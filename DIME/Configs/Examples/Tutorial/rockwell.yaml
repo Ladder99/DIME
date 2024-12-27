@@ -6,6 +6,10 @@ rockwell: &rockwell
   type: !!int 5
   address: 192.168.111.20
   path: 1,0
+  sink:
+    transform:
+      type: script
+      template: Message.Data;
   items:
     - name: Execution
       type: bool
@@ -13,14 +17,6 @@ rockwell: &rockwell
       script: |
         local states = { [0]='Idle', [1]='Running' };
         return states[result and 1 or 0];
-      sink:
-        transform:
-          type: script
-          template: Message.Data;
     - name: GoodPartCount
       type: int
       address: N7:1
-      sink:
-        transform:
-          type: script
-          template: Message.Data;
