@@ -1,0 +1,10 @@
+ignition: &ignition
+  name: ignition
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: MQTT
+  address: wss.sharc.tech
+  port: !!int 1883
+  base_topic: hydra
+  qos: !!int 0
+  retain: !!bool true

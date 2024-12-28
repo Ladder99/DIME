@@ -57,6 +57,7 @@ static class Builder
                 if (dataItem is null)
                 {
                     dataItem = DataItem.Create($"{part.Name}");
+                    ((DataItem)dataItem).Device = device;
                     ((DataItem)dataItem).Source = new Source()
                     {
                         Value = mtConnectSource

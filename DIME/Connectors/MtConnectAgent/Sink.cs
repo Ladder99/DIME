@@ -1,5 +1,6 @@
 using DIME.Configuration.MtConnectAgent;
 using DIME.ConnectorSupport.MtConnect.DeviceBuilder;
+using Mono.Unix.Native;
 using MTConnect.Agents;
 using MTConnect.Applications;
 using MTConnect.Configurations;
@@ -103,6 +104,8 @@ public class Module : MTConnectInputAgentModule
                         message.ConnectorItemRef.SinkMeta["mtconnect"].ToString(), 
                         message.Path);
 
+                //System.Console.WriteLine($"{dataItem.Id} / {dataItem.Device.Uuid}");
+                
                 if (wasModified)
                 {
                     Agent.AddDevice(device);

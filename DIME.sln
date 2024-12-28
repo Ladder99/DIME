@@ -25,6 +25,7 @@ Global
 		MqttToWebsocket|Any CPU = MqttToWebsocket|Any CPU
 		ChariotApi|Any CPU = ChariotApi|Any CPU
 		Tutorial|Any CPU = Tutorial|Any CPU
+		ToIgnitionViaHydra|Any CPU = ToIgnitionViaHydra|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -69,5 +70,7 @@ Global
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.ChariotApi|Any CPU.Build.0 = ChariotApi|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.Tutorial|Any CPU.ActiveCfg = Tutorial|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.Tutorial|Any CPU.Build.0 = Tutorial|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.ToIgnitionViaHydra|Any CPU.ActiveCfg = ToIgnitionViaHydra|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.ToIgnitionViaHydra|Any CPU.Build.0 = ToIgnitionViaHydra|Any CPU
 	EndGlobalSection
 EndGlobal

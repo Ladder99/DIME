@@ -30,12 +30,12 @@ mtInstance1: &mtInstance1
       script: |
         local n = math.random(0, 1);
         return n==1 and 'Fault' or 'Normal';
-      sink:
-        mtconnect: Device[Name=device1]/Controller/Path/System[Category=Condition]
+      #sink:
+      #  mtconnect: Device[Name=device1]/Controller/Path/System[Category=Condition]
     - name: Position
       enabled: !!bool true
       rbe: !!bool true
       script: |
         return math.random(-100, 100);
-      sink:
-        mtconnect: Device[Name=device1]/Axes/Linear[Name=X]/Position[Category=Sample,SubType=Actual]
+      #sink:
+      #  mtconnect: Device[Name=device1]/Axes/Linear[Name=X]/Position[Category=Sample,SubType=Actual]

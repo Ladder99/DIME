@@ -17,7 +17,7 @@
         <TargetFramework>net8.0</TargetFramework>
 	  <!--<RuntimeIdentifiers>win-x86;win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>-->
 	  <SelfContained>true</SelfContained>
-	  <Configurations>Debug;Release;MqttMotors;PostgresReads;MsSqlReads;MtConnectAgentModel;MtConnectShdrModel;HttpClientWrites;WikiEx1;AscCpcReads;AirSharc;MtConnectAgentToSplunkHec;MtConnectAgentToShdr;MtConnectAgentToAgent;Basic;ToIgnition;OpcDaReads;OpcUaReads;MqttToWebsocket;ChariotApi;Tutorial</Configurations>
+	  <Configurations>Debug;Release;MqttMotors;PostgresReads;MsSqlReads;MtConnectAgentModel;MtConnectShdrModel;HttpClientWrites;WikiEx1;AscCpcReads;AirSharc;MtConnectAgentToSplunkHec;MtConnectAgentToShdr;MtConnectAgentToAgent;Basic;ToIgnition;OpcDaReads;OpcUaReads;MqttToWebsocket;ChariotApi;Tutorial;ToIgnitionViaHydra</Configurations>
 	  <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
