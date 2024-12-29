@@ -14,30 +14,30 @@ Reshape and move data from enterprise and industrial sources to message queues, 
 | Source                                                                      |
 |-----------------------------------------------------------------------------|
 | ActiveMQ                                                                    |
-| [ASC CPC](../../wiki/4.-Connector-Reference#asc-cpc)                        |
+| [ASC CPC](../../wiki/04.-Connector-Reference#asc-cpc)                        |
 | BACnet IP                                                                   |
 | Beckhoff ADS                                                                |
 | Brother CNC                                                                 |
-| [Ethernet/IP](../../wiki/4.-Connector-Reference#ethernetip)                 |
+| [Ethernet/IP](../../wiki/04.-Connector-Reference#ethernetip)                 |
 | Fanuc Focas [[external driver]](https://github.com/Ladder99/fanuc-driver)   |
 | Filesystem                                                                  |
-| [Haas SHDR](../../wiki/4.-Connector-Reference#haas-shdr)                    |
+| [Haas SHDR](../../wiki/04.-Connector-Reference#haas-shdr)                    |
 | HTTP Client                                                                 |
-| [HTTP Server](../../wiki/4.-Connector-Reference#http-server)                |
-| [Modbus/TCP](../../wiki/4.-Connector-Reference#modbus-tcp)                  |
-| [MQTT](../../wiki/4.-Connector-Reference#mqtt)                              |
-| [MS SQL Server](../../wiki/4.-Connector-Reference#ms-sql-server)            |
-| [MTConnect Agent](../../wiki/4.-Connector-Reference#mtconnect-agent)        |
+| [HTTP Server](../../wiki/04.-Connector-Reference#http-server)                |
+| [Modbus/TCP](../../wiki/04.-Connector-Reference#modbus-tcp)                  |
+| [MQTT](../../wiki/04.-Connector-Reference#mqtt)                              |
+| [MS SQL Server](../../wiki/04.-Connector-Reference#ms-sql-server)            |
+| [MTConnect Agent](../../wiki/04.-Connector-Reference#mtconnect-agent)        |
 | OPC-DA                                                                      |
-| [OPC-UA](../../wiki/4.-Connector-Reference#opc-ua)                          |
+| [OPC-UA](../../wiki/04.-Connector-Reference#opc-ua)                          |
 | OPC XML-DA                                                                  |
-| [Postgres](../../wiki/4.-Connector-Reference#postgres)                      |
-| [Redis](../../wiki/4.-Connector-Reference#redis)                            |
-| [Script](../../wiki/4.-Connector-Reference#script)                          |
+| [Postgres](../../wiki/04.-Connector-Reference#postgres)                      |
+| [Redis](../../wiki/04.-Connector-Reference#redis)                            |
+| [Script](../../wiki/04.-Connector-Reference#script)                          |
 | Siemens S7                                                                  |
-| [SNMP](../../wiki/4.-Connector-Reference#snmp)                              |
-| [Timebase Websocket](../../wiki/4.-Connector-Reference#timebase-websocket)  | 
-| [Wintriss SmartPac](../../wiki/4.-Connector-Reference#wintriss-smartpac)    |
+| [SNMP](../../wiki/04.-Connector-Reference#snmp)                              |
+| [Timebase Websocket](../../wiki/04.-Connector-Reference#timebase-websocket)  | 
+| [Wintriss SmartPac](../../wiki/04.-Connector-Reference#wintriss-smartpac)    |
 | Zenoh                                                                       |
 
 </td><td valign="top">
@@ -45,22 +45,22 @@ Reshape and move data from enterprise and industrial sources to message queues, 
 | Sink                                                                   |
 |------------------------------------------------------------------------|
 | ActiveMQ                                                               |
-| [Console](../../wiki/4.-Connector-Reference#console)                   |
-| [HTTP Client](../../wiki/4.-Connector-Reference#http-client)           |
-| [HTTP Server](../../wiki/4.-Connector-Reference#http-server)           |
-| [Influx LP](../../wiki/4.-Connector-Reference#influx-lp)               |
+| [Console](../../wiki/04.-Connector-Reference#console)                   |
+| [HTTP Client](../../wiki/04.-Connector-Reference#http-client)           |
+| [HTTP Server](../../wiki/04.-Connector-Reference#http-server)           |
+| [Influx LP](../../wiki/04.-Connector-Reference#influx-lp)               |
 | IoTDB                                                                  |
-| [MQTT](../../wiki/4.-Connector-Reference#mqtt)                         |
+| [MQTT](../../wiki/04.-Connector-Reference#mqtt)                         |
 | MS SQL Server                                                          |
-| [MTConnect Agent](../../wiki/4.-Connector-Reference#mtconnect-agent)                                    |
-| [MTConnect SHDR](../../wiki/4.-Connector-Reference#mtconnect-shdr)     |
+| [MTConnect Agent](../../wiki/04.-Connector-Reference#mtconnect-agent)                                    |
+| [MTConnect SHDR](../../wiki/04.-Connector-Reference#mtconnect-shdr)     |
 | Postgres                                                               |
-| [Redis](../../wiki/4.-Connector-Reference#redis)                       |
-| [Splunk EH SDK](../../wiki/4.-Connector-Reference#splunk-eh-sdk)       |
-| [Splunk HEC](../../wiki/4.-Connector-Reference#splunk-hec)             |
-| [SparkplugB](../../wiki/4.-Connector-Reference#sparkplugb)             |
-| [TrakHound HTTP](../../wiki/4.-Connector-Reference#trakhound-http)     |
-| [Websocket Server](../../wiki/4.-Connector-Reference#websocket-server) |
+| [Redis](../../wiki/04.-Connector-Reference#redis)                       |
+| [Splunk EH SDK](../../wiki/04.-Connector-Reference#splunk-eh-sdk)       |
+| [Splunk HEC](../../wiki/04.-Connector-Reference#splunk-hec)             |
+| [SparkplugB](../../wiki/04.-Connector-Reference#sparkplugb)             |
+| [TrakHound HTTP](../../wiki/04.-Connector-Reference#trakhound-http)     |
+| [Websocket Server](../../wiki/04.-Connector-Reference#websocket-server) |
 | Zenoh                                                                  |
 
 </td></tr></table>
