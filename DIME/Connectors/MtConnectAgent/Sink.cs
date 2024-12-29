@@ -33,8 +33,8 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool ConnectImplementation()
     {
-        //_client.StartAgent(new AgentApplicationConfiguration());
-        _client.Run(["run", "MtConnectAgentSink.yaml"]);
+        //_client.StartAgent(new AgentApplicationConfiguration() { });
+        _client.Run(["run", "MtConnectAgentSink.yaml"], false);
         _module = new Module(_client.Agent, this);
         _module.Start();
         IsConnected = true;
@@ -43,6 +43,19 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool WriteImplementation()
     {
+        return true;
+    }
+
+    public override bool AfterUpdate()
+    {
+        Logger.Trace($"[{Configuration.Name}] SinkConnector:AfterUpdate::ENTER");
+        
+        // Do not clear outbox here.  That is the module's job.
+
+        IsWriting = false;
+        
+        Logger.Trace($"[{Configuration.Name}] SinkConnector:AfterUpdate::EXIT");
+        
         return true;
     }
 
@@ -68,9 +81,10 @@ public class Module : MTConnectInputAgentModule
     public Module(IMTConnectAgentBroker agent, Sink connector) : base(agent)
     {
         _connector = connector;
-        this.StartBeforeLoad(false);
+        //this.StartBeforeLoad(false);
     }
     
+    /*
     protected override IDevice OnAddDevice()
     {
         var device = new Device();
@@ -86,11 +100,18 @@ public class Module : MTConnectInputAgentModule
         
         return device;
     }
+    */
     
     protected override void OnRead()
     {
-        var devices = new Dictionary<string, Device>();
-        devices[Device.Name] = (Device)Device;
+        var devices = Agent.GetDevices().ToDictionary(o => o.Name, o => (Device)o);
+        //var devices = new Dictionary<string, Device>();
+        //devices[Device.Name] = (Device)Device;
+        
+        _connector.IsWriting = true;
+
+        bool addDevice = false;
+        Device newDevice = null;
         
         foreach (var message in _connector.Outbox)
         {
@@ -104,17 +125,25 @@ public class Module : MTConnectInputAgentModule
                         message.ConnectorItemRef.SinkMeta["mtconnect"].ToString(), 
                         message.Path);
 
-                //System.Console.WriteLine($"{dataItem.Id} / {dataItem.Device.Uuid}");
-                
+                //System.Console.WriteLine($"///////// {message.Path} / {dataItem.Id} / {dataItem.Device.Uuid}");
+
                 if (wasModified)
                 {
-                    Agent.AddDevice(device);
+                    addDevice = true;
+                    newDevice = device;
                 }
-
-                AddValueObservation(dataItem, _connector.Configuration.UseSinkTransform ? _connector.TransformAndSerializeMessage(message) : message.Data, message.Timestamp);
+                
+                Agent.AddObservation(device.Uuid, dataItem.Id, _connector.Configuration.UseSinkTransform ? _connector.TransformAndSerializeMessage(message) : message.Data, message.Timestamp);
             }
         }
         
+        if (addDevice)
+        {
+            Agent.AddDevice(newDevice);
+        }
+        
         _connector.Outbox.Clear();
+        
+        _connector.IsWriting = false;
     }
 }

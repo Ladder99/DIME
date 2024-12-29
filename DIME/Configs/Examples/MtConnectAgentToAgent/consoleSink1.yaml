@@ -3,3 +3,6 @@ consoleSink1: &consoleSink1
   enabled: !!bool true
   scan_interval: !!int 1000
   connector: Console
+  use_sink_transform: !!bool true
+  exclude_filter:
+    - mtConnectSource1/$SYSTEM

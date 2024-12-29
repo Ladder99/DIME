@@ -1,3 +1,4 @@
+using MTConnect;
 using MTConnect.Devices;
 
 namespace DIME.ConnectorSupport.MtConnect.DeviceBuilder;
@@ -53,10 +54,11 @@ static class Builder
             }
             else if (i == parts.Count - 1) // DataItem expected
             {
-                dataItem = nextComponent.GetDataItemByType($"{part.Name}", SearchType.Child);
+                var type = part.Name.ToUnderscoreUpper();
+                dataItem = nextComponent.GetDataItemByType(type, SearchType.Child);
                 if (dataItem is null)
                 {
-                    dataItem = DataItem.Create($"{part.Name}");
+                    dataItem = DataItem.Create(type);
                     ((DataItem)dataItem).Device = device;
                     ((DataItem)dataItem).Source = new Source()
                     {
@@ -65,7 +67,7 @@ static class Builder
                     
                     part.Attributes.TryAdd("Id", Guid.NewGuid().ToString());
                     part.Attributes.TryAdd("Name", string.Empty);
-                    part.Attributes.TryAdd("Type", part.Name);
+                    //part.Attributes.TryAdd("Type", type);
                     
                     foreach (var attribute in part.Attributes)
                     {
@@ -90,10 +92,10 @@ static class Builder
             }
             else // Component expected
             {
-                var childComponent = nextComponent.GetComponent($"{part.Name}", searchType: SearchType.Child);
+                var childComponent = nextComponent.GetComponent(part.Name, searchType: SearchType.Child);
                 if (childComponent is null)
                 {
-                    childComponent = Component.Create($"{part.Name}");
+                    childComponent = Component.Create(part.Name);
 
                     part.Attributes.TryAdd("Id", Guid.NewGuid().ToString());
                     part.Attributes.TryAdd("Name", string.Empty);

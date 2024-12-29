@@ -82,7 +82,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
     {
         foreach (var message in Outbox)
         {
-            //Console.WriteLine($"{response.Path} = {response.Data}");
+            //System.Console.WriteLine($"{message.Path} = {message.Data}");
 
             if (message.ConnectorItemRef is not null && 
                 message.ConnectorItemRef.SinkMeta is not null &&
@@ -93,8 +93,11 @@ public class Sink: SinkConnector<ConnectorConfiguration, Configuration.Connector
                         _devices, 
                         message.ConnectorItemRef.SinkMeta["mtconnect"].ToString(),
                         message.Path);
-                
-                if (wasModified) _writeFile = true;
+
+                if (wasModified)
+                {
+                    _writeFile = true;
+                }
 
                 switch (dataItem.Category)
                 {

@@ -14,10 +14,12 @@ public class SinkMessageHandler : Disruptor.IEventHandler<MessageBoxMessage>
     public void OnEvent(MessageBoxMessage data, long sequence, bool endOfBatch)
     {
         // when Outbox was a list, it was necessary to manage concurrent access
-        /*while (Connector.IsWriting)
-        { 
+        // even with concurrent access, the sink could clear the outbox and miss events
+        while (Connector.IsWriting)
+        {
+            //System.Console.WriteLine("SinkMessageHandler /////////////////////////////////////////////////////////// SPIN");
             Thread.Sleep(10);
-        }*/
+        }
 
         Connector.Outbox.Add(data);
     }

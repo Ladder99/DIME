@@ -5,24 +5,23 @@ namespace DIME.Connectors;
 
 public interface ISourceConnector: IConnector
 {
-    public ConcurrentBag<MessageBoxMessage> Inbox { get; }
-    public ConcurrentBag<MessageBoxMessage> Samples { get; }
-    public ConcurrentDictionary<string, MessageBoxMessage> Current { get; }
-    public ConcurrentDictionary<string, MessageBoxMessage> UserCache { get; }
-    public ConcurrentDictionary<string, MessageBoxMessage> TagValues { get; }
+    public List<MessageBoxMessage> Inbox { get; }
+    public List<MessageBoxMessage> Samples { get; }
+    public Dictionary<string, MessageBoxMessage> Current { get; }
+    public Dictionary<string, MessageBoxMessage> UserCache { get; }
+    public Dictionary<string, MessageBoxMessage> TagValues { get; }
     public bool Read();
-    public event Action<ConcurrentBag<MessageBoxMessage>, ConcurrentDictionary<string, MessageBoxMessage>, ConcurrentBag<MessageBoxMessage>> OnInboxReady;
-    public event Action<ConcurrentBag<MessageBoxMessage>, ConcurrentDictionary<string, MessageBoxMessage>, ConcurrentBag<MessageBoxMessage>> OnInboxSent;
+    public event Action<List<MessageBoxMessage>, Dictionary<string, MessageBoxMessage>, List<MessageBoxMessage>> OnInboxReady;
+    public event Action<List<MessageBoxMessage>, Dictionary<string, MessageBoxMessage>, List<MessageBoxMessage>> OnInboxSent;
 }
 
 public interface ISinkConnector: IConnector
 {
-    //public ConcurrentBag<MessageBoxMessage> Outbox { get; }
-    public ConcurrentBag<MessageBoxMessage> Outbox { get; }
+    public List<MessageBoxMessage> Outbox { get; }
     public bool IsWriting { get; }
     public bool Write();
-    public event Action<ConcurrentBag<MessageBoxMessage>> OnOutboxReady;
-    public event Action<ConcurrentBag<MessageBoxMessage>, bool> OnOutboxSent;
+    public event Action<List<MessageBoxMessage>> OnOutboxReady;
+    public event Action<List<MessageBoxMessage>, bool> OnOutboxSent;
 }
 
 public interface IConnector

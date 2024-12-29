@@ -6,7 +6,7 @@ sinks:
   - *consoleSink1
   - *httpServerSink1
   - *mqttSink1
-  - *redisSink1
+  #- *redisSink1
 sources:
   - *instanceMotor1A
   - *instanceMotor1B

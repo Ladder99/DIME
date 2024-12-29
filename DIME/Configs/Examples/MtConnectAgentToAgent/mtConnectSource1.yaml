@@ -13,7 +13,7 @@ mtConnectSource1: &mtConnectSource1
     transform:
       type: script
       template: >-
-        Message.Data[0].Value
+        Message.Data[0].Value + " TEST TEST"
   items:
     - name: Availability
       address: avail
@@ -26,4 +26,4 @@ mtConnectSource1: &mtConnectSource1
     - name: XLoad
       address: Xload
       sink:
-        mtconnect: Device[Name=device1]/Axis/Linear[Name=X]/Load[Category=Sample]
+        mtconnect: Device[Name=device1]/Axes/Linear[Name=X]/Load[Category=Sample]

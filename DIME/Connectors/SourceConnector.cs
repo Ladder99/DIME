@@ -11,14 +11,14 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     where TItem : ConnectorItem
 {
     protected LuaRunner ScriptRunner { get; } = new LuaRunner();
-    public ConcurrentBag<MessageBoxMessage> Inbox { get; } = new ConcurrentBag<MessageBoxMessage>();
-    public ConcurrentBag<MessageBoxMessage> Samples { get; } = new ConcurrentBag<MessageBoxMessage>();
-    public ConcurrentDictionary<string, MessageBoxMessage> Current { get; } = new ConcurrentDictionary<string, MessageBoxMessage>();
-    public ConcurrentDictionary<string, MessageBoxMessage> UserCache { get; } = new ConcurrentDictionary<string, MessageBoxMessage>();
-    public ConcurrentDictionary<string, MessageBoxMessage> TagValues { get; } = new ConcurrentDictionary<string, MessageBoxMessage>();
+    public List<MessageBoxMessage> Inbox { get; } = new List<MessageBoxMessage>();
+    public List<MessageBoxMessage> Samples { get; } = new List<MessageBoxMessage>();
+    public Dictionary<string, MessageBoxMessage> Current { get; } = new Dictionary<string, MessageBoxMessage>();
+    public Dictionary<string, MessageBoxMessage> UserCache { get; } = new Dictionary<string, MessageBoxMessage>();
+    public Dictionary<string, MessageBoxMessage> TagValues { get; } = new Dictionary<string, MessageBoxMessage>();
     protected bool PublishInboxInBatch { get; } = true;
-    public event Action<ConcurrentBag<MessageBoxMessage>, ConcurrentDictionary<string, MessageBoxMessage>, ConcurrentBag<MessageBoxMessage>> OnInboxReady;
-    public event Action<ConcurrentBag<MessageBoxMessage>, ConcurrentDictionary<string, MessageBoxMessage>, ConcurrentBag<MessageBoxMessage>> OnInboxSent;
+    public event Action<List<MessageBoxMessage>, Dictionary<string, MessageBoxMessage>, List<MessageBoxMessage>> OnInboxReady;
+    public event Action<List<MessageBoxMessage>, Dictionary<string, MessageBoxMessage>, List<MessageBoxMessage>> OnInboxSent;
     
 
     public SourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
@@ -273,7 +273,8 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                              $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
                 
                 Inbox.Add(sampleResponse);
-                Current.AddOrUpdate(sampleResponse.Path, sampleResponse, (key, oldValue) => sampleResponse);
+                //Current.AddOrUpdate(sampleResponse.Path, sampleResponse, (key, oldValue) => sampleResponse);
+                Current[sampleResponse.Path] = sampleResponse;
             }
             // sample data is different, it is an updated sample
             else
@@ -355,7 +356,8 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                     Inbox.Add(sampleResponse);
                 }
 
-                Current.AddOrUpdate(sampleResponse.Path, sampleResponse, (key, oldValue) => sampleResponse);
+                //Current.AddOrUpdate(sampleResponse.Path, sampleResponse, (key, oldValue) => sampleResponse);
+                Current[sampleResponse.Path] = sampleResponse;
             }
         }
     }

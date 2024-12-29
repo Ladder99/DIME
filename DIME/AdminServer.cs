@@ -299,14 +299,14 @@ public class AdminServer
         BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
 
-    public void OnOutboxReady(IConnector connector, ConcurrentBag<MessageBoxMessage> outbox)
+    public void OnOutboxReady(IConnector connector, List<MessageBoxMessage> outbox)
     {
         _connectorStatuses[connector.Configuration.Name].MessagesAttempted += outbox.Count;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
         BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
 
-    public void OnOutboxSent(IConnector connector, ConcurrentBag<MessageBoxMessage> outbox, bool success)
+    public void OnOutboxSent(IConnector connector, List<MessageBoxMessage> outbox, bool success)
     {
         if (!success) _connectorStatuses[connector.Configuration.Name].OutboxSendFailCount += 1;
         _connectorStatuses[connector.Configuration.Name].MessagesAccepted += outbox.Count;
@@ -314,14 +314,14 @@ public class AdminServer
         BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
 
-    public void OnInboxReady(IConnector connector, ConcurrentBag<MessageBoxMessage> inbox, ConcurrentDictionary<string, MessageBoxMessage> current, ConcurrentBag<MessageBoxMessage> samples)
+    public void OnInboxReady(IConnector connector, List<MessageBoxMessage> inbox, Dictionary<string, MessageBoxMessage> current, List<MessageBoxMessage> samples)
     {
         _connectorStatuses[connector.Configuration.Name].MessagesAttempted += inbox.Count;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;
         BroadcastToAllWebsocketClients(_connectorStatuses[connector.Configuration.Name]);
     }
     
-    public void OnInboxSent(IConnector connector, ConcurrentBag<MessageBoxMessage> inbox, ConcurrentDictionary<string, MessageBoxMessage> current, ConcurrentBag<MessageBoxMessage> samples)
+    public void OnInboxSent(IConnector connector, List<MessageBoxMessage> inbox, Dictionary<string, MessageBoxMessage> current, List<MessageBoxMessage> samples)
     {
         _connectorStatuses[connector.Configuration.Name].MessagesAccepted += inbox.Count;
         _connectorStatuses[connector.Configuration.Name].LastUpdate = DateTime.Now;

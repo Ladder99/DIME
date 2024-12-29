@@ -10,11 +10,11 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
     where TConfig : ConnectorConfiguration<TItem>
     where TItem : ConnectorItem
 {
-    public ConcurrentBag<MessageBoxMessage> Outbox { get; private set; } = new ConcurrentBag<MessageBoxMessage>();
-    public event Action<ConcurrentBag<MessageBoxMessage>> OnOutboxReady;
-    public event Action<ConcurrentBag<MessageBoxMessage>, bool> OnOutboxSent;
+    public List<MessageBoxMessage> Outbox { get; private set; } = new List<MessageBoxMessage>();
+    public event Action<List<MessageBoxMessage>> OnOutboxReady;
+    public event Action<List<MessageBoxMessage>, bool> OnOutboxSent;
     
-    public bool IsWriting { get; protected set; }
+    public bool IsWriting { get; set; }
     
     protected SinkConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
     {
@@ -71,17 +71,15 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
                 {
                     if (Configuration.IncludeFilter.Count > 0)
                     {
-                        Outbox = new ConcurrentBag<MessageBoxMessage>(
-                            Outbox.Where(message =>
+                        Outbox = Outbox.Where(message =>
                                 Configuration.IncludeFilter.Any(prefix =>
-                                    message.Path.StartsWith(prefix))));
+                                    message.Path.StartsWith(prefix))).ToList();
                     }
                     else
                     {
-                        Outbox = new ConcurrentBag<MessageBoxMessage>(
-                            Outbox.Where(message =>
+                        Outbox = Outbox.Where(message =>
                                 !Configuration.ExcludeFilter.Any(prefix =>
-                                    message.Path.StartsWith(prefix))));
+                                    message.Path.StartsWith(prefix))).ToList();
                     }
                 }
 
