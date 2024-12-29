@@ -40,8 +40,8 @@
       <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.0-preview3.24332.3" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
       <PackageReference Include="MQTTnet" Version="4.3.7.1207" />
-      <PackageReference Include="MTConnect.NET-Applications-Agents" Version="6.5.0" />
-      <PackageReference Include="MTConnect.NET-SHDR" Version="6.5.0" />
+      <PackageReference Include="MTConnect.NET-Applications-Agents" Version="6.5.1" />
+      <PackageReference Include="MTConnect.NET-SHDR" Version="6.5.1" />
       <PackageReference Include="nauful-LibUA-core" Version="1.0.31" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
       <PackageReference Include="NLog" Version="5.3.4" />

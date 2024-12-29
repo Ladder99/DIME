@@ -81,37 +81,11 @@ public class Module : MTConnectInputAgentModule
     public Module(IMTConnectAgentBroker agent, Sink connector) : base(agent)
     {
         _connector = connector;
-        //this.StartBeforeLoad(false);
     }
-    
-    /*
-    protected override IDevice OnAddDevice()
-    {
-        var device = new Device();
-        device.Uuid = _connector.Configuration.DeviceUuid;
-        device.Id = _connector.Configuration.DeviceId;
-        device.Name = _connector.Configuration.DeviceName;
-        device.Description = new Description()
-        {
-            //Manufacturer = _connector.Configuration.DeviceManufacturer,
-            //Model = _connector.Configuration.DeviceModel,
-            //SerialNumber = _connector.Configuration.DeviceSerialNumber
-        };
-        
-        return device;
-    }
-    */
     
     protected override void OnRead()
     {
-        var devices = Agent.GetDevices().ToDictionary(o => o.Name, o => (Device)o);
-        //var devices = new Dictionary<string, Device>();
-        //devices[Device.Name] = (Device)Device;
-        
         _connector.IsWriting = true;
-
-        bool addDevice = false;
-        Device newDevice = null;
         
         foreach (var message in _connector.Outbox)
         {
@@ -119,27 +93,23 @@ public class Module : MTConnectInputAgentModule
                 message.ConnectorItemRef.SinkMeta is not null &&
                 message.ConnectorItemRef.SinkMeta.ContainsKey("mtconnect"))
             {
+                var devices = Agent.GetDevices().ToDictionary(o => o.Name, o => (Device)o);
+                
                 var (wasModified, device, dataItem) = 
                     Builder.Build(
                         devices, 
                         message.ConnectorItemRef.SinkMeta["mtconnect"].ToString(), 
                         message.Path);
 
-                //System.Console.WriteLine($"///////// {message.Path} / {dataItem.Id} / {dataItem.Device.Uuid}");
+                //System.Console.WriteLine($"///////// {message.Path} / di={dataItem.Id} / diDevice={dataItem.Device.Uuid} / device={device.Uuid}");
 
                 if (wasModified)
                 {
-                    addDevice = true;
-                    newDevice = device;
+                    Agent.AddDevice(device);
                 }
                 
                 Agent.AddObservation(device.Uuid, dataItem.Id, _connector.Configuration.UseSinkTransform ? _connector.TransformAndSerializeMessage(message) : message.Data, message.Timestamp);
             }
-        }
-        
-        if (addDevice)
-        {
-            Agent.AddDevice(newDevice);
         }
         
         _connector.Outbox.Clear();

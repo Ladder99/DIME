@@ -1,3 +1,4 @@
+using DIME.Configuration.MtConnectAgent;
 using MTConnect;
 using MTConnect.Devices;
 
@@ -7,7 +8,10 @@ static class Builder
 {
     static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     
-    public static (bool, Device, IDataItem) Build(Dictionary<string, Device> devices, string mtConnectPath, string mtConnectSource)
+    public static (bool, Device, IDataItem) Build(
+        Dictionary<string, Device> devices,
+        string mtConnectPath, 
+        string mtConnectSource)
     {
         Logger.Debug($"Processing Path: {mtConnectPath}");
     
@@ -37,7 +41,6 @@ static class Builder
                     
                     part.Attributes.TryAdd("Id", Guid.NewGuid().ToString());
                     part.Attributes.TryAdd("Name", string.Empty);
-                    part.Attributes.TryAdd("Type", part.Name);
                     
                     foreach (var attribute in part.Attributes)
                     {
@@ -67,7 +70,6 @@ static class Builder
                     
                     part.Attributes.TryAdd("Id", Guid.NewGuid().ToString());
                     part.Attributes.TryAdd("Name", string.Empty);
-                    //part.Attributes.TryAdd("Type", type);
                     
                     foreach (var attribute in part.Attributes)
                     {
@@ -99,7 +101,6 @@ static class Builder
 
                     part.Attributes.TryAdd("Id", Guid.NewGuid().ToString());
                     part.Attributes.TryAdd("Name", string.Empty);
-                    part.Attributes.TryAdd("Type", part.Name);
 
                     foreach (var attribute in part.Attributes)
                     {
