@@ -1,4 +1,0 @@
-modules:
-  #- dime-sink:
-  - http-server:
-      port: 5000
