@@ -1,0 +1,32 @@
+agent: &agent
+  name: agent
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: MTConnectAgent
+  rbe: !!bool true
+  itemized_read: !!bool true
+  address: mtconnect.mazakcorp.com
+  port: !!int 5719
+  device: HCN001
+  strip_path_prefix: !!bool false
+  init_script: |
+    print("hello world from lua");
+    stringx = require('pl.stringx');
+  items:
+    - name: ProgramComment
+      address: activeprogram_cmt
+      script:
+        print("parsing program comment");
+        local a = "123;456;789;012";
+        local b = stringx.split(a, ';');
+        print("parsed");
+        emit('./eric/workOrderNumber', b[1]);
+        emit('./eric/lotNumber', b[2]);
+        emit('./eric/subId', b[3]);
+        emit('./eric/operationNumber', b[4]);
+        return nil;
+  sink:
+    transform:
+      type: script
+      template: >-
+        Message.Data[0].Value

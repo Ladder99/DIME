@@ -1,7 +1,6 @@
 using DIME.Configuration.InfluxLp;
-using InfluxDB.Client;
-using InfluxDB.Client.Api.Domain;
-using InfluxDB.Client.Writes;
+using InfluxDB3.Client;
+using InfluxDB3.Client.Write;
 
 namespace DIME.Connectors.InfluxLp;
 
@@ -19,26 +18,24 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool CreateImplementation()
     {
-        _client = new InfluxDBClient($"http://{Configuration.Address}:{Configuration.Port}", Configuration.Token);
+        _client = new InfluxDBClient(Configuration.Address, Configuration.Token);
         return true;
     }
 
     protected override bool ConnectImplementation()
     {
-        return _client.PingAsync().GetAwaiter().GetResult();
+        return true;
     }
 
     protected override bool WriteImplementation()
     {
-        using var writeApi = _client.GetWriteApi();
-        
         foreach (var message in Outbox)
         {
             var point = PointData.Measurement(message.Path)
-                .Field("value", Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : message.Data)
-                .Timestamp(message.Timestamp, WritePrecision.Ms);
+                .SetField("value", Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : message.Data)
+                .SetTimestamp(message.Timestamp, WritePrecision.Ms);
 
-            writeApi.WritePoint(point, Configuration.BucketName, Configuration.OrgId);
+            _client.WritePointAsync(point, Configuration.BucketName).GetAwaiter().GetResult();
         }
 
         return true;

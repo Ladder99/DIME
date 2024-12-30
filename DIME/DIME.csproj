@@ -17,7 +17,7 @@
         <TargetFramework>net8.0</TargetFramework>
 	  <!--<RuntimeIdentifiers>win-x86;win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>-->
 	  <SelfContained>true</SelfContained>
-	  <Configurations>Debug;Release;MqttMotors;PostgresReads;MsSqlReads;MtConnectAgentModel;MtConnectShdrModel;HttpClientWrites;WikiEx1;AscCpcReads;AirSharc;MtConnectAgentToSplunkHec;MtConnectAgentToShdr;MtConnectAgentToAgent;Basic;ToIgnition;OpcDaReads;OpcUaReads;MqttToWebsocket;ChariotApi;Tutorial;ToIgnitionViaHydra;ToMongo</Configurations>
+	  <Configurations>Debug;Release;MqttMotors;PostgresReads;MsSqlReads;MtConnectAgentModel;MtConnectShdrModel;HttpClientWrites;WikiEx1;AscCpcReads;AirSharc;MtConnectAgentToSplunkHec;MtConnectAgentToShdr;MtConnectAgentToAgent;Basic;ToIgnition;OpcDaReads;OpcUaReads;MqttToWebsocket;ChariotApi;Tutorial;ToIgnitionViaHydra;ToMongo;ToInflux;MtConnectAgentToInflux</Configurations>
 	  <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
@@ -34,7 +34,7 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="InfluxDB.Client" Version="4.19.0-dev.15190" />
+      <PackageReference Include="InfluxDB3.Client" Version="1.0.0-dev.1334" />
       <PackageReference Include="Lextm.SharpSnmpLib" Version="12.5.5" />
       <PackageReference Include="libplctag" Version="1.5.2" />
       <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.0-preview3.24332.3" />

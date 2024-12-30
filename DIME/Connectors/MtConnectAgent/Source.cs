@@ -19,7 +19,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
 
     protected override bool CreateImplementation()
     {
-        _client = new MTConnectHttpClient(Configuration.Address, Configuration.Port);
+        _client = new MTConnectHttpClient(Configuration.Address, Configuration.Port, Configuration.Device);
         
         _client.ObservationReceived += (s, observation) =>
         {

@@ -11,7 +11,8 @@ public static class Source
             .MakeConfig(section, "MTConnectAgent", Configuration.ConnectorDirectionEnum.Source);
         
         config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "mtconnect.mazakcorp.com";
-        config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 5000;
+        config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 5719;
+        config.Device = section.ContainsKey("device") ? Convert.ToString(section["device"]) : null;
 
         config.Items = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>.MakeItems(config, section, (item, dict) =>
         {

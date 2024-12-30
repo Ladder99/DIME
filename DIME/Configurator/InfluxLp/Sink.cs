@@ -10,11 +10,9 @@ public static class Sink
         ConnectorConfiguration config = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>
             .MakeConfig(section, "InfluxLP", Configuration.ConnectorDirectionEnum.Sink);
 
-        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";
-        config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 8086;
+        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : string.Empty;
         config.Token = section.ContainsKey("token") ? Convert.ToString(section["token"]) : string.Empty;
         config.BucketName = section.ContainsKey("bucket_name") ? Convert.ToString(section["bucket_name"]) : string.Empty;
-        config.OrgId = section.ContainsKey("org_id") ? Convert.ToString(section["org_id"]) : string.Empty;
         
         var connector = new Connectors.InfluxLp.Sink(config, disruptor);
 
