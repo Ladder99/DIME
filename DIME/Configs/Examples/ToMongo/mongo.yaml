@@ -1,0 +1,11 @@
+mongo: &mongo
+  name: mongo
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: MongoDB
+  use_sink_transform: !!bool true
+  address: mongodb+srv://user:pa55w0rd@cluster0.h7xod.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+  database: DIME
+  collection: TS
+  exclude_filter:
+    - rockwell/$SYSTEM

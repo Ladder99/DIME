@@ -22,6 +22,9 @@ public static class SinkConnectorFactory
             case "influxlp":
                 connector = InfluxLp.Sink.Create(section, disruptor);
                 break;
+            case "mongodb":
+                connector = MongoDb.Sink.Create(section, disruptor);
+                break;
             case "mqtt":
                 connector = Mqtt.Sink.Create(section, disruptor);
                 break;

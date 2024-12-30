@@ -42,25 +42,26 @@ Reshape and move data from enterprise and industrial sources to message queues, 
 
 </td><td valign="top">
 
-| Sink                                                                   |
-|------------------------------------------------------------------------|
-| ActiveMQ                                                               |
+| Sink                                                                    |
+|-------------------------------------------------------------------------|
+| ActiveMQ                                                                |
 | [Console](../../wiki/04.-Connector-Reference#console)                   |
 | [HTTP Client](../../wiki/04.-Connector-Reference#http-client)           |
 | [HTTP Server](../../wiki/04.-Connector-Reference#http-server)           |
 | [Influx LP](../../wiki/04.-Connector-Reference#influx-lp)               |
-| IoTDB                                                                  |
+| IoTDB                                                                   |
+| [MongoDB](../../wiki/04.-Connector-Reference#mongodb)                   |
 | [MQTT](../../wiki/04.-Connector-Reference#mqtt)                         |
-| MS SQL Server                                                          |
-| [MTConnect Agent](../../wiki/04.-Connector-Reference#mtconnect-agent)                                    |
+| MS SQL Server                                                           |
+| [MTConnect Agent](../../wiki/04.-Connector-Reference#mtconnect-agent)   |
 | [MTConnect SHDR](../../wiki/04.-Connector-Reference#mtconnect-shdr)     |
-| Postgres                                                               |
+| Postgres                                                                |
 | [Redis](../../wiki/04.-Connector-Reference#redis)                       |
 | [Splunk EH SDK](../../wiki/04.-Connector-Reference#splunk-eh-sdk)       |
 | [Splunk HEC](../../wiki/04.-Connector-Reference#splunk-hec)             |
 | [SparkplugB](../../wiki/04.-Connector-Reference#sparkplugb)             |
 | [TrakHound HTTP](../../wiki/04.-Connector-Reference#trakhound-http)     |
 | [Websocket Server](../../wiki/04.-Connector-Reference#websocket-server) |
-| Zenoh                                                                  |
+| Zenoh                                                                   |
 
 </td></tr></table>

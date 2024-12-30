@@ -159,6 +159,22 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         }
     }
     
+    public object TransformAndSerializeMessageToObject(MessageBoxMessage message)
+    {
+        try
+        {
+            var outMessage = TransformMessage(message);
+            return outMessage;
+        }
+        catch (Exception e)
+        {
+            //System.Console.WriteLine(JsonConvert.SerializeObject(message));
+            //if (message.Data is null) return null;
+            //return message.Data.GetType() == typeof(string) ? message.Data.ToString() : JsonConvert.SerializeObject(message.Data);
+            return JsonConvert.SerializeObject(message);
+        }
+    }
+    
     protected object TransformMessage(MessageBoxMessage message)
     {
         var itemTransformExists = message.ConnectorItemRef is not null && 

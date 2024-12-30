@@ -13,7 +13,7 @@ mtConnectSource1: &mtConnectSource1
     transform:
       type: script
       template: >-
-        Message.Data[0].Value"
+        Message.Data[0].Value
   items:
     - name: Availability
       address: avail

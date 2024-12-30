@@ -17,7 +17,7 @@
         <TargetFramework>net8.0</TargetFramework>
 	  <!--<RuntimeIdentifiers>win-x86;win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>-->
 	  <SelfContained>true</SelfContained>
-	  <Configurations>Debug;Release;MqttMotors;PostgresReads;MsSqlReads;MtConnectAgentModel;MtConnectShdrModel;HttpClientWrites;WikiEx1;AscCpcReads;AirSharc;MtConnectAgentToSplunkHec;MtConnectAgentToShdr;MtConnectAgentToAgent;Basic;ToIgnition;OpcDaReads;OpcUaReads;MqttToWebsocket;ChariotApi;Tutorial;ToIgnitionViaHydra</Configurations>
+	  <Configurations>Debug;Release;MqttMotors;PostgresReads;MsSqlReads;MtConnectAgentModel;MtConnectShdrModel;HttpClientWrites;WikiEx1;AscCpcReads;AirSharc;MtConnectAgentToSplunkHec;MtConnectAgentToShdr;MtConnectAgentToAgent;Basic;ToIgnition;OpcDaReads;OpcUaReads;MqttToWebsocket;ChariotApi;Tutorial;ToIgnitionViaHydra;ToMongo</Configurations>
 	  <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
@@ -39,6 +39,7 @@
       <PackageReference Include="libplctag" Version="1.5.2" />
       <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.0-preview3.24332.3" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.0" />
+      <PackageReference Include="MongoDB.Driver" Version="3.1.0" />
       <PackageReference Include="MQTTnet" Version="4.3.7.1207" />
       <PackageReference Include="MTConnect.NET-Applications-Agents" Version="6.5.1" />
       <PackageReference Include="MTConnect.NET-SHDR" Version="6.5.1" />
