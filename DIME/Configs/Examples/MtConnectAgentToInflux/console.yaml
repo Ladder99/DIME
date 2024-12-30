@@ -3,6 +3,6 @@ console: &console
   enabled: !!bool true
   scan_interval: !!int 1000
   connector: Console
-  use_sink_transform: !!bool false
+  use_sink_transform: !!bool true
   exclude_filter:
     - agent/$SYSTEM

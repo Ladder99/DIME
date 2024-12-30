@@ -4,7 +4,7 @@ agent: &agent
   scan_interval: !!int 1000
   connector: MTConnectAgent
   rbe: !!bool true
-  itemized_read: !!bool true
+  itemized_read: !!bool false
   address: mtconnect.mazakcorp.com
   port: !!int 5719
   device: HCN001
@@ -13,9 +13,11 @@ agent: &agent
     print("hello world from lua");
     stringx = require('pl.stringx');
   items:
+    #- name: ZTravel
+    #  address: Ztravel
     - name: ProgramComment
       address: activeprogram_cmt
-      script:
+      script: |
         print("parsing program comment");
         local a = "123;456;789;012";
         local b = stringx.split(a, ';');
@@ -28,5 +30,9 @@ agent: &agent
   sink:
     transform:
       type: script
-      template: >-
-        Message.Data[0].Value
+      template: |
+        if type(Message.Data) == "System.Collections.Generic.List`1[MTConnect.Observations.ObservationValue]";
+          Message.Data[0].Value;
+        else;
+          Message.Data;
+        end;
