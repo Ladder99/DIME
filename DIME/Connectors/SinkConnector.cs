@@ -216,7 +216,7 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
                     so.SetValue("Configuration", Configuration, true);
                     so.SetValue("Message", message, true);
                     so.Import("print", new Action<object>(o => System.Console.WriteLine(o)));
-                    so.Import("type", new Func<object, string>(o => o.GetType().ToString()));
+                    so.Import("type", new Func<object, string>(o => o is null ? null : o.GetType().ToString()));
                     var tc = new TemplateContext(so) { MemberRenamer = member => member.Name };
                     return Template.Evaluate(transformTemplate, tc);
                 default:

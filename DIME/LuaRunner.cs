@@ -235,7 +235,10 @@ public class LuaRunner
     
     private string ToJson(object json)
     {
-        return JsonConvert.SerializeObject(json);
+        return JsonConvert.SerializeObject(json, Formatting.Indented, new JsonSerializerSettings
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        });
     }
 
     private string GetEnvironmentVariable(string variableName, string defaultValue)

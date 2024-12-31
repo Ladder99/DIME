@@ -4,28 +4,44 @@ agent: &agent
   scan_interval: !!int 1000
   connector: MTConnectAgent
   rbe: !!bool true
-  itemized_read: !!bool false
+  itemized_read: !!bool true
   address: mtconnect.mazakcorp.com
   port: !!int 5719
   device: HCN001
   strip_path_prefix: !!bool false
   init_script: |
     print("hello world from lua");
-    stringx = require('pl.stringx');
+    sx = require('pl.stringx');
   items:
-    #- name: ZTravel
-    #  address: Ztravel
+    - name: ZTravel
+      address: Ztravel
+      script: |
+        --print(to_json(this));
+        --print("---");
+        --print(to_json(configuration()));
+        --print("---");
+        --print(to_json(connector()));
+        --print("---");
+        --result = set('my_ztravel', result);
+        --result = cache('my_ztravel', nil);
+        --result, ts = cache_ts('my_ztravel', nil);
+        --print(result);
+        --my_var = env('windir', nil);
+        --print(my_var);
+        --emit('./my_windir', my_var);
+        return result;
     - name: ProgramComment
       address: activeprogram_cmt
       script: |
         print("parsing program comment");
-        local a = "123;456;789;012";
-        local b = stringx.split(a, ';');
-        print("parsed");
-        emit('./eric/workOrderNumber', b[1]);
-        emit('./eric/lotNumber', b[2]);
-        emit('./eric/subId', b[3]);
-        emit('./eric/operationNumber', b[4]);
+        result = "(W/O NO:W63647**LOT NO:1**SUB ID:0**OP NO:234**DE#:31634**)"
+        
+        local pattern = "%(W/O%s*NO:(%w+)%*%*LOT%s*NO:(%d+)%*%*SUB%s*ID:(%d+)%*%*OP%s*NO:(%d+)%*%*DE#:(%d+)%*%*%)";
+        local wo_no, lot_no, sub_id, op_no, de_no = result:match(pattern);
+        emit('./eric/workOrderNumber', wo_no);
+        emit('./eric/lotNumber', lot_no);
+        emit('./eric/subId', sub_id);
+        emit('./eric/operationNumber', op_no);
         return nil;
   sink:
     transform:
