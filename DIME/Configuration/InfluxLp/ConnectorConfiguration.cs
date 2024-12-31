@@ -4,5 +4,6 @@ public sealed class ConnectorConfiguration : Configuration.ConnectorConfiguratio
 {
     public string Address { get; set; }
     public string Token { get; set; }
+    public string Organization { get; set; }
     public string BucketName { get; set; }
 }

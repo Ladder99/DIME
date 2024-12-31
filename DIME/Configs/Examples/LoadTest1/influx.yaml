@@ -1,0 +1,12 @@
+influx: &influx
+  name: influx
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: InfluxLP
+  address: http://172.24.56.104:8086
+  token: VVJCSvFXi-P1_45cx7mKkqihmuf_E_NIJ29bLvXuH9pf2i-LHFcDahecqOAn5HovWjq2ARp_7XBllFV4TtRBgQ==
+  org_name: mriiot
+  bucket_name: dime
+  use_sink_transform: !!bool true
+  exclude_filter:
+    - mqttin/$SYSTEM

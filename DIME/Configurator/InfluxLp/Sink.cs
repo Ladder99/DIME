@@ -12,6 +12,7 @@ public static class Sink
 
         config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : string.Empty;
         config.Token = section.ContainsKey("token") ? Convert.ToString(section["token"]) : string.Empty;
+        config.Organization = section.ContainsKey("org_name") ? Convert.ToString(section["org_name"]) : null;
         config.BucketName = section.ContainsKey("bucket_name") ? Convert.ToString(section["bucket_name"]) : string.Empty;
         
         var connector = new Connectors.InfluxLp.Sink(config, disruptor);

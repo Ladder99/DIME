@@ -18,7 +18,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool CreateImplementation()
     {
-        _client = new InfluxDBClient(Configuration.Address, Configuration.Token);
+        _client = new InfluxDBClient(Configuration.Address, Configuration.Token, organization: Configuration.Organization);
         return true;
     }
 
@@ -29,14 +29,24 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool WriteImplementation()
     {
+        var points = Outbox.Select(message => 
+            PointData.Measurement(message.Path)
+                .SetField("value", Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : message.Data)
+                .SetTimestamp(message.Timestamp, WritePrecision.Ms)
+        );
+        
+        _client.WritePointsAsync(points, Configuration.BucketName).GetAwaiter().GetResult();
+        
+        /*
         foreach (var message in Outbox)
         {
             var point = PointData.Measurement(message.Path)
                 .SetField("value", Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : message.Data)
                 .SetTimestamp(message.Timestamp, WritePrecision.Ms);
-
+            
             _client.WritePointAsync(point, Configuration.BucketName).GetAwaiter().GetResult();
         }
+        */
 
         return true;
     }

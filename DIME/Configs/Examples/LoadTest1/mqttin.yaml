@@ -1,0 +1,18 @@
+mqttin: &mqttin
+  name: mqttin
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: MQTT
+  rbe: !!bool true
+  itemized_read: !!bool false
+  address: localhost
+  port: !!int 1883
+  qos: !!int 0
+  items:
+    - name: LoadData
+      address: loadtester/#
+  sink:
+    transform:
+      type: script
+      template: >-
+        Message.Data
