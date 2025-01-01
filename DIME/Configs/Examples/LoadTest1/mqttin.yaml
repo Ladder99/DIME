@@ -8,7 +8,6 @@ mqttin: &mqttin
   address: localhost
   port: !!int 1883
   qos: !!int 0
-  turbo: !!bool true
   items:
     - name: LoadData
       address: loadtester/#
