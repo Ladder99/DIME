@@ -13,6 +13,9 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
     public List<MessageBoxMessage> Outbox { get; private set; } = new List<MessageBoxMessage>();
     public event Action<List<MessageBoxMessage>> OnOutboxReady;
     public event Action<List<MessageBoxMessage>, bool> OnOutboxSent;
+
+    private ScriptObject _scribanScriptObject;
+    private TemplateContext _scribanTemplatecontext;
     
     public bool IsWriting { get; set; }
     
@@ -21,6 +24,14 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         IsWriting = false;
         
         Logger.Trace($"[{Configuration.Name}] SinkConnector:.ctor");
+        
+        // cache scriban script sink transform for performance
+        _scribanScriptObject = new ScriptObject();
+        _scribanScriptObject.SetValue("Connector", this, true);
+        _scribanScriptObject.SetValue("Configuration", Configuration, true);
+        _scribanScriptObject.Import("print", new Action<object>(o => System.Console.WriteLine(o)));
+        _scribanScriptObject.Import("type", new Func<object, string>(o => o is null ? null : o.GetType().ToString()));
+        _scribanTemplatecontext = new TemplateContext(_scribanScriptObject) { MemberRenamer = member => member.Name };
     }
     
     public override bool BeforeUpdate()
@@ -211,14 +222,8 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
                         new { Connector = this, Configuration = Configuration, Message = message }, 
                         member => member.Name);
                 case "script":
-                    var so = new ScriptObject();
-                    so.SetValue("Connector", this, true);
-                    so.SetValue("Configuration", Configuration, true);
-                    so.SetValue("Message", message, true);
-                    so.Import("print", new Action<object>(o => System.Console.WriteLine(o)));
-                    so.Import("type", new Func<object, string>(o => o is null ? null : o.GetType().ToString()));
-                    var tc = new TemplateContext(so) { MemberRenamer = member => member.Name };
-                    return Template.Evaluate(transformTemplate, tc);
+                    _scribanScriptObject.SetValue("Message", message, true);
+                     return Template.Evaluate(transformTemplate, _scribanTemplatecontext);
                 default:
                     return message;
             }

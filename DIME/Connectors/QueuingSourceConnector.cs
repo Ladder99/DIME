@@ -8,7 +8,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
     where TConfig : ConnectorConfiguration<TItem>
     where TItem : ConnectorItem
 {
-    protected class IncomingMessage
+    protected struct IncomingMessage
     {
         public string Key { get; set; }
         public object Value { get; set; }
@@ -16,7 +16,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
     }
     
     // message hold
-    protected readonly ConcurrentBag<IncomingMessage> IncomingBuffer = new();
+    protected readonly List<IncomingMessage> IncomingBuffer = new();
     protected readonly object IncomingBufferLock = new();
     
     public QueuingSourceConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
@@ -130,8 +130,7 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
              */
             lock (IncomingBufferLock)
             {
-                //TODO: why ToArray?
-                foreach (var message in IncomingBuffer.ToArray())
+                foreach (var message in IncomingBuffer)
                 {
                     try
                     {

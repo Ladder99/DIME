@@ -10,4 +10,5 @@ public sealed class ConnectorConfiguration : Configuration.ConnectorConfiguratio
     public string BaseTopic { get; set; }
     public int QoS { get; set; }
     public bool RetainPublish { get; set; }
+    public bool UseTurbo { get; set; }
 }

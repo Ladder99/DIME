@@ -14,6 +14,7 @@ public static class Source
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 1883;
         config.Username = section.ContainsKey("username") ? Convert.ToString(section["username"]) : null;
         config.Password = section.ContainsKey("password") ? Convert.ToString(section["password"]) : null;
+        config.UseTurbo = section.ContainsKey("turbo") ? Convert.ToBoolean(section["turbo"]) : false;
 
         config.Items = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>.MakeItems(config, section, (item, dict) =>
         {

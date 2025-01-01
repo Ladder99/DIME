@@ -273,7 +273,6 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                              $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
                 
                 Inbox.Add(sampleResponse);
-                //Current.AddOrUpdate(sampleResponse.Path, sampleResponse, (key, oldValue) => sampleResponse);
                 Current[sampleResponse.Path] = sampleResponse;
             }
             // sample data is different, it is an updated sample
