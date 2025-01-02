@@ -10,7 +10,7 @@ public static class Source
         ConnectorConfiguration config = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>
             .MakeConfig(section, "OpcUA", Configuration.ConnectorDirectionEnum.Source);
         
-        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";
+        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : string.Empty;
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 49320;
         config.TimeoutMs = section.ContainsKey("timeout") ? Convert.ToInt32(section["timeout"]) : 1000;
         config.UseAnonymousUser = section.ContainsKey("anonymous") ? Convert.ToBoolean(section["anonymous"]) : false;

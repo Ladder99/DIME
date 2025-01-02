@@ -10,9 +10,8 @@ public static class Source
         ConnectorConfiguration config = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>
             .MakeConfig(section, "EthernetIP", Configuration.ConnectorDirectionEnum.Source);
         
-        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";
+        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : string.Empty;
         config.PlcType = section.ContainsKey("type") ? Convert.ToInt32(section["type"]) : 0;
-        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "0.0.0.0";
         config.Path = section.ContainsKey("path") ? Convert.ToString(section["path"]) : "1,0";
         config.Log = section.ContainsKey("log") ? Convert.ToInt32(section["log"]) : 0;
         config.TimeoutMs = section.ContainsKey("timeout") ? Convert.ToInt32(section["timeout"]) : 1000;

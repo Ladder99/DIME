@@ -10,7 +10,7 @@ public static class Sink
         ConnectorConfiguration config = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>
             .MakeConfig(section, "SparkplugB", Configuration.ConnectorDirectionEnum.Sink);
 
-        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";
+        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : string.Empty;
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 1883;
         config.Username = section.ContainsKey("username") ? Convert.ToString(section["username"]) : null;
         config.Password = section.ContainsKey("password") ? Convert.ToString(section["password"]) : null;

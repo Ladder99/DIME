@@ -10,7 +10,7 @@ public static class Source
         ConnectorConfiguration config = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>
             .MakeConfig(section, "SmartPAC", Configuration.ConnectorDirectionEnum.Source);
         
-        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";
+        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : string.Empty;
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 1007;
         
         config.Items = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>.MakeItems(config, section, (item, dict) =>

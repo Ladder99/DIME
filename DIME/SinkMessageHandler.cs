@@ -4,6 +4,8 @@ namespace DIME;
 
 public class SinkMessageHandler : Disruptor.IEventHandler<MessageBoxMessage>
 {
+    protected readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+    
     ISinkConnector Connector;
     
     public SinkMessageHandler(ISinkConnector connector)
@@ -17,8 +19,8 @@ public class SinkMessageHandler : Disruptor.IEventHandler<MessageBoxMessage>
         // even with concurrent access, the sink could clear the outbox and miss events
         while (Connector.IsWriting)
         {
-            //System.Console.WriteLine("SinkMessageHandler /////////////////////////////////////////////////////////// SPIN");
-            Thread.Sleep(10);
+            Logger.Debug($"[{Connector.Configuration.Name}] Connector is writing.... Spinning.");
+            Thread.Sleep(5);
         }
 
         Connector.Outbox.Add(data);

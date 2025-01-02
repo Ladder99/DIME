@@ -3,7 +3,6 @@ using DIME.Configuration;
 using DIME.Connectors;
 using Newtonsoft.Json;
 using NLua;
-using YamlDotNet.Serialization;
 
 namespace DIME;
 

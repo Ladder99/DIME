@@ -10,7 +10,7 @@ public static class Sink
         ConnectorConfiguration config = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>
             .MakeConfig(section, "SplunkEhSDK", Configuration.ConnectorDirectionEnum.Sink);
 
-        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";
+        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "http://host.docker.internal";
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 50051;
         config.NumbersToMetrics = section.ContainsKey("numbers_to_metrics") ? Convert.ToBoolean(section["numbers_to_metrics"]) : false;
         

@@ -1,5 +1,6 @@
 using DIME.Connectors;
 using DIME.Configuration.TimebaseWs;
+using InfluxDB3.Client.Internal;
 
 namespace DIME.Configurator.TimebaseWs;
 
@@ -11,7 +12,7 @@ public static class Source
         ConnectorConfiguration config = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>
             .MakeConfig(section, "TimebaseWS", Configuration.ConnectorDirectionEnum.Source);
         
-        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";
+        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : string.Empty;
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 4511;
         
         config.Items = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>.MakeItems(config, section, (item, dict) =>

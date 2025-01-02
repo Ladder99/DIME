@@ -10,7 +10,7 @@ public static class Source
         ConnectorConfiguration config = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>
             .MakeConfig(section, "HaasSHDR", Configuration.ConnectorDirectionEnum.Source);
         
-        config.IpAddress = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";
+        config.IpAddress = section.ContainsKey("address") ? Convert.ToString(section["address"]) : string.Empty;
         config.Port = section.ContainsKey("port") ? Convert.ToInt32(section["port"]) : 9998;
         config.TimeoutMs = section.ContainsKey("timeout") ? Convert.ToInt32(section["timeout"]) : 1000;
         config.HeartbeatMs = section.ContainsKey("heartbeat_interval") ? Convert.ToInt32(section["heartbeat_interval"]) : 4000;

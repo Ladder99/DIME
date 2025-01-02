@@ -8,7 +8,7 @@ public static class Source
     public static IConnector Create(Dictionary<object, object> section, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor)
     {
         ConnectorConfiguration config = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>
-            .MakeConfig(section, "OpcUA", Configuration.ConnectorDirectionEnum.Source);
+            .MakeConfig(section, "OpcDA", Configuration.ConnectorDirectionEnum.Source);
         
         config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "Kepware.KEPServerEX.V6";
 

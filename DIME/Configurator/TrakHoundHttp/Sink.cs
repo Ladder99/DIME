@@ -10,7 +10,7 @@ public static class Sink
         ConnectorConfiguration config = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>
             .MakeConfig(section, "TrakHoundHTTP", Configuration.ConnectorDirectionEnum.Sink);
 
-        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "localhost";
+        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : string.Empty;
         config.Port = section.ContainsKey("port") ? Convert.ToInt16(section["port"]) : 8472;
         config.UseSsl = section.ContainsKey("use_ssl") ? Convert.ToBoolean(section["use_ssl"]) : false;
         config.HostPath = section.ContainsKey("host_path") ? Convert.ToString(section["host_path"]) : null;

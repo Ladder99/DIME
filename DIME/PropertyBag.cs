@@ -2,7 +2,7 @@ namespace DIME;
 
 public class PropertyBag
 {
-    private readonly NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+    private readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
     public Dictionary<string,object> Properties { get; } = new Dictionary<string, object>();
 
     public PropertyBag()
@@ -20,7 +20,7 @@ public class PropertyBag
                 return (T)Convert.ChangeType(Properties[key], typeof(T));
             } 
             catch (InvalidCastException) {
-                _logger.Warn($"Unable to cast '{key}' property.");
+                Logger.Warn($"Unable to cast '{key}' property.");
                 return default(T);
             }
         }

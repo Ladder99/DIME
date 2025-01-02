@@ -10,8 +10,8 @@ public static class Sink
         ConnectorConfiguration config = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>
             .MakeConfig(section, "SplunkHEC", Configuration.ConnectorDirectionEnum.Sink);
 
-        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : "127.0.0.1";
-        config.Port = section.ContainsKey("port") ? Convert.ToInt16(section["port"]) : 8472;
+        config.Address = section.ContainsKey("address") ? Convert.ToString(section["address"]) : string.Empty;
+        config.Port = section.ContainsKey("port") ? Convert.ToInt16(section["port"]) : 8088;
         config.UseSsl = section.ContainsKey("use_ssl") ? Convert.ToBoolean(section["use_ssl"]) : false;
         config.Token = section.ContainsKey("token") ? Convert.ToString(section["token"]) : string.Empty;
         config.EventOrMetric = section.ContainsKey("event_or_metric") ? Convert.ToString(section["event_or_metric"]) : "event";

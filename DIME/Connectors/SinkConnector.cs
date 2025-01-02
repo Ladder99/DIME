@@ -20,8 +20,6 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
     
     protected SinkConnector(TConfig configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor): base(configuration, disruptor)
     {
-        IsWriting = false;
-        
         Logger.Trace($"[{Configuration.Name}] SinkConnector:.ctor");
         
         // cache scriban script sink transform for performance
