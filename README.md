@@ -36,6 +36,7 @@ Reshape and move data from enterprise and industrial sources to message queues, 
 | [Script](../../wiki/04.-Connector-Reference#script)                         |
 | Siemens S7                                                                  |
 | [SNMP](../../wiki/04.-Connector-Reference#snmp)                             |
+| [SparkplugB](../../wiki/04.-Connector-Reference#sparkplugb)                 |
 | [Timebase Websocket](../../wiki/04.-Connector-Reference#timebase-websocket) | 
 | [Wintriss SmartPac](../../wiki/04.-Connector-Reference#wintriss-smartpac)   |
 | Zenoh                                                                       |
