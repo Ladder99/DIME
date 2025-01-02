@@ -9,7 +9,7 @@ namespace DIME.Connectors.HttpServer;
 public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 {
     private HttpListener _listener;
-    private ConcurrentDictionary<string, MessageBoxMessage> _messagesDictionary;
+    private Dictionary<string, MessageBoxMessage> _messagesDictionary;
     private List<MessageBoxMessage> _messagesList;
     
     public Sink(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
@@ -23,7 +23,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool CreateImplementation()
     {
-        _messagesDictionary = new ConcurrentDictionary<string, MessageBoxMessage>();
+        _messagesDictionary = new Dictionary<string, MessageBoxMessage>();
         _messagesList = new List<MessageBoxMessage>();
         
         _listener = new HttpListener();
@@ -42,6 +42,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     { 
         foreach (var message in Outbox)
         {
+            
             // TODO: DATA CORRUPTION
             var tempMessage = new MessageBoxMessage()
             {
@@ -51,7 +52,8 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
                 ConnectorItemRef = message.ConnectorItemRef
             };
             
-            _messagesDictionary.AddOrUpdate(tempMessage.Path, tempMessage, (key, oldValue) => tempMessage);
+            
+            _messagesDictionary[tempMessage.Path] = tempMessage;
             
             var foundMessage = _messagesList.Find(x => x.Path == tempMessage.Path);
             if (foundMessage is null)

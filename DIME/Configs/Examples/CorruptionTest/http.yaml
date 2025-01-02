@@ -1,0 +1,7 @@
+http: &http
+  name: http
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: HTTPServer
+  uri: http://localhost:8080/
+  #uri: http://*:8080/

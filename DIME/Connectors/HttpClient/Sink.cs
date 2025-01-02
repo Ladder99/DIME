@@ -41,7 +41,6 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
             {
                 contentType = header.Value;
             }
-            
         }
         
         foreach (var message in Outbox)
