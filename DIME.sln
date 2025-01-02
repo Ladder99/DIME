@@ -30,6 +30,7 @@ Global
 		ToInflux|Any CPU = ToInflux|Any CPU
 		MtConnectAgentToInflux|Any CPU = MtConnectAgentToInflux|Any CPU
 		LoadTest1|Any CPU = LoadTest1|Any CPU
+		FromActiveMq|Any CPU = FromActiveMq|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -84,5 +85,7 @@ Global
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.MtConnectAgentToInflux|Any CPU.Build.0 = MtConnectAgentToInflux|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.LoadTest1|Any CPU.ActiveCfg = LoadTest1|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.LoadTest1|Any CPU.Build.0 = LoadTest1|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.FromActiveMq|Any CPU.ActiveCfg = FromActiveMq|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.FromActiveMq|Any CPU.Build.0 = FromActiveMq|Any CPU
 	EndGlobalSection
 EndGlobal

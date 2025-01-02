@@ -10,6 +10,9 @@ public static class SourceConnectorFactory
         
         switch (connectorType)
         {
+            case "activemq":
+                connector = ActiveMq.Source.Create(section, disruptor);
+                break;
             case "asccpc":
                 connector = AscCpc.Source.Create(section, disruptor);
                 break;

@@ -269,8 +269,9 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
             // sample does not exist in current, it is a new sample
             if (matchingCurrent is null)
             {
-                Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. New sample added to inbox. " +
-                             $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
+                if (Logger.IsDebugEnabled)
+                    Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. New sample added to inbox. " +
+                                $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
                 
                 Inbox.Add(sampleResponse);
                 Current[sampleResponse.Path] = sampleResponse;
@@ -289,17 +290,19 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                     {
                         if (matchingCurrent.Data != sampleResponse.Data)
                         {
-                            Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE (null check) sample object added to inbox. " +
-                                         $"Current={(matchingCurrent.Data is null ? "<null>": matchingCurrent.Data)}, " +
-                                         $"Sample={(sampleResponse.Data is null ? "<null>": sampleResponse.Data)}");
+                            if (Logger.IsDebugEnabled)
+                                Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE (null check) sample object added to inbox. " +
+                                            $"Current={(matchingCurrent.Data is null ? "<null>": matchingCurrent.Data)}, " +
+                                            $"Sample={(sampleResponse.Data is null ? "<null>": sampleResponse.Data)}");
 
                             Inbox.Add(sampleResponse);
                         }
                         else
                         {
-                            Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE (null check) sample object dropped. " +
-                                         $"Current={(matchingCurrent.Data is null ? "<null>": matchingCurrent.Data)}, " +
-                                         $"Sample={(sampleResponse.Data is null ? "<null>": sampleResponse.Data)}");
+                            if (Logger.IsDebugEnabled)
+                                Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE (null check) sample object dropped. " +
+                                            $"Current={(matchingCurrent.Data is null ? "<null>": matchingCurrent.Data)}, " +
+                                            $"Sample={(sampleResponse.Data is null ? "<null>": sampleResponse.Data)}");
                         }
                     }
                     // datas are not null
@@ -313,17 +316,19 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                         {
                             if (!((object[])matchingCurrent.Data).SequenceEqual((object[])sampleResponse.Data))
                             {
-                                Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE sample array added to inbox. " +
-                                             $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
-                                             $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
+                                if (Logger.IsDebugEnabled)
+                                    Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE sample array added to inbox. " +
+                                                $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
+                                                $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
 
                                 Inbox.Add(sampleResponse);
                             }
                             else
                             {
-                                Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE sample array dropped. " +
-                                             $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
-                                             $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
+                                if (Logger.IsDebugEnabled)
+                                    Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE sample array dropped. " +
+                                                $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
+                                                $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
                             }
                         }
                         // both datas are not arrays, compare datas as object
@@ -331,17 +336,19 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                         {
                             if (!matchingCurrent.Data.Equals(sampleResponse.Data))
                             {
-                                Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE sample object added to inbox. " +
-                                             $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
-                                             $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
+                                if (Logger.IsDebugEnabled)
+                                    Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE sample object added to inbox. " +
+                                                $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
+                                                $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
 
                                 Inbox.Add(sampleResponse);
                             }
                             else
                             {
-                                Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE sample object dropped. " +
-                                             $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
-                                             $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
+                                if (Logger.IsDebugEnabled)
+                                    Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. RBE sample object dropped. " +
+                                                $"Current={(matchingCurrent.Data is null ? "<null>" : JsonConvert.SerializeObject(matchingCurrent.Data))}, " +
+                                                $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
                             }
                         }
                     }
@@ -349,8 +356,9 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                 // rbe is disabled
                 else
                 {
-                    Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. Non-RBE sample added to inbox. " +
-                                 $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
+                    if (Logger.IsDebugEnabled)
+                        Logger.Debug($"[{sampleResponse.Path}] Fill Inbox. Non-RBE sample added to inbox. " +
+                                     $"Sample={(sampleResponse.Data is null ? "<null>" : JsonConvert.SerializeObject(sampleResponse.Data))}");
                     
                     Inbox.Add(sampleResponse);
                 }

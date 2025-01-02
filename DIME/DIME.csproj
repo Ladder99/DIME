@@ -17,7 +17,7 @@
         <TargetFramework>net8.0</TargetFramework>
 	  <!--<RuntimeIdentifiers>win-x86;win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>-->
 	  <SelfContained>true</SelfContained>
-	  <Configurations>Debug;Release;MqttMotors;PostgresReads;MsSqlReads;MtConnectAgentModel;MtConnectShdrModel;HttpClientWrites;WikiEx1;AscCpcReads;AirSharc;MtConnectAgentToSplunkHec;MtConnectAgentToShdr;MtConnectAgentToAgent;Basic;ToIgnition;OpcDaReads;OpcUaReads;MqttToWebsocket;ChariotApi;Tutorial;ToIgnitionViaHydra;ToMongo;ToInflux;MtConnectAgentToInflux;LoadTest1</Configurations>
+	  <Configurations>Debug;Release;MqttMotors;PostgresReads;MsSqlReads;MtConnectAgentModel;MtConnectShdrModel;HttpClientWrites;WikiEx1;AscCpcReads;AirSharc;MtConnectAgentToSplunkHec;MtConnectAgentToShdr;MtConnectAgentToAgent;Basic;ToIgnition;OpcDaReads;OpcUaReads;MqttToWebsocket;ChariotApi;Tutorial;ToIgnitionViaHydra;ToMongo;ToInflux;MtConnectAgentToInflux;LoadTest1;FromActiveMq</Configurations>
 	  <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
@@ -27,6 +27,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Apache.NMS.ActiveMQ" Version="2.1.0" />
       <PackageReference Include="Disruptor" Version="6.0.0" />
       <PackageReference Include="Google.Protobuf" Version="3.29.1" />
       <PackageReference Include="Grpc.Net.Client" Version="2.67.0" />

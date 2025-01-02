@@ -10,7 +10,7 @@ mqttin: &mqttin
   qos: !!int 0
   items:
     - name: LoadData
-      address: loadtester/#
+      address: loadtest/#
   sink:
     transform:
       type: script

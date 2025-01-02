@@ -1,7 +1,7 @@
+using System.Net;
 using DIME.Configuration.Mqtt;
 using MQTTnet;
 using MQTTnet.Client;
-using MQTTnet.Formatter;
 using MQTTnet.Protocol;
 
 namespace DIME.Connectors.Mqtt;
@@ -34,7 +34,11 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
     {
         var clientOptions = new MqttClientOptionsBuilder()
             .WithClientId(Properties.GetProperty<string>("client_id"))
-            .WithTcpServer(Configuration.Address, Configuration.Port)
+            .WithTcpServer(tcpOptions =>
+            {
+                tcpOptions.BufferSize = 0x100000;
+            })
+            .WithEndPoint(new DnsEndPoint(Configuration.Address, Configuration.Port, System.Net.Sockets.AddressFamily.InterNetwork))
             .WithCleanSession(Configuration.CleanSession);
         var options = clientOptions.Build();
         var result = _client.ConnectAsync(options).Result;

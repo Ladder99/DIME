@@ -1,0 +1,19 @@
+activemq: &activemq
+  name: activemq
+  enabled: !!bool true
+  scan_interval: !!int 500
+  connector: ActiveMQ
+  rbe: !!bool true
+  itemized_read: !!bool false
+  address: activemq:tcp://172.24.56.104:61616
+  username: artemis
+  password: artemis
+  init_script: |
+    print("hello world from lua");
+  items:
+    - name: FooBar
+      enabled: !!bool true
+      address: topic://FOO.BAR
+    - name: BarFoo
+      enabled: !!bool true
+      address: queue://BAR.FOO
