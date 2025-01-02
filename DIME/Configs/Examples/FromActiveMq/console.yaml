@@ -6,3 +6,4 @@ console: &console
   #use_sink_transform: !!bool true
   exclude_filter:
     - activemq/$SYSTEM
+    - activemq

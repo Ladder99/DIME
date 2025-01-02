@@ -1,4 +1,3 @@
-using System.Net;
 using System.Text;
 using Apache.NMS;
 using Apache.NMS.ActiveMQ.Commands;
@@ -20,21 +19,22 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
 
     protected override bool InitializeImplementation()
     {
+        _consumers = new List<IMessageConsumer>();
         return true;
     }
 
     protected override bool CreateImplementation()
     {
-        var factory = new NMSConnectionFactory(new Uri(Configuration.Address));
-        _connection = factory.CreateConnection(Configuration.Username, Configuration.Password);
         return true;
     }
 
     protected override bool ConnectImplementation()
     {
+        var factory = new NMSConnectionFactory(new Uri(Configuration.Address));
+        _connection = factory.CreateConnection(Configuration.Username, Configuration.Password);
+        _connection.ExceptionListener += ConnectionOnExceptionListener;
         _connection.Start();
         _session = _connection.CreateSession(AcknowledgementMode.AutoAcknowledge);
-        _consumers = new List<IMessageConsumer>();
         foreach (var item in Configuration.Items)
         {
             var consumer = _session.CreateConsumer(SessionUtil.GetDestination(_session, item.Address));
@@ -51,11 +51,15 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         {
             consumer.Listener -= ConsumerOnListener;
             consumer.Close();
+            consumer.Dispose();
         }
         _consumers.Clear();
         _session.Close();
+        _session.Dispose();
+        _connection.ExceptionListener -= ConnectionOnExceptionListener;
         _connection.Close();
         _connection.Stop();
+        _connection.Dispose();
         return true;
     }
     
@@ -70,5 +74,10 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
         string content = Encoding.UTF8.GetString(activeMQMessage.Content);
         string destination = activeMQMessage.Destination.ToString();
         AddToIncomingBuffer(destination, content, message.NMSTimestamp.ToEpochMilliseconds());
+    }
+    
+    private void ConnectionOnExceptionListener(Exception exception)
+    {
+        IsConnected = false;
     }
 }
