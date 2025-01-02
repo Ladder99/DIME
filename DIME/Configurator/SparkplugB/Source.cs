@@ -1,7 +1,7 @@
 using DIME.Connectors;
-using DIME.Configuration.Mqtt;
+using DIME.Configuration.SparkplugB;
 
-namespace DIME.Configurator.Mqtt;
+namespace DIME.Configurator.SparkplugB;
 
 public static class Source
 {
@@ -16,13 +16,13 @@ public static class Source
         config.Password = section.ContainsKey("password") ? Convert.ToString(section["password"]) : null;
         config.CleanSession = section.ContainsKey("clean_session") ? Convert.ToBoolean(section["clean_session"]) : true;
         config.QoS = section.ContainsKey("qos") ? Convert.ToInt32(section["qos"]) : 0;
-
+        
         config.Items = ConfigurationHelper<ConnectorConfiguration, ConnectorItem>.MakeItems(config, section, (item, dict) =>
         {
             
         });
 
-        var connector = new Connectors.Mqtt.Source(config, disruptor);
+        var connector = new Connectors.SparkplugB.Source(config, disruptor);
 
         return connector;
     }

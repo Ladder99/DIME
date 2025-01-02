@@ -1,0 +1,32 @@
+mqtt: &mqtt
+  name: chariot1
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: MQTT
+  rbe: !!bool true
+  itemized_read: !!bool false
+  address: localhost
+  port: !!int 1883
+  username: user
+  password: password
+  clean_session: !!bool true
+  qos: !!int 0
+  item_script: |
+    return from_json(result).value;
+  items:
+    - name: NodesOnline
+      address: unsAv1.0/Edge Nodes/NodesOnline
+    - name: NodesOffline
+      address: unsAv1.0/Edge Nodes/NodesOffline
+    - name: DevicesOnline
+      address: unsAv1.0/Devices/DevicesOnline
+    - name: DevicesOffline
+      address: unsAv1.0/Devices/DevicesOffline
+    - name: BytesTx
+      address: unsAv1.0/Total Bytes Xmit
+    - name: BytesRx
+      address: unsAv1.0/Total Bytes Recvd
+    - name: TagsPerSecond
+      address: unsAv1.0/Tags Per Second
+    - name: MessageCount
+      address: unsAv1.0/Total Data Mesg Count

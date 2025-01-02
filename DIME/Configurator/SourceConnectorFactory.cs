@@ -58,6 +58,9 @@ public static class SourceConnectorFactory
             case "snmp":
                 connector = Snmp.Source.Create(section, disruptor);
                 break;
+            case "sparkplugb":
+                connector = SparkplugB.Source.Create(section, disruptor);
+                break;
             case "timebasews":
                 connector = TimebaseWs.Source.Create(section, disruptor);
                 break;

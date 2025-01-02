@@ -12,4 +12,6 @@ public sealed class ConnectorConfiguration : Configuration.ConnectorConfiguratio
     public string DeviceId { get; set; }
     public int ReconnectIntervalMs { get; set; }
     public int BirthDelayMs { get; set; }
+    public bool CleanSession { get; set; }
+    public int QoS { get; set; }
 }

@@ -38,10 +38,12 @@ agent: &agent
         result = result[0].Value;
         local pattern = "%(W/O%s*NO:(%w+)%*%*LOT%s*NO:(%d+)%*%*SUB%s*ID:(%d+)%*%*OP%s*NO:(%d+)%*%*DE#:(%d+)%*%*%)";
         local wo_no, lot_no, sub_id, op_no, de_no = result:match(pattern);
-        emit('./eric/workOrderNumber', wo_no);
-        emit('./eric/lotNumber', lot_no);
-        emit('./eric/subId', sub_id);
-        emit('./eric/operationNumber', op_no);
+        if wo_no then
+          emit('./eric/workOrderNumber', wo_no);
+          emit('./eric/lotNumber', lot_no);
+          emit('./eric/subId', sub_id);
+          emit('./eric/operationNumber', op_no);
+        end
         return nil;
   sink:
     transform:

@@ -1,0 +1,16 @@
+spb: &spb
+  name: spb
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: SparkplugB
+  rbe: !!bool true
+  itemized_read: !!bool false
+  address: localhost
+  port: !!int 1883
+  username: user
+  password: password
+  clean_session: !!bool true
+  qos: !!int 0
+  items:
+    - name: ddata
+      address: spBv1.0/Chicago/DDATA/#

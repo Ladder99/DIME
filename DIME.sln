@@ -32,6 +32,8 @@ Global
 		LoadTest1|Any CPU = LoadTest1|Any CPU
 		FromActiveMq|Any CPU = FromActiveMq|Any CPU
 		CorruptionTest|Any CPU = CorruptionTest|Any CPU
+		FromSparkplugB|Any CPU = FromSparkplugB|Any CPU
+		IgnitionMetricsToInflux|Any CPU = IgnitionMetricsToInflux|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -90,5 +92,9 @@ Global
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.FromActiveMq|Any CPU.Build.0 = FromActiveMq|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.CorruptionTest|Any CPU.ActiveCfg = CorruptionTest|Any CPU
 		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.CorruptionTest|Any CPU.Build.0 = CorruptionTest|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.FromSparkplugB|Any CPU.ActiveCfg = FromSparkplugB|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.FromSparkplugB|Any CPU.Build.0 = FromSparkplugB|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.IgnitionMetricsToInflux|Any CPU.ActiveCfg = IgnitionMetricsToInflux|Any CPU
+		{EF7419BD-9E0C-4C37-A854-184082C90B0E}.IgnitionMetricsToInflux|Any CPU.Build.0 = IgnitionMetricsToInflux|Any CPU
 	EndGlobalSection
 EndGlobal
