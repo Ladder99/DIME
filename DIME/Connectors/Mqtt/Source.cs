@@ -52,7 +52,7 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
                 f.WithQualityOfServiceLevel((MqttQualityOfServiceLevel)Configuration.QoS);
             });
         }
-        var subscribeResult = _client.SubscribeAsync(mqttSubscribeOptions.Build()).Result;
+        _client.SubscribeAsync(mqttSubscribeOptions.Build()).Wait();
         
         return result.ResultCode == MqttClientConnectResultCode.Success;;
     }
@@ -65,13 +65,14 @@ public class Source: QueuingSourceConnector<ConnectorConfiguration, ConnectorIte
     
     protected override bool DeinitializeImplementation()
     {
+        _client.DisconnectedAsync -= ClientOnDisconnectedAsync;
+        _client.ApplicationMessageReceivedAsync -= ClientOnApplicationMessageReceivedAsync;
         return true;
     }
     
     private Task ClientOnApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
     {
         AddToIncomingBuffer(arg.ApplicationMessage.Topic, arg.ApplicationMessage.ConvertPayloadToString());
-        
         return Task.FromResult(0);
     }
 

@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using DIME.Configuration;
 using DIME.Connectors;
 using Timer = System.Timers.Timer;

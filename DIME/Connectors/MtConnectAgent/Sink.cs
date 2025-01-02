@@ -1,13 +1,8 @@
 using DIME.Configuration.MtConnectAgent;
 using DIME.ConnectorSupport.MtConnect.DeviceBuilder;
-using Mono.Unix.Native;
-using MTConnect.Agents;
 using MTConnect.Applications;
 using MTConnect.Configurations;
 using MTConnect.Devices;
-using MTConnect.Devices.Components;
-using MTConnect.Devices.DataItems;
-using MTConnect.Observations.Events;
 
 namespace DIME.Connectors.MtConnectAgent;
 
@@ -45,7 +40,6 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
             }
         });
         
-        IsConnected = true;
         return true;
     }
 
@@ -80,7 +74,6 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     protected override bool DisconnectImplementation()
     {
         _client.StopAgent();
-        IsConnected = false;
         return true;
     }
     

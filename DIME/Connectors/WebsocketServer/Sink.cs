@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using DIME.Configuration.WebsocketServer;
 using Newtonsoft.Json;
 using WebSocketSharp;
@@ -14,8 +13,6 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     }
     
     private WebSocketServer _client;
-    private ConcurrentDictionary<string, MessageBoxMessage> _messagesDictionary;
-    private List<MessageBoxMessage> _messagesList;
     
     public Sink(ConnectorConfiguration configuration, Disruptor.Dsl.Disruptor<MessageBoxMessage> disruptor) : base(configuration, disruptor)
     {
@@ -28,9 +25,6 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
 
     protected override bool CreateImplementation()
     {
-        _messagesDictionary = new ConcurrentDictionary<string, MessageBoxMessage>();
-        _messagesList = new List<MessageBoxMessage>();
-        
         _client = new WebSocketServer(Configuration.Uri);
         _client.AddWebSocketService<Feed>("/");
         return true;

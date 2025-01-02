@@ -36,17 +36,6 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
         );
         
         _client.WritePointsAsync(points, Configuration.BucketName).GetAwaiter().GetResult();
-        
-        /*
-        foreach (var message in Outbox)
-        {
-            var point = PointData.Measurement(message.Path)
-                .SetField("value", Configuration.UseSinkTransform ? TransformAndSerializeMessage(message) : message.Data)
-                .SetTimestamp(message.Timestamp, WritePrecision.Ms);
-            
-            _client.WritePointAsync(point, Configuration.BucketName).GetAwaiter().GetResult();
-        }
-        */
 
         return true;
     }

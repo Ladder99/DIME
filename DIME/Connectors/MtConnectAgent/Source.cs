@@ -1,5 +1,4 @@
 using DIME.Configuration.MtConnectAgent;
-using MQTTnet;
 using MTConnect.Clients;
 
 namespace DIME.Connectors.MtConnectAgent;

@@ -56,7 +56,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
             
             var msg = msgBuilder.Build();
 
-            _client.PublishAsync(msg);
+            _client.PublishAsync(msg).Wait();
         }
         
         return true;
@@ -70,6 +70,7 @@ public class Sink: SinkConnector<ConnectorConfiguration, ConnectorItem>
     
     protected override bool DeinitializeImplementation()
     {
+        _client.DisconnectedAsync -= ClientOnDisconnectedAsync;
         return true;
     }
 
