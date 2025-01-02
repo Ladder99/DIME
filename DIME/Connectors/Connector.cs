@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using DIME.Configuration;
 
@@ -264,7 +263,7 @@ public abstract class Connector<TConfig, TItem>: IConnector
 
                 if (isDisconnected)
                 {
-                    //ClearFault();
+                    
                 }
                 else
                 {

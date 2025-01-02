@@ -35,7 +35,7 @@ agent: &agent
       script: |
         print("parsing program comment");
         result = "(W/O NO:W63647**LOT NO:1**SUB ID:0**OP NO:234**DE#:31634**)"
-        
+        -- result = result[0].Value;
         local pattern = "%(W/O%s*NO:(%w+)%*%*LOT%s*NO:(%d+)%*%*SUB%s*ID:(%d+)%*%*OP%s*NO:(%d+)%*%*DE#:(%d+)%*%*%)";
         local wo_no, lot_no, sub_id, op_no, de_no = result:match(pattern);
         emit('./eric/workOrderNumber', wo_no);

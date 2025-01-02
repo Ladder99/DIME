@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using DIME.Configuration;
 using Newtonsoft.Json;
 using Scriban;
@@ -119,10 +118,11 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         
         Logger.Trace($"[{Configuration.Name}] SinkConnector:Write::EXIT");
         
-        Logger.Debug($"[{Configuration.Name}] Loop Perf. " +
-                    $"DeviceRead: {ReadFromDeviceSumStopwatch.ElapsedMilliseconds}ms, " +
-                    $"ExecuteScript: {ExecuteScriptSumStopwatch.ElapsedMilliseconds}ms, " +
-                    $"EntireLoop: {EntireReadLoopStopwatch.ElapsedMilliseconds}ms");
+        if (Logger.IsDebugEnabled)
+            Logger.Debug($"[{Configuration.Name}] Loop Perf. " +
+                        $"DeviceRead: {ReadFromDeviceSumStopwatch.ElapsedMilliseconds}ms, " +
+                        $"ExecuteScript: {ExecuteScriptSumStopwatch.ElapsedMilliseconds}ms, " +
+                        $"EntireLoop: {EntireReadLoopStopwatch.ElapsedMilliseconds}ms");
         
         base.InvokeOnLoopPerf(
             ReadFromDeviceSumStopwatch.ElapsedMilliseconds,
@@ -163,9 +163,6 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         }
         catch (Exception e)
         {
-            //System.Console.WriteLine(JsonConvert.SerializeObject(message));
-            //if (message.Data is null) return null;
-            //return message.Data.GetType() == typeof(string) ? message.Data.ToString() : JsonConvert.SerializeObject(message.Data);
             return JsonConvert.SerializeObject(message);
         }
     }
@@ -179,9 +176,6 @@ public abstract class SinkConnector<TConfig, TItem> : Connector<TConfig, TItem>,
         }
         catch (Exception e)
         {
-            //System.Console.WriteLine(JsonConvert.SerializeObject(message));
-            //if (message.Data is null) return null;
-            //return message.Data.GetType() == typeof(string) ? message.Data.ToString() : JsonConvert.SerializeObject(message.Data);
             return JsonConvert.SerializeObject(message);
         }
     }

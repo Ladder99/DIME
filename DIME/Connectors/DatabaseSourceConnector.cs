@@ -62,10 +62,11 @@ public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<T
                 AddMessageToSamples(item, response);
             }
             
-            Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
-                         $"Read={(readResult==null ? "<null>" : JsonConvert.SerializeObject(readResult))}, " +
-                         $"Script={(scriptResult==null ? "<null>" : JsonConvert.SerializeObject(scriptResult))}, " +
-                         $"Sample={(response == null ? "DROPPED" : "ADDED")}");
+            if (Logger.IsTraceEnabled)
+                Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
+                            $"Read={(readResult==null ? "<null>" : JsonConvert.SerializeObject(readResult))}, " +
+                            $"Script={(scriptResult==null ? "<null>" : JsonConvert.SerializeObject(scriptResult))}, " +
+                            $"Sample={(response == null ? "DROPPED" : "ADDED")}");
         }
         
         if (!string.IsNullOrEmpty(Configuration.LoopExitScript))
@@ -78,10 +79,11 @@ public abstract class DatabaseSourceConnector<TConfig, TItem>: SourceConnector<T
         EntireReadLoopStopwatch.Stop();
         Logger.Trace($"[{Configuration.Name}] DatabaseSourceConnector:ReadImplementation::EXIT");
         
-        Logger.Debug($"[{Configuration.Name}] Loop Perf. " +
-                    $"DeviceRead: {ReadFromDeviceSumStopwatch.ElapsedMilliseconds}ms, " +
-                    $"ExecuteScript: {ExecuteScriptSumStopwatch.ElapsedMilliseconds}ms, " +
-                    $"EntireLoop: {EntireReadLoopStopwatch.ElapsedMilliseconds}ms");
+        if (Logger.IsDebugEnabled)
+            Logger.Debug($"[{Configuration.Name}] Loop Perf. " +
+                        $"DeviceRead: {ReadFromDeviceSumStopwatch.ElapsedMilliseconds}ms, " +
+                        $"ExecuteScript: {ExecuteScriptSumStopwatch.ElapsedMilliseconds}ms, " +
+                        $"EntireLoop: {EntireReadLoopStopwatch.ElapsedMilliseconds}ms");
         
         base.InvokeOnLoopPerf(
             ReadFromDeviceSumStopwatch.ElapsedMilliseconds,

@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using DIME.Configuration;
 using Newtonsoft.Json;
 
@@ -93,10 +92,11 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                                 AddMessageToSamples(item, result);
                             }
                             
-                            Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
-                                         $"Read={(readResult==null ? "<null>" : JsonConvert.SerializeObject(readResult))}, " +
-                                         $"Script={(scriptResult==null ? "<null>" : JsonConvert.SerializeObject(scriptResult))}, " +
-                                         $"Sample={(result == null ? "DROPPED" : "ADDED")}");
+                            if (Logger.IsTraceEnabled)
+                                Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
+                                            $"Read={(readResult==null ? "<null>" : JsonConvert.SerializeObject(readResult))}, " +
+                                            $"Script={(scriptResult==null ? "<null>" : JsonConvert.SerializeObject(scriptResult))}, " +
+                                            $"Sample={(result == null ? "DROPPED" : "ADDED")}");
                         }
                     }
                     else if (ItemOrConfigurationHasItemScript(item))
@@ -110,10 +110,11 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                             AddMessageToSamples(item, result);
                         }
                         
-                        Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
-                                     $"Read=<null>, " +
-                                     $"Script={(result==null ? "<null>" : JsonConvert.SerializeObject(result))}, " +
-                                     $"Sample={(result == null ? "DROPPED" : "ADDED")}");
+                        if (Logger.IsTraceEnabled)
+                            Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
+                                        $"Read=<null>, " +
+                                        $"Script={(result==null ? "<null>" : JsonConvert.SerializeObject(result))}, " +
+                                        $"Sample={(result == null ? "DROPPED" : "ADDED")}");
                     }
                 }
 
@@ -156,10 +157,11 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
                             AddMessageToSamples(item, result);
                         }
                         
-                        Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
-                                     $"Read={(readResult==null ? "<null>" : JsonConvert.SerializeObject(readResult))}, " +
-                                     $"Script={(scriptResult==null ? "<null>" : JsonConvert.SerializeObject(scriptResult))}, " +
-                                     $"Sample={(result == null ? "DROPPED" : "ADDED")}");
+                        if (Logger.IsTraceEnabled)
+                            Logger.Trace($"[{Configuration.Name}/{item.Name}] Read Impl. " +
+                                        $"Read={(readResult==null ? "<null>" : JsonConvert.SerializeObject(readResult))}, " +
+                                        $"Script={(scriptResult==null ? "<null>" : JsonConvert.SerializeObject(scriptResult))}, " +
+                                        $"Sample={(result == null ? "DROPPED" : "ADDED")}");
                     }
                     catch (InvalidOperationException e)
                     {
@@ -193,10 +195,11 @@ public abstract class QueuingSourceConnector<TConfig, TItem>: SourceConnector<TC
         EntireReadLoopStopwatch.Stop();
         Logger.Trace($"[{Configuration.Name}] QueuingSourceConnector:ReadImplementation::ENTER");
         
-        Logger.Debug($"[{Configuration.Name}] Loop Perf. " +
-                    $"DeviceRead: {ReadFromDeviceSumStopwatch.ElapsedMilliseconds}ms, " +
-                    $"ExecuteScript: {ExecuteScriptSumStopwatch.ElapsedMilliseconds}ms, " +
-                    $"EntireLoop: {EntireReadLoopStopwatch.ElapsedMilliseconds}ms");
+        if (Logger.IsDebugEnabled)
+            Logger.Debug($"[{Configuration.Name}] Loop Perf. " +
+                        $"DeviceRead: {ReadFromDeviceSumStopwatch.ElapsedMilliseconds}ms, " +
+                        $"ExecuteScript: {ExecuteScriptSumStopwatch.ElapsedMilliseconds}ms, " +
+                        $"EntireLoop: {EntireReadLoopStopwatch.ElapsedMilliseconds}ms");
         
         base.InvokeOnLoopPerf(
             ReadFromDeviceSumStopwatch.ElapsedMilliseconds,
