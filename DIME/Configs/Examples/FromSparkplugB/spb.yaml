@@ -18,17 +18,17 @@ spb: &spb
       local dt = Convert.ToInt32(metric.Datatype);
       local value = nil;
       if dt == 12 then
-        value = metric.StringValue;
+        value = metric.StringValue:ToString();
       elseif dt == 11 then
-        value = metric.BooleanValue;
+        value = Convert.ToBoolean(metric.BooleanValue);
       elseif dt == 10 then
-        value = metric.DoubleValue;
+        value = Convert.ToDouble(metric.DoubleValue);
       elseif dt == 9 then
-        value = metric.FloatValue;
+        value = Convert.ToDouble(metric.FloatValue);
       elseif dt == 8 or dt == 4 then
-        value = metric.LongValue;
+        value = Convert.ToInt32(metric.LongValue);
       elseif dt <= 7 then
-        value = metric.IntValue;
+        value = Convert.ToInt32(metric.IntValue);
       else
         value = nil;
       end
