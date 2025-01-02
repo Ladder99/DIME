@@ -13,3 +13,6 @@ ignition: &ignition
   device_id: DIME1
   reconnect_interval: !!int 15000
   birth_delay: !!int 10000
+  exclude_filter:
+    - rockwell/$SYSTEM
+    - spb

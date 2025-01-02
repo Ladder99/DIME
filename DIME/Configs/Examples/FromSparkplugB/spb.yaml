@@ -11,6 +11,36 @@ spb: &spb
   password: password
   clean_session: !!bool true
   qos: !!int 0
+  init_script: |
+    import('System');
+    json = require('json');
+    get_metric_value = function(metric)
+      local dt = Convert.ToInt32(metric.Datatype);
+      local value = nil;
+      if dt == 12 then
+        value = metric.StringValue;
+      elseif dt == 11 then
+        value = metric.BooleanValue;
+      elseif dt == 10 then
+        value = metric.DoubleValue;
+      elseif dt == 9 then
+        value = metric.FloatValue;
+      elseif dt == 8 or dt == 4 then
+        value = metric.LongValue;
+      elseif dt <= 7 then
+        value = metric.IntValue;
+      else
+        value = nil;
+      end
+      return value;
+    end
   items:
-    - name: ddata
-      address: spBv1.0/Chicago/DDATA/#
+    - name: F1D1
+      address: spBv1.0/Chicago/DDATA/Factory1/DIME1
+      script: |
+        result = from_json(result);
+        for metric in luanet.each(result.Metrics) do;
+          local value = get_metric_value(metric);
+          emit("./" .. metric.Name:ToString(), value);
+        end;
+        return nil;

@@ -1,0 +1,12 @@
+influx: &influx
+  name: influx
+  enabled: !!bool true
+  scan_interval: !!int 1000
+  connector: InfluxLP
+  address: https://us-east-1-1.aws.cloud2.influxdata.com
+  token: holjd83YjHjuQg7ne1Gt84w_zZYGzfmvHBsr3RPNvIJLzmdhas6PvdEIQ1jeTNSYd1u51wzrEf8qmf6hHYy4Lg==
+  bucket_name: DIME
+  use_sink_transform: !!bool false
+  exclude_filter:
+    - rockwell
+    - spb/$SYSTEM

@@ -5,6 +5,7 @@ app:
 sinks:
   - *console
   - *ignition
+  #- *influx
 sources:
   - *spb
   - *rockwell
