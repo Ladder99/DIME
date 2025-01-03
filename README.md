@@ -24,6 +24,7 @@ Reshape and move data from enterprise and industrial sources to message queues, 
 | [Haas SHDR](../../wiki/04.-Connector-Reference#haas-shdr)                   |
 | HTTP Client                                                                 |
 | [HTTP Server](../../wiki/04.-Connector-Reference#http-server)               |
+| Kafka                                                                       |
 | [Modbus/TCP](../../wiki/04.-Connector-Reference#modbus-tcp)                 |
 | [MQTT](../../wiki/04.-Connector-Reference#mqtt)                             |
 | [MS SQL Server](../../wiki/04.-Connector-Reference#ms-sql-server)           |
@@ -51,6 +52,7 @@ Reshape and move data from enterprise and industrial sources to message queues, 
 | [HTTP Server](../../wiki/04.-Connector-Reference#http-server)           |
 | [Influx LP](../../wiki/04.-Connector-Reference#influx-lp)               |
 | IoTDB                                                                   |
+| Kafka                                                                   |
 | [MongoDB](../../wiki/04.-Connector-Reference#mongodb)                   |
 | [MQTT](../../wiki/04.-Connector-Reference#mqtt)                         |
 | MS SQL Server                                                           |

@@ -260,8 +260,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
     {
         foreach (var sampleResponse in Samples)
         {
-            MessageBoxMessage matchingCurrent = null;
-            Current.TryGetValue(sampleResponse.Path, out matchingCurrent);
+            Current.TryGetValue(sampleResponse.Path, out var matchingCurrent);
             
             // sample does not exist in current, it is a new sample
             if (matchingCurrent is null)
@@ -360,7 +359,6 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
                     Inbox.Add(sampleResponse);
                 }
 
-                //Current.AddOrUpdate(sampleResponse.Path, sampleResponse, (key, oldValue) => sampleResponse);
                 Current[sampleResponse.Path] = sampleResponse;
             }
         }
@@ -374,7 +372,7 @@ public abstract class SourceConnector<TConfig, TItem>: Connector<TConfig, TItem>
 
             if (Inbox.Count > Disruptor.RingBuffer.BufferSize)
             {
-                Logger.Warn("Inbox is larger than ring buffer!");
+                Logger.Warn($"[{Configuration.Name}] Inbox is larger than ring buffer!");
             }
 
             if (PublishInboxInBatch && Inbox.Count < Disruptor.RingBuffer.BufferSize)
